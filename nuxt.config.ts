@@ -28,20 +28,12 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: [
-    "nuxt-headlessui",
-    "@vueuse/nuxt",
-    "@nuxtjs/i18n",
-    "@pinia/nuxt",
-    "@nuxthq/ui",
-    "nuxt-svgo",
-    "@nuxt/image",
-  ],
+  modules: ["nuxt-headlessui", "@vueuse/nuxt", "@nuxtjs/i18n", "@pinia/nuxt", "@nuxt/ui", "nuxt-svgo", "@nuxt/image"],
 
   colorMode: {
-    preference: 'system',
-    fallback: 'dark',
-    storageKey: 'nuxt-starter-color-mode',
+    preference: "system",
+    fallback: "dark",
+    storageKey: "nuxt-starter-color-mode",
   },
 
   i18n: {
@@ -50,19 +42,19 @@ export default defineNuxtConfig({
       alwaysRedirect: true,
       useCookie: true,
       cookieKey: "i18n_redirected",
-      redirectOn: 'root',
+      redirectOn: "root",
     },
     locales: [
       {
-        code: 'en',
-        iso: 'en-US'
+        code: "en",
+        iso: "en-US",
       },
       {
-        code: 'fr',
-        iso: 'fr-FR'
-      }
+        code: "fr",
+        iso: "fr-FR",
+      },
     ],
-    baseUrl: 'https://nuxt-starter.com',
+    baseUrl: "https://nuxt-starter.com",
     vueI18n: "~/i18n.config.ts",
   },
 
