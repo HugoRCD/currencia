@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   app:
-    container_name: time-manager-app
+    container_name: currencia-app
     build:
       context: .
       dockerfile: Dockerfile
