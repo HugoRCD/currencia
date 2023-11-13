@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  app:
+    container_name: time-manager-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
