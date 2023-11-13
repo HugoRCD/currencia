@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @import "animation";
-@import "themes/dark";
-@import "themes/light";
+@import "app/assets/style/themes/dark";
+@import "app/assets/style/themes/light";
 
 #__nuxt, #__layout {
   height:100%!important;

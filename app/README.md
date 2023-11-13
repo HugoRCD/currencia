@@ -1,12 +1,6 @@
-# Nuxt Boilerplate
+# Currencia APP
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/96ef5ef23a4442c2bf73762f46e52749)](https://www.codacy.com/gh/hugoRCD/nuxtjs-boilerplate/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hugoRCD/nuxtjs-boilerplate&amp;utm_campaign=Badge_Grade)
-
-This is a fully functional Nuxt 3 template that includes features such as translation with I18n, a dark and light theme and many more.
-It is built with the latest version of Nuxt and uses bun as package manager, which helps to keep the application lightweight and fast.
-All the template has been made to be as simple as possible to use and to be easily customizable, also I have spent a lot of time to make it as clean as possible with good locale management, seo, accessibility, but also with a good folder structure and a good code quality.
-
-![Homepage](./public/homescreen.png)
+![Homepage](public/homescreen.png)
 
 ## Features
 
@@ -26,7 +20,7 @@ All the template has been made to be as simple as possible to use and to be easi
 - simply run `docker-compose up` to start the application
 
 ### Lint
-- Eslint is configure on the boilerplate (configure for Typescript, with Prettier)
+- Eslint is configure on the project (configure for Typescript, with Prettier)
 
 ## Console
 This application includes a powerful console that can be launched
@@ -39,7 +33,7 @@ is just an example of what you can do with it.
 
 ### Clone the repository:
 ```
-git clone git@github.com:hugoRCD/nuxt3-boilerplate.git
+git clone git@github.com:hugoRCD/currencia.git
 ```
 
 ### Install dependencies:
@@ -71,4 +65,4 @@ Now you can open the app in your browser at http://localhost:3000 if you do not 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
