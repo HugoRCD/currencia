@@ -3,8 +3,8 @@
 </script>
 
 <template>
-  <div class="flex justify-center items-center">
-    Dashboard
+  <div>
+    Settings
   </div>
 </template>
 

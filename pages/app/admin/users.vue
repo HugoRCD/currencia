@@ -3,9 +3,9 @@
 </script>
 
 <template>
-  <div class="flex justify-center items-center">
-    Dashboard
-  </div>
+<div>
+  Users
+</div>
 </template>
 
 <style scoped lang="scss">

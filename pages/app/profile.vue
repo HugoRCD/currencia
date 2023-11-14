@@ -4,7 +4,7 @@
 
 <template>
   <div class="flex justify-center items-center">
-    Dashboard
+    Profile
   </div>
 </template>
 

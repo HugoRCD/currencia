@@ -1,9 +1,11 @@
 <script setup lang="ts">
-
+definePageMeta({
+  layout: "app",
+})
 </script>
 
 <template>
-  <div>
+  <div class="w-full">
     <NuxtPage />
   </div>
 </template>
