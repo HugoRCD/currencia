@@ -22,7 +22,7 @@ const toast = useToast();
     </h2>
     <HomeCircleSystem />
     <div class="flex gap-4 mt-6 z-10">
-      <NuxtLink to="https://github.com/HugoRCD/nuxt3-boilerplate">
+      <NuxtLink to="/app/dashboard">
         <UButton>
           {{ $t("home.hero.cta") }}
         </UButton>

@@ -6,7 +6,7 @@ export default defineAppConfig({
     primary: "orange",
     gray: "neutral",
     notifications: {
-      position: "top-0 right-0",
+      position: "top-0 bottom-auto",
     },
     notification: {
       progress: {
