@@ -11,7 +11,7 @@ const admin_navigations = getNavigation("admin");
   <div class="mr-2 flex flex-col w-64">
     <!-- Top part -->
     <div class="flex flex-col gap-3">
-      <div class="main-container flex flex-row items-center px-3 py-2 rounded-lg shadow-sm border">
+      <div class="main-container flex flex-row items-center px-3 py-2 rounded-xl shadow-sm border">
         <SvgoNuxt :fontControlled="false" class="w-8 h-8 text-gray-500 dark:text-gray-400"/>
         <span class="ml-2 text-lg font-semibold text-gray-700 dark:text-gray-200">
         Currencia<span class="text-primary">.</span>
