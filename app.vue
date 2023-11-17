@@ -7,7 +7,8 @@ useHead({
     { charset: "utf-8" },
     {
       name: "description",
-      content: "Currencia is the simplest crypto tracker, with a clean and minimalistic design, you can quickly be up to date with the latest crypto news and prices.",
+      content:
+        "Currencia is the simplest crypto tracker, with a clean and minimalistic design, you can quickly be up to date with the latest crypto news and prices.",
     },
     {
       name: "keywords",
@@ -20,7 +21,6 @@ useHead({
 <template>
   <Html :lang="$i18n.locale">
     <Body class="bg-white dark:bg-zinc-950">
-      <LayoutCommandConsole />
       <LayoutScrollToTop />
       <NuxtLayout>
         <NuxtPage />
