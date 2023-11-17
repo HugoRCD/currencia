@@ -44,7 +44,7 @@ const open = ref(true);
     <div class="flex-1" />
     <!-- Bottom part -->
     <div class="flex flex-col gap-2 justify-center items-center sm:items-start mb-4 sm:mb-0">
-      <div>
+      <div class="flex w-full" :class="!open ? 'justify-center' : 'justify-start'">
         <UTooltip text="Change theme">
           <ThemeToggle />
         </UTooltip>
