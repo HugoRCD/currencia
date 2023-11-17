@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 @import "animation";
-@import "./themes/dark";
-@import "./themes/light";
 
 #__nuxt, #__layout {
   height:100%!important;
@@ -12,6 +10,16 @@
 }
 
 @layer components {
+  .app-background {
+    @apply bg-[#F8F8F8];
+    @apply dark:bg-[#161618];
+  }
+
+  .main-container {
+    @apply bg-[#FFFFFF] border-[#E5E7EB];
+    @apply dark:bg-[#1C1C1E] dark:border-[#303032];
+  }
+
   .input {
     @apply border-sm rounded-md;
     @apply focus:outline-none;
@@ -25,5 +33,11 @@
   .text-gradient {
     @apply bg-clip-text text-transparent;
     @apply bg-gradient-to-bl from-accent-main to-accent-secondary;
+  }
+
+  .white-gradient {
+    @apply bg-gradient-to-br bg-clip-text text-transparent;
+    @apply from-black/90 to-black/30;
+    @apply dark:from-white/90 dark:to-white/30;
   }
 }

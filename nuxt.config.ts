@@ -28,12 +28,12 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["nuxt-headlessui", "@vueuse/nuxt", "@nuxtjs/i18n", "@pinia/nuxt", "@nuxt/ui", "nuxt-svgo", "@nuxt/image"],
+  modules: ["@vueuse/nuxt", "@nuxtjs/i18n", "@pinia/nuxt", "@nuxt/ui", "nuxt-svgo", "@nuxt/image"],
 
   colorMode: {
     preference: "system",
     fallback: "dark",
-    storageKey: "nuxt-starter-color-mode",
+    storageKey: "currencia-color-mode",
   },
 
   i18n: {
@@ -54,7 +54,7 @@ export default defineNuxtConfig({
         iso: "fr-FR",
       },
     ],
-    baseUrl: "https://nuxt-starter.com",
+    baseUrl: "https://currencia.hrcd.fr",
     vueI18n: "~/i18n.config.ts",
   },
 

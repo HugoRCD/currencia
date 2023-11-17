@@ -5,8 +5,6 @@ definePageMeta({
   path: "/contact",
 });
 
-const toastStore = useToastStore();
-
 const demandTypes = [
   {
     label: "contact.subject_types.project",
@@ -37,8 +35,9 @@ const selected = ref(demandTypes[0]);
 const message = ref("");
 
 async function submitForm() {
-  toastStore.showSuccessToast({
-    title: "contact.success",
+  useToast().add({
+    title: "Message sent",
+    description: "Your message has been sent successfully",
   });
 }
 </script>
