@@ -25,7 +25,7 @@ const open = ref(true);
         </UButton>
       </UTooltip>
     </div>
-    <div class="flex flex-col gap-3 mt-3 sm:mt-0">
+    <div class="flex flex-col gap-3 mt-3">
       <LayoutCommandConsole :sidebarOpen="open" />
       <div class="flex flex-col gap-2">
         <LayoutNavItem v-for="nav in navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
