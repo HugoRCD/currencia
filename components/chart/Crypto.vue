@@ -28,7 +28,7 @@ const crypto = reactive({
 
 <template>
   <div class="relative overflow-hidden flex flex-col gap-2 p-4 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800">
-    <div class="absolute -bottom-2 -right-2">
+    <div class="absolute -bottom-3 -right-2">
       <span class="text-7xl font-bold text-gray-700/20 dark:text-gray-200/20">
         {{ index + 1 }}
       </span>
