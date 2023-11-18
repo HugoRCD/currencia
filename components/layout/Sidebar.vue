@@ -8,16 +8,23 @@ const open = ref(true);
 </script>
 
 <template>
-  <div class="mr-2 flex flex-col transition-all duration-300 ease-in-out" :class="open ? 'sm:w-[250px]' : 'sm:w-[45px]'">
+  <div class="m-2 flex flex-col transition-all duration-300 ease-in-out" :class="open ? 'sm:w-[250px]' : 'sm:w-[45px]'">
     <!-- Top part -->
     <div class="hidden sm:flex justify-center items-center gap-2 my-2">
-      <UButton color="gray" size="sm" class="flex-1 text-left font-semibold text-gray-700 dark:text-gray-200" :class="!open ? 'hidden' : 'block'">
+      <UButton
+        color="gray"
+        variant="soft"
+        size="sm"
+        class="flex-1 text-left font-semibold text-gray-700 dark:text-gray-200"
+        :class="!open ? 'hidden' : 'block'"
+      >
         <div class="whitespace-nowrap">Hi, Hugo</div>
       </UButton>
       <UTooltip text="Toggle sidebar">
         <UButton
           size="sm"
           color="gray"
+          variant="soft"
           class="select-none text-neutral-700 dark:text-white hidden sm:block hover:text-neutral-900 dark:hover:text-gray-200"
           @click="open = !open"
         >
@@ -27,11 +34,14 @@ const open = ref(true);
     </div>
     <div class="flex flex-col gap-3 mt-3">
       <LayoutCommandConsole :sidebarOpen="open" />
+
+      <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
+
       <div class="flex flex-col gap-2">
         <LayoutNavItem v-for="nav in navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
       </div>
 
-      <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-4" />
+      <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
 
       <!-- Admin -->
       <div v-if="true" class="flex flex-col gap-2">

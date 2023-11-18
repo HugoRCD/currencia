@@ -35,14 +35,8 @@ defineProps({
 <style scoped lang="scss">
 .nav-item {
   @apply cursor-pointer rounded-lg px-3 py-2 flex flex-row items-center gap-2;
-  /*@apply hover:bg-gray-100 dark:hover:bg-gray-800;
-  @apply text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200;
-
-  &.active {
-    @apply border-l-4 border-primary;
-  }*/
   border: 1px solid transparent;
-  transition: border-color 0.25s, background-color 0.25s, box-shadow 0.25s;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
 }
 
 .light {
@@ -52,12 +46,8 @@ defineProps({
     box-shadow: 0 1px 0 #cccccc, 0 -3px 0 #ececec inset;
   }
 
-  .nav-item:focus .nav-item:focus-visible {
-    color: #575757;
-    border: 1px solid #ececec;
-    background-color: #ffffff;
-    box-shadow: 0 1px 0 #cccccc, 0 -3px 0 #ececec inset;
-    outline: none;
+  .nav-item:active {
+    box-shadow: 0 1px 0 #cccccc, 0 -0.5px 0 #ececec inset;
   }
 
   .nav-item.active {
@@ -75,12 +65,8 @@ defineProps({
     box-shadow: 0 1px 0 #2f2f2f, 0 -3px 0 #414141 inset;
   }
 
-  .nav-item:focus .nav-item:focus-visible {
-    color: #b5b3b3;
-    border: 1px solid #414141;
-    background-color: #ffffff;
-    box-shadow: 0 1px 0 #2f2f2f, 0 -3px 0 #414141 inset;
-    outline: none;
+  .nav-item:active {
+    box-shadow: 0 1px 0 #2f2f2f, 0 -0.5px 0 #414141 inset;
   }
 
   .nav-item.active {
