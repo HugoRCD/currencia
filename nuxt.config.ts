@@ -12,6 +12,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/": { isr: true, prerender: true },
+    "/app/**": { ssr: false },
   },
 
   css: ["~/assets/style/main.scss"],
@@ -28,7 +29,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@vueuse/nuxt", "@nuxtjs/i18n", "@pinia/nuxt", "@nuxt/ui", "nuxt-svgo", "@nuxt/image"],
+  modules: ["@vueuse/nuxt", "@nuxtjs/i18n", "@pinia/nuxt", "@nuxt/ui", "nuxt-svgo", "@nuxt/image", "dayjs-nuxt"],
 
   colorMode: {
     preference: "system",

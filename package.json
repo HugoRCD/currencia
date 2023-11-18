@@ -25,6 +25,8 @@
     "@vercel/analytics": "^1.0.1",
     "@vueuse/core": "^9.13.0",
     "@vueuse/nuxt": "^9.13.0",
+    "apexcharts": "^3.44.0",
+    "dayjs-nuxt": "^2.1.9",
     "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -36,6 +38,7 @@
     "prettier": "^2.8.8",
     "resend": "^2.0.0",
     "sass": "^1.63.3",
-    "sitemap": "^7.1.1"
+    "sitemap": "^7.1.1",
+    "vue3-apexcharts": "^1.4.4"
   }
 }
