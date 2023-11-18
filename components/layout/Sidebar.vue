@@ -8,7 +8,7 @@ const open = ref(true);
 </script>
 
 <template>
-  <div class="m-2 flex flex-col transition-all duration-300 ease-in-out" :class="open ? 'sm:w-[250px]' : 'sm:w-[45px]'">
+  <div class="m-2 flex flex-col transition-all duration-300 ease-in-out" :class="open ? 'sm:w-[250px] pr-0 sm:pr-2' : 'sm:w-[45px]'">
     <!-- Top part -->
     <div class="hidden sm:flex justify-center items-center gap-2 my-2">
       <UButton color="white" variant="soft" size="sm" class="flex-1 text-left font-semibold" :class="!open ? 'hidden' : 'block'">
