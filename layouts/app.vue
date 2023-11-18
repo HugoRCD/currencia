@@ -3,7 +3,7 @@
 <template>
   <div class="flex app-background pt-2 h-screen">
     <LayoutSidebar />
-    <div class="main-container flex flex-1 p-4 rounded-tl-2xl shadow-sm border">
+    <div class="main-container overflow-y-auto flex flex-1 p-4 rounded-tl-2xl shadow-sm border">
       <slot />
     </div>
   </div>
