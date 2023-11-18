@@ -23,7 +23,7 @@ defineProps({
       </p>
     </div>
     <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-full mx-auto mt-1 mb-3" />
-    <div>
+    <div class="flex flex-col gap-4">
       <slot />
     </div>
   </div>
