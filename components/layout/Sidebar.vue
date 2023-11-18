@@ -11,23 +11,11 @@ const open = ref(true);
   <div class="m-2 flex flex-col transition-all duration-300 ease-in-out" :class="open ? 'sm:w-[250px]' : 'sm:w-[45px]'">
     <!-- Top part -->
     <div class="hidden sm:flex justify-center items-center gap-2 my-2">
-      <UButton
-        color="gray"
-        variant="soft"
-        size="sm"
-        class="flex-1 text-left font-semibold text-gray-700 dark:text-gray-200"
-        :class="!open ? 'hidden' : 'block'"
-      >
+      <UButton color="white" variant="soft" size="sm" class="flex-1 text-left font-semibold" :class="!open ? 'hidden' : 'block'">
         <div class="whitespace-nowrap">Hi, Hugo</div>
       </UButton>
       <UTooltip text="Toggle sidebar">
-        <UButton
-          size="sm"
-          color="gray"
-          variant="soft"
-          class="select-none text-neutral-700 dark:text-white hidden sm:block hover:text-neutral-900 dark:hover:text-gray-200"
-          @click="open = !open"
-        >
+        <UButton size="sm" color="white" variant="soft" class="select-none hidden sm:block" @click="open = !open">
           <ViewColumnsIcon class="w-5 h-5" />
         </UButton>
       </UTooltip>

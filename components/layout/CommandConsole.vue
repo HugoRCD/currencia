@@ -87,7 +87,7 @@ onMounted(() => {
 
 <template>
   <div class="w-full">
-    <UButton block size="lg" class="console-button whitespace-nowrap" @click="open = !open">
+    <UButton block size="lg" class="console-button whitespace-nowrap justify-start" @click="open = !open">
       <UIcon name="i-heroicons-command-line" class="h-5 w-5" />
       <span class="text-sm font-medium hidden sm:block" v-if="sidebarOpen">Find a crypto</span>
     </UButton>
@@ -111,18 +111,4 @@ onMounted(() => {
   @apply bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-gray-200;
   @apply text-white dark:text-neutral-900 hover:text-white dark:hover:text-gray-900;
 }
-
-/*.dark .console-button {
-  box-shadow: inset 0px -2px 0px 3px #b5b3b3, 0 -3px 0 #c8c7c7 inset;
-  &:active {
-    box-shadow: none;
-  }
-}
-
-.light .console-button {
-  box-shadow: inset 0px -2px 0px 3px #414141, 0 -3px 0 #6a6a6a inset;
-  &:active {
-    box-shadow: none;
-  }
-}*/
 </style>
