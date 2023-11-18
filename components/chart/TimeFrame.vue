@@ -43,7 +43,7 @@ watch(selectedTimeframe, (value) => {
 </script>
 
 <template>
-  <div class="flex flex-row items-center gap-3">
+  <div class="flex flex-row items-center gap-1">
     <div v-for="timeframe in timeframes" :key="timeframe.name">
       <button
         :class="{

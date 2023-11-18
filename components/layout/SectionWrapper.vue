@@ -13,7 +13,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 h-full">
     <div class="flex flex-col gap-1">
       <h1 class="text-2xl font-bold">
         {{ title }}
@@ -29,4 +29,18 @@ defineProps({
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.custom-overflow {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 0.5rem;
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(209, 213, 219, 0.5);
+    border-radius: 0.5rem;
+  }
+}
+</style>
