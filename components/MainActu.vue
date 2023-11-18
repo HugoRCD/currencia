@@ -1,7 +1,4 @@
 <script setup lang="ts">
-
-import {cryptos} from "~/data/crypto";
-
 const articles = [
   {
     id: 1,
@@ -32,7 +29,7 @@ const articles = [
   <div class="flex flex-col gap-3">
     <h2 class="text-xl font-bold">Latest Crypto Price</h2>
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <ChartActu v-for="(crypto, index) in cryptos" :key="crypto.name" :cryptoItem="crypto" :index="index" />
+      <ChartActu v-for="(article, index) in articles" :key="index" :article="article" :index="index" />
     </div>
   </div>
 </template>
