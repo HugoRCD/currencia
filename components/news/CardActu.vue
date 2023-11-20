@@ -1,0 +1,40 @@
+<script setup lang="ts">
+import type { PropType } from "vue";
+import type { Article } from "~/types/Article";
+
+defineProps({
+  article: {
+    type: Object as PropType<Article>,
+    required: true,
+  },
+});
+
+import { ref } from "vue";
+
+const showFullDescription = ref(false);
+</script>
+
+<template>
+  <div class="relative overflow-hidden flex flex-col gap-2 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800">
+    <img :src="article.image" class="w-full h-auto" :alt="article.title" />
+    <div class="flex flex-col gap-1 p-4 pt-0">
+      <div class="flex flex-row items-center">
+        <span v-if="article" class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ article.title }}</span>
+      </div>
+      <div class="flex flex-row items-center">
+        <span v-if="article" class="text-sm text-gray-500 dark:text-gray-400 description max-h-20" ref="description">
+          {{ article.description }}
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Nombre de lignes à afficher */
+  -webkit-box-orient: vertical;
+}
+</style>
