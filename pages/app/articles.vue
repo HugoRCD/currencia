@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import ListActu from "~/components/news/ListActu.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <LayoutSectionWrapper

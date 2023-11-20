@@ -8,10 +8,6 @@ defineProps({
     required: true,
   },
 });
-
-import { ref } from "vue";
-
-const showFullDescription = ref(false);
 </script>
 
 <template>
@@ -34,7 +30,7 @@ const showFullDescription = ref(false);
 .description {
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Nombre de lignes à afficher */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 </style>

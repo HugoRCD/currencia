@@ -29,7 +29,7 @@ const articles = [
 
 <template>
   <div class="flex flex-col gap-3">
-    <h2 class="text-xl font-bold">The more recently</h2>
+    <h2 class="text-xl font-bold">Recently in the crypto sphere</h2>
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
       <NewsCardActu v-for="(article, index) in articles" :key="index" :article="article" :index="index" />
     </div>
