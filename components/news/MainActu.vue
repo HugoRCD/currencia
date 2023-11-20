@@ -36,19 +36,11 @@ onUnmounted(() => {
         <div class="absolute w-full bottom-10 flex items-center justify-center">
           <div class="flex justify-between w-35 absolute">
             <div
+              v-for="(article, index) in articles"
+              :key="index"
               class="h-2 bg-white rounded-full cursor-pointer transition duration-300 m-2"
-              :class="activeArticle.id === 1 ? 'w-4' : 'w-2'"
-              @click="activeArticle = articles[0]"
-            ></div>
-            <div
-              class="h-2 bg-white rounded-full cursor-pointer transition duration-300 m-2"
-              :class="activeArticle.id === 2 ? 'w-4' : 'w-2'"
-              @click="activeArticle = articles[1]"
-            ></div>
-            <div
-              class="h-2 bg-white rounded-full cursor-pointer transition duration-300 m-2"
-              :class="activeArticle.id === 3 ? 'w-4' : 'w-2'"
-              @click="activeArticle = articles[2]"
+              :class="activeArticle.id === article.id ? 'w-4' : 'w-2'"
+              @click="activeArticle = article"
             ></div>
           </div>
         </div>
