@@ -40,5 +40,8 @@
     "sass": "^1.63.3",
     "sitemap": "^7.1.1",
     "vue3-apexcharts": "^1.4.4"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
   }
 }
