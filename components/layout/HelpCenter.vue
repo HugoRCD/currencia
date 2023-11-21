@@ -4,12 +4,45 @@ const isOpen = ref(false);
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 
-const options = [
-  { label: "Request your favorite crypto", value: "crypto", color: "blue" },
-  { label: "Highlight a bothersome bug", value: "bug", color: "red" },
-  { label: "Propose a dream feature for the app", value: "feature", color: "green" },
-  { label: "Suggest an innovative idea", value: "innovation", color: "yellow" },
+import { ref } from "vue";
+
+/*
+const options = ref([
+  { id: 1, name: "Request your favorite crypto", color: "3498db", value: "crypto" },
+  { id: 2, name: "Highlight a bothersome bug", color: "e74c3c", value: "bug" },
+  { id: 3, name: "Propose a dream feature for the app", color: "2ecc71", value: "feature" },
+  { id: 4, name: "Suggest an innovative idea", color: "f1c40f", value: "innovation" },
+]);
+*/
+
+const demandTypes = [
+  {
+    label: "contact.subject_types.project",
+    value: "Request your favorite crypto",
+    color: "bg-blue-500",
+    button_color: "blue",
+  },
+  {
+    label: "contact.subject_types.question",
+    value: "Propose a dream feature for the app",
+    color: "bg-yellow-500",
+    button_color: "yellow",
+  },
+  {
+    label: "contact.subject_types.bug",
+    value: "Highlight a bothersome bug",
+    color: "bg-red-500",
+    button_color: "red",
+  },
+  {
+    label: "contact.subject_types.other",
+    value: "Suggest an innovative idea",
+    color: "bg-gray-500",
+    button_color: "gray",
+  },
 ];
+
+const selected = ref(demandTypes[0]);
 
 const state = reactive({
   input: undefined,
@@ -65,7 +98,18 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           </UFormGroup>
 
           <UFormGroup name="Request Type" label="Request Type">
-            <USelect v-model="state.select" placeholder="Select..." :options="options" />
+            <USelectMenu v-model="selected" :options="demandTypes">
+              <template #label>
+                <div class="rounded-full h-2 w-2" :class="selected.color"></div>
+                <span class="text-gray-400">{{ $t(selected.label) }}</span>
+              </template>
+              <template #option="{ option }">
+                <div class="flex items-center gap-3">
+                  <div class="rounded-full h-2 w-2" :class="option.color"></div>
+                  <span>{{ $t(option.label) }}</span>
+                </div>
+              </template>
+            </USelectMenu>
           </UFormGroup>
 
           <UFormGroup name="Description" label="Description">
@@ -73,19 +117,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           </UFormGroup>
 
           <div class="w-full flex gap-2 mt-20">
-            <UButton
-              type="submit"
-              class="flex-1 text-center justify-center"
-              :color="options.find((option) => option.value === state.select)?.color || 'primary'"
-            >
-              Submit
-            </UButton>
-            <UButton
-              variant="outline"
-              class="flex-1 text-center justify-center"
-              @click="form.clear()"
-              :color="options.find((option) => option.value === state.select)?.color || 'primary'"
-            >
+            <UButton type="submit" class="flex-1 text-center justify-center" :color="selected.button_color || 'primary'"> Submit </UButton>
+            <UButton variant="outline" class="flex-1 text-center justify-center" @click="form.clear()" :color="selected.button_color || 'primary'">
               Clear
             </UButton>
           </div>
