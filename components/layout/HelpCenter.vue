@@ -74,7 +74,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <div>
     <UButton :ui="{ rounded: 'rounded-full' }" @click="isOpen = !isOpen" icon="i-heroicons-chat-bubble-oval-left-ellipsis" size="xl" />
     <UModal v-model="isOpen">
-      <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+      <UCard :ui="{ divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
         <template #header>
           <div class="flex items-center justify-between">
             <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Help Center</h3>
