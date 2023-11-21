@@ -5,10 +5,10 @@ import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 
 const options = [
-  { label: "Request new crypto", value: "crypto" },
-  { label: "Report a bug", value: "bug" },
-  { label: "Request a new features", value: "feature" },
-  { label: "Request a new features", value: "feature" },
+  { label: "Request your favorite crypto", value: "crypto", color: "blue" },
+  { label: "Highlight a bothersome bug", value: "bug", color: "red" },
+  { label: "Propose a dream feature for the app", value: "feature", color: "green" },
+  { label: "Suggest an innovative idea", value: "innovation", color: "yellow" },
 ];
 
 const state = reactive({
@@ -56,7 +56,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Help Center</h3>
             <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="isOpen = false" />
           </div>
-          <p class="text-gray-500 dark:text-gray-400 text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.</p>
+          <p class="text-gray-500 dark:text-gray-400 text-sm">Your feedback is very important to us.</p>
         </template>
 
         <UForm ref="form" :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
@@ -73,8 +73,21 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           </UFormGroup>
 
           <div class="w-full flex gap-2 mt-20">
-            <UButton type="submit" class="flex-1 text-center"> Submit </UButton>
-            <UButton variant="outline" class="flex-1 text-center" @click="form.clear()"> Clear </UButton>
+            <UButton
+              type="submit"
+              class="flex-1 text-center justify-center"
+              :color="options.find((option) => option.value === state.select)?.color || 'primary'"
+            >
+              Submit
+            </UButton>
+            <UButton
+              variant="outline"
+              class="flex-1 text-center justify-center"
+              @click="form.clear()"
+              :color="options.find((option) => option.value === state.select)?.color || 'primary'"
+            >
+              Clear
+            </UButton>
           </div>
         </UForm>
       </UCard>
