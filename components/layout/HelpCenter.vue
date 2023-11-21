@@ -4,8 +4,6 @@ const isOpen = ref(false);
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 
-import { ref } from "vue";
-
 const demandTypes = [
   {
     label: "contact.subject_types.project",
