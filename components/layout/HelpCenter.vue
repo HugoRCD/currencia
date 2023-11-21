@@ -6,15 +6,6 @@ import type { FormSubmitEvent } from "#ui/types";
 
 import { ref } from "vue";
 
-/*
-const options = ref([
-  { id: 1, name: "Request your favorite crypto", color: "3498db", value: "crypto" },
-  { id: 2, name: "Highlight a bothersome bug", color: "e74c3c", value: "bug" },
-  { id: 3, name: "Propose a dream feature for the app", color: "2ecc71", value: "feature" },
-  { id: 4, name: "Suggest an innovative idea", color: "f1c40f", value: "innovation" },
-]);
-*/
-
 const demandTypes = [
   {
     label: "contact.subject_types.project",
