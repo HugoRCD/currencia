@@ -35,12 +35,12 @@ watch(selectedTimeframe, (value) => {
 </script>
 
 <template>
-  <div class="flex flex-row items-center gap-1">
+  <div class="flex flex-row items-center gap-1 sm:gap-5">
     <div v-for="timeframe in timeframes" :key="timeframe.value">
       <button
         :class="{
           'bg-gray-200 dark:bg-gray-700': selectedTimeframe.value === timeframe.value,
-          'bg-white dark:bg-gray-800': selectedTimeframe.value !== timeframe.value,
+          'not-active': selectedTimeframe.value !== timeframe.value,
         }"
         class="timeframe"
         @click="selectedTimeframe = timeframe"
@@ -53,12 +53,17 @@ watch(selectedTimeframe, (value) => {
 
 <style scoped lang="scss">
 .timeframe {
-  @apply rounded-md px-[0.75rem] py-[3px];
+  @apply rounded-md;
   @apply text-gray-700 dark:text-gray-200;
   border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: 0.1rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+
+  &.not-active {
+    opacity: 0.5;
+  }
 }
 </style>

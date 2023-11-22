@@ -40,6 +40,20 @@ const chartOptions = {
   theme: {
     mode: colorMode.value,
   },
+  plotOptions: {
+    area: {
+      fillTo: "end",
+    },
+  },
+  fill: {
+    type: "gradient",
+    gradient: {
+      shadeIntensity: 0.1,
+      opacityFrom: 0.6,
+      opacityTo: 0,
+      stops: [0, 90, 100],
+    },
+  },
   dataLabels: {
     enabled: false,
   },
@@ -48,7 +62,7 @@ const chartOptions = {
     width: 2,
   },
   grid: {
-    borderColor: "rgba(0,0,0,0.04)",
+    borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#E5E7EB",
   },
   markers: {
     size: 0,
@@ -62,11 +76,38 @@ const chartOptions = {
   xaxis: {
     type: "datetime",
     min: timeframe.value.series.start,
-    tickAmount: 6,
+    tickAmount: 5,
+    labels: {
+      style: {
+        colors: colorMode.value === "dark" ? "#9CA3AF" : "#4B5563",
+      },
+      formatter: function (value) {
+        return dayjs(value).format("DD.MM");
+      },
+    },
+    axisBorder: {
+      show: false,
+    },
+    axisTicks: {
+      show: false,
+    },
   },
   tooltip: {
     x: {
       format: "dd/MM/yy HH:mm",
+      formatter: function (value) {
+        return dayjs(value).format("DD.MM.YYYY");
+      },
+    },
+    y: {
+      title: {
+        formatter: function () {
+          return "";
+        },
+      },
+      formatter: function (value) {
+        return value.toFixed(2);
+      },
     },
   },
 } satisfies ApexOptions;
@@ -80,6 +121,16 @@ watch(colorMode, () => {
     theme: {
       mode: colorMode.value,
     },
+    grid: {
+      borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#E5E7EB",
+    },
+    xaxis: {
+      labels: {
+        style: {
+          colors: colorMode.value === "dark" ? "#9CA3AF" : "#4B5563",
+        },
+      },
+    },
   });
 });
 </script>
@@ -87,7 +138,7 @@ watch(colorMode, () => {
 <template>
   <div>
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
-    <apexchart ref="chart" type="line" :options="chartOptions" :series="series" />
+    <apexchart ref="chart" type="area" :options="chartOptions" :series="series" />
   </div>
 </template>
 

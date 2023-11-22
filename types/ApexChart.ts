@@ -26,6 +26,9 @@ export interface ApexOptions {
     borderColor?: string;
   };
   plotOptions?: {
+    area?: {
+      fillTo?: string;
+    };
     radialBar?: {
       offsetY?: number;
       startAngle?: number;
@@ -86,7 +89,16 @@ export interface ApexOptions {
     min?: number;
     max?: number;
     tickAmount?: number;
+    axisBorder?: {
+      show?: boolean;
+    };
+    axisTicks?: {
+      show?: boolean;
+    };
     labels?: {
+      style?: {
+        colors?: string;
+      };
       categories?: string[];
       formatter?: (value: number) => string;
       datetimeFormatter?: {
