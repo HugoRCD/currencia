@@ -4,10 +4,6 @@ export default defineNuxtConfig({
       name: "fade",
       mode: "out-in",
     },
-    pageTransition: {
-      name: "fade",
-      mode: "out-in",
-    },
   },
 
   routeRules: {

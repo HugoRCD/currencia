@@ -32,7 +32,7 @@ export function getNavigation(where: Where): Navigation[] {
           to: "/app/articles",
           icon: ChatBubbleLeftIcon,
           title: "Latest Crypto News",
-          description: "The Community displays the latest crypto news published by projects from all corners of the crypto world.",
+          description: "Where the community shares the latest news about the crypto world.",
         },
         { name: "Profile", to: "/app/profile", icon: UserIcon, title: "Profile", description: "Here you can see your profile information and edit it." },
         {
