@@ -19,7 +19,7 @@ import { cryptos } from "~/data/crypto";
     <div class="flex gap-4 mt-6 z-10">
       <NuxtLink to="/app/dashboard">
         <UButton>
-          {{ $t("home.hero.cta") }}
+          <span class="font-semibold">Get started</span>
         </UButton>
       </NuxtLink>
     </div>
