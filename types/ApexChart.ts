@@ -1,15 +1,18 @@
 export interface ApexOptions {
   chart: {
+    id?: string;
     width?: string | number;
     height?: string | number;
     type: string;
     foreColor?: string;
     zoom?: {
-      enabled: boolean;
+      enabled?: boolean;
+      autoScaleYaxis?: boolean;
     };
     toolbar?: {
       show: boolean;
     };
+    background?: string;
   };
   dataLabels?: {
     enabled?: boolean;
@@ -23,6 +26,9 @@ export interface ApexOptions {
     borderColor?: string;
   };
   plotOptions?: {
+    area?: {
+      fillTo?: string;
+    };
     radialBar?: {
       offsetY?: number;
       startAngle?: number;
@@ -76,13 +82,36 @@ export interface ApexOptions {
   };
   markers?: {
     size?: number;
+    style?: string;
   };
   xaxis?: {
-    categories?: string[];
     type?: string;
+    min?: number;
+    max?: number;
+    tickAmount?: number;
+    axisBorder?: {
+      show?: boolean;
+    };
+    axisTicks?: {
+      show?: boolean;
+    };
+    labels?: {
+      style?: {
+        colors?: string;
+      };
+      categories?: string[];
+      formatter?: (value: number) => string;
+      datetimeFormatter?: {
+        year?: string;
+        month?: string;
+        day?: string;
+        hour?: string;
+      };
+    };
   };
   yaxis?: {
     labels?: {
+      show?: boolean;
       formatter?: (value: number) => string;
     };
     min?: number;
@@ -94,7 +123,25 @@ export interface ApexOptions {
     intersect?: boolean;
     followCursor?: boolean;
     x: {
+      show?: boolean;
       format?: string;
+    };
+  };
+  theme?: {
+    mode?: string;
+  };
+  fill?: {
+    type?: string;
+    opacity?: number;
+    gradient?: {
+      shade?: string;
+      type?: string;
+      shadeIntensity?: number;
+      gradientToColors?: string[];
+      inverseColors?: boolean;
+      opacityFrom?: number;
+      opacityTo?: number;
+      stops?: number[];
     };
   };
   colors?: string[];
@@ -123,3 +170,16 @@ export interface ApexOptions {
     };
   };
 }
+
+export type ApexChartSeries = {
+  name?: string;
+  data: [number, number][];
+};
+
+export type TimeFrame = {
+  value: string;
+  series: {
+    start: number;
+    end: number;
+  };
+};

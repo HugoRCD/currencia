@@ -93,7 +93,7 @@ onMounted(() => {
     <div class="flex flex-col gap-3">
       <h2 class="text-xl font-bold">Latest Crypto Price</h2>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        <ChartCrypto v-for="(crypto, index) in cryptos" :key="crypto.name" :cryptoItem="crypto" :index="index" />
+        <ChartCrypto v-for="(crypto, index) in cryptos.slice(0, 12)" :key="crypto.name" :cryptoItem="crypto" :index="index" />
       </div>
     </div>
 
