@@ -1,30 +1,44 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
-import type { ApexOptions } from "~/types/ApexChart";
+import type { ApexOptions, TimeFrame } from "~/types/ApexChart";
+import { getRandomDailyData } from "~/composables/useTime";
+const colorMode = useColorMode();
 
-const props = defineProps({
-  series: {
-    type: Object as PropType<{ data: number[] }>,
-    required: true,
-  },
-  categories: {
-    type: Array as PropType<string[]>,
-    required: true,
-  },
+const dayjs = useDayjs();
+
+const timeframe = ref<TimeFrame>({
+  value: "3M",
+  series: getCurrent3Months(),
 });
 
-const timeframe = ref([]);
+const series = [
+  {
+    data: getRandomDailyData(),
+  },
+];
 
-const chartOptions = ref({
+const chart = ref();
+
+function updateTimeline() {
+  const start = timeframe.value.series.start;
+  const end = timeframe.value.series.end;
+  chart.value.chart.zoomX(start, end);
+}
+
+const chartOptions = {
   chart: {
+    id: "area-datetime",
+    type: "area",
     height: 350,
-    type: "line",
     zoom: {
       enabled: false,
     },
     toolbar: {
       show: false,
     },
+    background: "transparent",
+  },
+  theme: {
+    mode: colorMode.value,
   },
   dataLabels: {
     enabled: false,
@@ -34,44 +48,46 @@ const chartOptions = ref({
     width: 2,
   },
   grid: {
-    borderColor: "#eceeef",
+    borderColor: "rgba(0,0,0,0.04)",
   },
   markers: {
     size: 0,
-  },
-  xaxis: {
-    type: "datetime",
-    categories: props.categories,
+    style: "hollow",
   },
   yaxis: {
     labels: {
-      formatter: function (val: number) {
-        return val.toFixed(2);
-      },
+      show: false,
     },
-    min: -1000,
-    max: 1000,
+  },
+  xaxis: {
+    type: "datetime",
+    min: timeframe.value.series.start,
+    tickAmount: 6,
   },
   tooltip: {
     x: {
       format: "dd/MM/yy HH:mm",
     },
   },
-} satisfies ApexOptions);
+} satisfies ApexOptions;
 
-const colors = computed(() => {
-  const start = props.series.data[0];
-  const end = props.series.data[props.series.data.length - 1];
-  return start > end ? ["#EF4444"] : ["#10B981"];
+watch(timeframe, () => {
+  updateTimeline();
 });
 
-onMounted(() => {});
+watch(colorMode, () => {
+  chart.value.chart.updateOptions({
+    theme: {
+      mode: colorMode.value,
+    },
+  });
+});
 </script>
 
 <template>
   <div>
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
-    <apexchart type="line" :options="{ ...chartOptions, colors }" :series="[series]" />
+    <apexchart ref="chart" type="line" :options="chartOptions" :series="series" />
   </div>
 </template>
 

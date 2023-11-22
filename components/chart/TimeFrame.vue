@@ -1,59 +1,51 @@
 <script setup lang="ts">
+import type { TimeFrame } from "~/types/ApexChart";
+
 const timeframes = [
   {
-    name: "1D",
-    value: "1d",
-    series: getTodayHours(),
-  },
-  {
-    name: "1W",
-    value: "1w",
+    value: "1W",
     series: getCurrentWeek(),
   },
   {
-    name: "1M",
-    value: "1m",
+    value: "1M",
     series: getCurrentMonth(),
   },
   {
-    name: "3M",
-    value: "3m",
+    value: "3M",
     series: getCurrent3Months(),
   },
   {
-    name: "6M",
-    value: "6m",
+    value: "6M",
     series: getCurrent6Months(),
   },
   {
-    name: "1Y",
-    value: "1y",
+    value: "1Y",
     series: getCurrentYear(),
   },
-];
+] as TimeFrame[];
 
-const selectedTimeframe = ref(timeframes[0].value);
+const selectedTimeframe = ref<TimeFrame>(timeframes[2]);
 
 const emit = defineEmits(["update:timeframe"]);
 
 watch(selectedTimeframe, (value) => {
-  const timeframe = timeframes.find((timeframe) => timeframe.value === value);
-  emit("update:timeframe", timeframe!.series);
+  const timeframe = timeframes.find((timeframe) => timeframe.value === value.value);
+  emit("update:timeframe", timeframe);
 });
 </script>
 
 <template>
   <div class="flex flex-row items-center gap-1">
-    <div v-for="timeframe in timeframes" :key="timeframe.name">
+    <div v-for="timeframe in timeframes" :key="timeframe.value">
       <button
         :class="{
-          'bg-gray-200 dark:bg-gray-700': selectedTimeframe === timeframe.value,
-          'bg-white dark:bg-gray-800': selectedTimeframe !== timeframe.value,
+          'bg-gray-200 dark:bg-gray-700': selectedTimeframe.value === timeframe.value,
+          'bg-white dark:bg-gray-800': selectedTimeframe.value !== timeframe.value,
         }"
         class="timeframe"
-        @click="selectedTimeframe = timeframe.value"
+        @click="selectedTimeframe = timeframe"
       >
-        {{ timeframe.name }}
+        {{ timeframe.value }}
       </button>
     </div>
   </div>

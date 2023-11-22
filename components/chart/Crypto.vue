@@ -46,10 +46,20 @@ const crypto = reactive({
         <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">$</span>
       </div>
       <div class="flex flex-row items-center">
-        <span :class="crypto.change > 0 ? 'text-green-500' : 'text-red-500'" class="text-sm font-semibold"> {{ crypto.change }}% </span>
+        <span :class="crypto.change > 0 ? 'positive' : 'negative'" class="text-sm font-semibold"> {{ crypto.change }}% </span>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.positive {
+  @apply text-green-500;
+  text-shadow: 0 0 0.5rem rgba(72, 187, 120, 0.2);
+}
+
+.negative {
+  @apply text-red-500;
+  text-shadow: 0 0 0.5rem rgba(239, 68, 68, 0.2);
+}
+</style>
