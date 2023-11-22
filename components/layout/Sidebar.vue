@@ -41,33 +41,13 @@ const open = ref(true);
     </div>
     <div class="flex-1" />
     <!-- Bottom part -->
-    <div class="flex flex-col gap-2 justify-center items-center sm:items-start mb-4 sm:mb-0">
-      <div class="flex w-full" :class="!open ? 'justify-center' : 'justify-start'">
-        <UTooltip text="Change theme">
-          <ThemeToggle />
-        </UTooltip>
-      </div>
-      <UTooltip class="w-full" text="Back to home">
-        <div
-          class="hidden w-full cursor-pointer main-container sm:flex items-center justify-between px-3 py-2 rounded-xl shadow-sm border"
-          @click="$router.push('/')"
-        >
-          <div class="flex flex-row items-center" :class="!open ? 'hidden' : 'block'">
-            <SvgoNuxt :fontControlled="false" class="w-8 h-8 text-gray-500 dark:text-gray-400" />
-            <span class="ml-2 text-lg font-semibold text-gray-700 dark:text-gray-200"> Currencia<span class="text-primary">.</span> </span>
-          </div>
-          <ArrowLeftOnRectangleIcon class="w-6 h-6 cursor-pointer text-neutral-700 dark:text-white" />
-        </div>
+    <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mb-4 sm:mb-0">
+      <UTooltip text="Change theme">
+        <ThemeToggle />
       </UTooltip>
-      <ArrowLeftOnRectangleIcon
-        class="w-6 h-6 cursor-pointer text-neutral-700 dark:text-white"
-        @click="$router.push('/')"
-        :class="[
-          // hidden if on mobile or if the sidebar is open
-          'sm:hidden',
-          open ? 'hidden' : 'block',
-        ]"
-      />
+      <UTooltip text="Back to home">
+        <UButton icon="i-heroicons-arrow-left-on-rectangle-20-solid" color="gray" variant="ghost" @click="$router.push('/')" />
+      </UTooltip>
     </div>
   </div>
 </template>

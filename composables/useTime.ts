@@ -1,5 +1,3 @@
-// I want to make 5 functions for my timeframe ["1W", "1M", "3M", "6M", "1Y"]
-// i want for each function to return a start and end date using timestamp like this [1627776000000, 1627776000000]
 import type { ApexChartSeries } from "~/types/ApexChart";
 
 export const getCurrentWeek = () => {
@@ -58,8 +56,8 @@ export const getRandomDailyData = (): ApexChartSeries["data"] => {
   const days = dayjs().diff(start, "day") + 1;
   const data = [] as ApexChartSeries["data"];
 
-  const rangeMin = -100;
-  const rangeMax = 100;
+  const rangeMin = -1000;
+  const rangeMax = 1000;
 
   const getRandomValue = () => {
     return Math.floor(Math.random() * (rangeMax - rangeMin + 1)) + rangeMin;

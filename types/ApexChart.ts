@@ -125,6 +125,7 @@ export interface ApexOptions {
     x: {
       show?: boolean;
       format?: string;
+      formatter?: (value: number) => string;
     };
   };
   theme?: {
