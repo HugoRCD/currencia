@@ -28,15 +28,12 @@ const articles = [
 </script>
 
 <template>
-  <LayoutSectionWrapper
-    title="Latest Crypto News"
-    description="The Community displays the latest crypto news published by projects from all corners of the crypto world."
-  >
+  <div class="w-full">
     <div class="flex flex-col gap-3">
       <NewsMainActu :articles="articles" />
       <NewsListActu :articles="articles" class="mt-8" />
     </div>
-  </LayoutSectionWrapper>
+  </div>
 </template>
 
 <style scoped lang="scss"></style>

@@ -88,7 +88,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <LayoutSectionWrapper title="Market overview" description="You can see all the market information, latest news, and more.">
+  <div>
     <!-- Crypto -->
     <div class="flex flex-col gap-3">
       <h2 class="text-xl font-bold">Latest Crypto Price</h2>
@@ -111,7 +111,7 @@ onMounted(() => {
         <span class="text-sm text-gray-500 dark:text-gray-400"> Please check back later. </span>
       </div>
     </div>
-  </LayoutSectionWrapper>
+  </div>
 </template>
 
 <style scoped lang="scss"></style>
