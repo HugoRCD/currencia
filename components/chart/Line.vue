@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { ApexOptions, TimeFrame } from "~/types/ApexChart";
-import { getRandomDailyData } from "~/composables/useTime";
 const colorMode = useColorMode();
 
 const dayjs = useDayjs();
@@ -138,7 +137,7 @@ watch(colorMode, () => {
 <template>
   <div>
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
-    <apexchart ref="chart" type="area" :options="chartOptions" :series="series" />
+    <apexchart id="chart" ref="chart" type="area" :options="chartOptions" :series="series" />
   </div>
 </template>
 
