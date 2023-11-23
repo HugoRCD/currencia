@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: "app",
-})
+});
 </script>
 
 <template>
@@ -10,6 +10,4 @@ definePageMeta({
   </div>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

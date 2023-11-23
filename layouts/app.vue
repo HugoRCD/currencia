@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const pages = [...getNavigation("app"), ...getNavigation("admin")];
-const currentPage = computed(() => pages.find((page) => page.to === useRoute().path));
+const currentPage = computed(() => {
+  const page = pages.find((page) => page.to === useRoute().path);
+  return page || { title: "404", description: "Page not found" };
+});
 </script>
 
 <template>
