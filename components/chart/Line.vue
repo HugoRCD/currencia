@@ -27,7 +27,6 @@ const chartOptions = {
   chart: {
     id: "area-datetime",
     type: "area",
-    height: 350,
     zoom: {
       enabled: false,
     },
@@ -92,6 +91,10 @@ const chartOptions = {
     },
   },
   tooltip: {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+      return '<div class="px-4 py-1">' + "<span>" + series[seriesIndex][dataPointIndex] + "</span>" + "</div>";
+    },
     x: {
       format: "dd/MM/yy HH:mm",
       formatter: function (value) {
@@ -104,7 +107,7 @@ const chartOptions = {
           return "";
         },
       },
-      formatter: function (value) {
+      formatter: function (value: number) {
         return value.toFixed(2);
       },
     },
@@ -137,7 +140,7 @@ watch(colorMode, () => {
 <template>
   <div>
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
-    <apexchart id="chart" ref="chart" type="area" :options="chartOptions" :series="series" />
+    <apexchart id="chart" ref="chart" height="300" type="area" :options="chartOptions" :series="series" />
   </div>
 </template>
 

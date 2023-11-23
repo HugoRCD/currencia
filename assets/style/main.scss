@@ -9,6 +9,14 @@
   width: 100% !important;
 }
 
+html.light {
+  background-color: #dfdfdf;
+}
+
+html.dark {
+  background-color: #0a0a0b;
+}
+
 @layer components {
   .app-background {
     @apply bg-[#F8F8F8];
@@ -39,5 +47,14 @@
     @apply bg-gradient-to-br bg-clip-text text-transparent;
     @apply from-black/90 to-black/30;
     @apply dark:from-white/90 dark:to-white/30;
+  }
+
+  .max-layout-width {
+    @apply max-w-[1700px] mx-auto;
+    @media (min-width: 1700px) {
+      border-radius: 1rem;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      @apply rounded-2xl shadow-md border border-gray-200 dark:border-gray-700;
+    }
   }
 }

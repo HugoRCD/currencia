@@ -3,7 +3,7 @@ import type { FunctionalComponent } from "vue";
 
 type Where = "home" | "app" | "user" | "admin";
 
-type Navigation = {
+export type Navigation = {
   name: string;
   title: string;
   description: string;

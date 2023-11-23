@@ -90,21 +90,18 @@ onMounted(() => {
 <template>
   <div>
     <!-- Crypto -->
-    <div class="flex flex-col gap-3">
-      <h2 class="text-xl font-bold">Latest Crypto Price</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        <ChartCryptoCard v-for="(crypto, index) in cryptos.slice(0, 12)" :key="crypto.name" :cryptoItem="crypto" :index="index" />
-      </div>
+    <div style="--stagger: 1" data-animate class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <ChartCryptoCard v-for="(crypto, index) in cryptos.slice(0, 12)" :key="crypto.name" :cryptoItem="crypto" :index="index" />
     </div>
 
     <!-- Overall Chart -->
-    <div class="flex flex-col gap-3 mt-8">
+    <div style="--stagger: 2" data-animate class="flex flex-col gap-3 mt-8">
       <h2 class="text-xl font-bold">Overall Market Chart</h2>
       <ChartLine :categories="categorie" :series="series" />
     </div>
 
     <!-- Latest News -->
-    <div class="flex flex-col gap-3 mt-8">
+    <div style="--stagger: 3" data-animate class="flex flex-col gap-3 mt-8">
       <h2 class="text-xl font-bold">Latest News</h2>
       <div class="h-64 flex flex-col justify-center items-center">
         <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">No news yet.</h3>

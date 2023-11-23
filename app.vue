@@ -20,8 +20,9 @@ useHead({
 
 <template>
   <Html :lang="$i18n.locale">
-    <Body class="bg-white dark:bg-zinc-950 selection:bg-neutral-200 dark:selection:bg-neutral-700">
+    <Body class="selection:bg-neutral-200 dark:selection:bg-neutral-700 relative">
       <LayoutScrollToTop />
+      <LayoutHelpCenter class="absolute bottom-3 right-2 sm:right-6 z-20" />
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>

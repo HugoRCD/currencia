@@ -30,8 +30,8 @@ const articles = [
 <template>
   <div class="w-full">
     <div class="flex flex-col gap-3">
-      <NewsMainActu :articles="articles" />
-      <NewsListActu :articles="articles" class="mt-8" />
+      <NewsMainActu style="--stagger: 1" data-animate :articles="articles" />
+      <NewsListActu style="--stagger: 2" data-animate :articles="articles" class="mt-8" />
     </div>
   </div>
 </template>

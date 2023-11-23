@@ -122,9 +122,16 @@ export interface ApexOptions {
     shared?: boolean;
     intersect?: boolean;
     followCursor?: boolean;
+    custom?: (options: never) => void;
     x: {
       show?: boolean;
       format?: string;
+      formatter?: (value: number) => string;
+    };
+    y: {
+      title?: {
+        formatter?: (seriesName: string) => string;
+      };
       formatter?: (value: number) => string;
     };
   };
