@@ -2,7 +2,7 @@
 const user = ref({
   username: "HugoRCD",
   email: "hrichard206@gmail.com",
-  avatar: "https://avatars.githubusercontent.com/u/71938701?v=4",
+  avatar: "https://hrcd.fr/_vercel/image?url=/assets/hugo-richard-light.webp&w=96&q=100",
 });
 
 const login = {
@@ -43,17 +43,25 @@ const authModal = ref(false);
       <UModal v-model="open">
         <UCard>
           <template #header>
-            <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome back, {{ user.username }}</h3>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Here you can edit your information.</p>
+            <div class="flex justify-between items-center">
+              <div class="flex flex-col">
+                <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome back, {{ user.username }}</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Here you can edit your information.</p>
+              </div>
+              <UAvatar :src="user.avatar" size="xl" />
+            </div>
           </template>
-          <div class="space-y-3">
+          <form class="space-y-3">
+            <UFormGroup label="Avatar" name="avatar">
+              <UInput v-model="user.avatar" />
+            </UFormGroup>
             <UFormGroup label="Username" name="username">
               <UInput v-model="user.username" />
             </UFormGroup>
             <UFormGroup label="Email" name="name">
               <UInput v-model="user.email" />
             </UFormGroup>
-          </div>
+          </form>
           <template #footer>
             <div class="flex gap-2 justify-end">
               <UButton variant="soft" @click="open = false"> Cancel</UButton>
