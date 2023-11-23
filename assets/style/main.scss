@@ -4,25 +4,20 @@
 
 @import "animation";
 
-#__nuxt, #__layout {
+#__nuxt, #__layout, html, body {
   height: 100% !important;
   width: 100% !important;
 }
 
 html.light {
-  background-color: #dfdfdf;
+  background-color: #F8F8F8;
 }
 
 html.dark {
-  background-color: #0a0a0b;
+  background-color: #131113;
 }
 
 @layer components {
-  .app-background {
-    @apply bg-[#F8F8F8];
-    @apply dark:bg-[#161618];
-  }
-
   .main-container {
     @apply bg-[#FFFFFF] border-[#E5E7EB];
     @apply dark:bg-[#1C1C1E] dark:border-[#303032];
@@ -50,11 +45,6 @@ html.dark {
   }
 
   .max-layout-width {
-    @apply max-w-[1700px] mx-auto;
-    @media (min-width: 1700px) {
-      border-radius: 1rem;
-      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-      @apply rounded-2xl shadow-md border border-gray-200 dark:border-gray-700;
-    }
+    @apply max-w-[1700px] mx-auto rounded-2xl;
   }
 }

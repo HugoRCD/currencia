@@ -11,8 +11,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="main-container flex flex-col flex-1 overflow-y-auto rounded-tl-2xl shadow-md border border-inherit">
-    <div class="flex flex-col gap-1 border-b border-inherit px-5 py-2">
+  <div class="main-container flex flex-col flex-1 custom-overflow overflow-y-auto rounded-t-2xl shadow-md border border-inherit">
+    <div class="flex flex-col gap-1 border-b border-inherit px-5 py-2 fixed h-11 rounded-tl-2xl xl:rounded-t-2xl main-container z-10 w-full max-w-[1432px]">
       <div class="flex gap-2 items-center">
         <Transition name="slide-to-bottom" mode="out-in">
           <component :is="navigation.icon" class="w-5 h-5 font-bold" :key="navigation.icon" />
@@ -24,10 +24,16 @@ defineProps({
         </Transition>
       </div>
     </div>
-    <div class="flex flex-col gap-4 px-4 mt-6">
+    <div class="flex flex-col gap-4 px-4 mt-16">
       <slot />
     </div>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.custom-overflow {
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+}
+</style>

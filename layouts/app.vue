@@ -8,7 +8,7 @@ const currentPage = computed(() => {
 </script>
 
 <template>
-  <div class="flex app-background pt-2 h-screen">
+  <div class="flex h-screen pt-2 max-layout-width">
     <LayoutSidebar />
     <LayoutSectionWrapper :navigation="currentPage">
       <slot />
