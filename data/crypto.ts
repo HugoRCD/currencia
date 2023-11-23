@@ -1,5 +1,6 @@
 export type Crypto = {
   name: string;
+  description?: string;
   symbol: string;
   logo: string;
 };
@@ -45,17 +46,20 @@ export type Crypto = {
 
  BCH: https://cryptologos.cc/logos/bitcoin-cash-bch-logo.svg*/
 
-
 export const cryptos: Crypto[] = [
   {
     name: "Bitcoin",
     symbol: "BTC",
     logo: "https://cryptologos.cc/logos/bitcoin-btc-logo.svg",
+    description:
+      "Bitcoin is a decentralized digital currency without a central bank or single administrator that can be sent from user to user on the peer-to-peer bitcoin network without the need for intermediaries.",
   },
   {
     name: "Ethereum",
     symbol: "ETH",
     logo: "https://cryptologos.cc/logos/ethereum-eth-logo.svg",
+    description:
+      "Ethereum is a decentralized, open-source blockchain with smart contract functionality. Ether (ETH or Ξ) is the native cryptocurrency of the platform.",
   },
   {
     name: "Tether",
@@ -117,4 +121,4 @@ export const cryptos: Crypto[] = [
     symbol: "DOT",
     logo: "https://cryptologos.cc/logos/polkadot-new-dot-logo.svg",
   },
-]
+];
