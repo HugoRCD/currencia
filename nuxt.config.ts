@@ -1,4 +1,8 @@
 export default defineNuxtConfig({
+  app: {
+    layoutTransition: { name: "fade", mode: "out-in" },
+  },
+
   routeRules: {
     "/": { isr: true, prerender: true },
     "/app/**": { ssr: false },

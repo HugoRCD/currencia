@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: "app-crypto",
+  layout: "app",
 });
 </script>
 

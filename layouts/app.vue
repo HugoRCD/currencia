@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
+import { ExclamationTriangleIcon, ChartBarIcon } from "@heroicons/vue/24/outline";
 const pages = [...getNavigation("app"), ...getNavigation("admin")];
+const route = useRoute();
 const currentPage = computed(() => {
-  const page = pages.find((page) => page.to === useRoute().path);
-  return page || { title: "404", description: "Page not found", icon: ExclamationTriangleIcon, to: "/404", name: "404" };
+  const page = pages.find((page) => page.to === route.path);
+  const fallback = route.path.includes("/app/crypto")
+    ? { title: "Crypto details", description: "Crypto", icon: ChartBarIcon, to: "/app/crypto", name: "crypto" }
+    : { title: "404", description: "Page not found", icon: ExclamationTriangleIcon, to: "/404", name: "404" };
+  return page ?? fallback;
 });
 </script>
 

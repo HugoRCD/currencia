@@ -11,7 +11,7 @@ const price = getRandomInt(20000, 40000);
 </script>
 
 <template>
-  <div class="flex flex-col p-4 gap-8">
+  <div class="flex flex-col gap-8">
     <div class="flex flex-col gap-4">
       <div class="flex flex-row items-center gap-3">
         <img :src="crypto.logo" class="w-7 h-7" :alt="crypto.name" />
