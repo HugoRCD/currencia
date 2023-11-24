@@ -12,7 +12,7 @@ const currentPage = computed(() => {
 </script>
 
 <template>
-  <div class="flex h-screen pt-2 max-layout-width">
+  <div class="flex h-screen pt-4 max-layout-width">
     <LayoutSidebar />
     <LayoutSectionWrapper :navigation="currentPage">
       <slot />
