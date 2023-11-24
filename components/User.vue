@@ -40,18 +40,17 @@ const authModal = ref(false);
           {{ user.username }}
         </span>
       </UButton>
-      <UModal v-model="open">
-        <UCard>
-          <template #header>
-            <div class="flex justify-between items-center">
-              <div class="flex flex-col">
-                <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome back, {{ user.username }}</h3>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Here you can edit your information.</p>
-              </div>
-              <UAvatar :src="user.avatar" size="xl" />
+      <UModal v-model="open" :ui="{ background: 'bg-transparent dark:bg-transparent', base: 'h-full' }" fullscreen>
+        <div class="flex flex-col gap-5 p-5 relative justify-center items-center h-full">
+          <div class="absolute bg-white dark:bg-neutral-900 rounded-full w-full h-full -z-10 blur-[40px] lg:blur-[150px] opacity-90 lg:opacity-100"></div>
+          <div class="flex flex-col justify-center items-center gap-3">
+            <UAvatar :src="user.avatar" size="xl" />
+            <div class="flex flex-col justify-center items-center gap-1">
+              <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome back, {{ user.username }}</h3>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Here you can edit your information.</p>
             </div>
-          </template>
-          <form class="space-y-3">
+          </div>
+          <form class="space-y-3 w-full max-w-[400px]">
             <UFormGroup label="Avatar" name="avatar">
               <UInput v-model="user.avatar" />
             </UFormGroup>
@@ -62,13 +61,11 @@ const authModal = ref(false);
               <UInput v-model="user.email" />
             </UFormGroup>
           </form>
-          <template #footer>
-            <div class="flex gap-2 justify-end">
-              <UButton variant="soft" @click="open = false"> Cancel</UButton>
-              <UButton>Save</UButton>
-            </div>
-          </template>
-        </UCard>
+          <div class="flex gap-2 justify-end">
+            <UButton variant="soft" @click="open = false"> Cancel</UButton>
+            <UButton>Save</UButton>
+          </div>
+        </div>
       </UModal>
     </div>
     <div class="flex-1" v-else>
