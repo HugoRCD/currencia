@@ -1,9 +1,11 @@
 <script setup lang="ts">
-const user = ref({
+/*const user = ref({
   username: "HugoRCD",
   email: "hrichard206@gmail.com",
-  avatar: "https://hrcd.fr/_vercel/image?url=/assets/hugo-richard-light.webp&w=96&q=100",
-});
+  avatar: "https://hrcd.fr/_vercel/image?url=/assets/hugo-richard-light.webp&w=256&q=100",
+});*/
+
+const user = ref();
 
 const login = {
   username: "HugoRCD",
@@ -42,32 +44,30 @@ const authModal = ref(false);
       </UButton>
       <UModal v-model="open">
         <UCard>
-          <template #header>
-            <div class="flex justify-between items-center">
-              <div class="flex flex-col">
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-col justify-center items-center gap-3">
+              <UAvatar :src="user.avatar" size="3xl" imgClass="object-cover" />
+              <div class="flex flex-col justify-center items-center gap-1">
                 <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome back, {{ user.username }}</h3>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Here you can edit your information.</p>
               </div>
-              <UAvatar :src="user.avatar" size="xl" />
             </div>
-          </template>
-          <form class="space-y-3">
-            <UFormGroup label="Avatar" name="avatar">
-              <UInput v-model="user.avatar" />
-            </UFormGroup>
-            <UFormGroup label="Username" name="username">
-              <UInput v-model="user.username" />
-            </UFormGroup>
-            <UFormGroup label="Email" name="name">
-              <UInput v-model="user.email" />
-            </UFormGroup>
-          </form>
-          <template #footer>
-            <div class="flex gap-2 justify-end">
+            <form class="space-y-3">
+              <UFormGroup label="Avatar" name="avatar">
+                <UInput v-model="user.avatar" />
+              </UFormGroup>
+              <UFormGroup label="Username" name="username">
+                <UInput v-model="user.username" />
+              </UFormGroup>
+              <UFormGroup label="Email" name="name">
+                <UInput v-model="user.email" />
+              </UFormGroup>
+            </form>
+            <div class="flex gap-2 justify-end mt-4">
               <UButton variant="soft" @click="open = false"> Cancel</UButton>
               <UButton>Save</UButton>
             </div>
-          </template>
+          </div>
         </UCard>
       </UModal>
     </div>
@@ -77,41 +77,42 @@ const authModal = ref(false);
       </UButton>
       <UModal v-model="authModal">
         <UCard>
-          <template #header>
-            <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome</h3>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Please sign in or sign up to continue.</p>
-          </template>
-          <UTabs :items="items">
-            <template #login>
-              <form class="flex flex-col gap-3">
-                <UFormGroup label="Username" name="username">
-                  <UInput v-model="login.username" />
-                </UFormGroup>
-                <UFormGroup label="Password" name="password">
-                  <UInput v-model="login.password" />
-                </UFormGroup>
-              </form>
-            </template>
-            <template #signup>
-              <form class="flex flex-col gap-3">
-                <UFormGroup label="Username" name="username">
-                  <UInput v-model="signup.username" />
-                </UFormGroup>
-                <UFormGroup label="Email" name="email">
-                  <UInput v-model="signup.email" />
-                </UFormGroup>
-                <UFormGroup label="Password" name="password">
-                  <UInput v-model="signup.password" />
-                </UFormGroup>
-              </form>
-            </template>
-          </UTabs>
-          <template #footer>
-            <div class="flex gap-2 justify-end">
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-col justify-center items-center gap-1">
+              <UAvatar size="3xl" icon="i-heroicons-user-circle" />
+              <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Please sign in or sign up to continue.</p>
+            </div>
+            <UTabs :items="items" class="mt-4">
+              <template #login>
+                <form class="flex flex-col gap-3">
+                  <UFormGroup label="Username" name="username">
+                    <UInput v-model="login.username" />
+                  </UFormGroup>
+                  <UFormGroup label="Password" name="password">
+                    <UInput v-model="login.password" />
+                  </UFormGroup>
+                </form>
+              </template>
+              <template #signup>
+                <form class="flex flex-col gap-3">
+                  <UFormGroup label="Username" name="username">
+                    <UInput v-model="signup.username" />
+                  </UFormGroup>
+                  <UFormGroup label="Email" name="email">
+                    <UInput v-model="signup.email" />
+                  </UFormGroup>
+                  <UFormGroup label="Password" name="password">
+                    <UInput v-model="signup.password" />
+                  </UFormGroup>
+                </form>
+              </template>
+            </UTabs>
+            <div class="flex gap-2 justify-end mt-4">
               <UButton variant="soft" @click="authModal = false"> Cancel</UButton>
               <UButton>Save</UButton>
             </div>
-          </template>
+          </div>
         </UCard>
       </UModal>
     </div>
