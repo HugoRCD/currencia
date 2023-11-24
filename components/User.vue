@@ -1,11 +1,11 @@
 <script setup lang="ts">
-/*const user = ref({
+const user = ref({
   username: "HugoRCD",
   email: "hrichard206@gmail.com",
   avatar: "https://hrcd.fr/_vercel/image?url=/assets/hugo-richard-light.webp&w=256&q=100",
-});*/
+});
 
-const user = ref();
+/*const user = ref();*/
 
 const login = {
   username: "HugoRCD",
