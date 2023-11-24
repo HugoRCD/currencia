@@ -13,11 +13,11 @@ const price = getRandomInt(20000, 40000);
 <template>
   <div class="flex flex-col gap-8">
     <div class="flex flex-col gap-4">
-      <div class="flex flex-row items-center gap-3">
+      <div style="--stagger: 1; --delay: 100ms" data-animate class="flex flex-row items-center gap-3">
         <img :src="crypto.logo" class="w-7 h-7" :alt="crypto.name" />
         <h1 class="text-2xl font-bold text-gray-700 dark:text-gray-200" :key="crypto">{{ crypto.name }}</h1>
       </div>
-      <div class="flex flex-col gap-2">
+      <div style="--stagger: 2; --delay: 100ms" data-animate class="flex flex-col gap-2">
         <div class="flex flex-row items-center">
           <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">{{ price }}</span>
           <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">$</span>
@@ -27,10 +27,10 @@ const price = getRandomInt(20000, 40000);
         </div>
       </div>
     </div>
-    <ChartLine />
-    <div v-if="crypto.description" class="flex flex-col gap-2">
+    <ChartLine style="--stagger: 3; --delay: 100ms" data-animate />
+    <div style="--stagger: 4; --delay: 100ms" data-animate v-if="crypto.description" class="flex flex-col gap-2">
       <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Overview</h3>
-      <p class="text-gray-500 dark:text-gray-400">{{ crypto.description }}</p>
+      <p class="text-gray-500 dark:text-gray-400 leading-relaxed text-sm">{{ crypto.description }}</p>
     </div>
   </div>
 </template>

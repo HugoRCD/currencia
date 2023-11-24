@@ -26,7 +26,7 @@ defineProps({
 <template>
   <div class="nav-item" @click="$router.push(nav_item.to)" :class="{ active: active }">
     <component :is="nav_item.icon" class="w-5 h-5 text-gray-500 dark:text-gray-400" />
-    <span class="text-sm font-medium hidden sm:block" v-if="open">
+    <span class="text-sm font-medium hidden sm:block text-gray-500 dark:text-gray-400" v-if="open">
       {{ nav_item.name }}
     </span>
   </div>
