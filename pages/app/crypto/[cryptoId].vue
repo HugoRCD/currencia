@@ -8,6 +8,7 @@ function getRandomInt(min: number, max: number = 100) {
 }
 
 const price = getRandomInt(20000, 40000);
+const variation = getRandomInt(-30, 30);
 </script>
 
 <template>
@@ -19,11 +20,11 @@ const price = getRandomInt(20000, 40000);
       </div>
       <div style="--stagger: 2; --delay: 100ms" data-animate class="flex flex-col gap-2">
         <div class="flex flex-row items-center">
-          <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">{{ price }}</span>
+          <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">{{ price.toLocaleString() }}</span>
           <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">$</span>
         </div>
         <div class="flex flex-row items-center">
-          <span :class="price > 0 ? 'positive' : 'negative'" class="text-sm font-semibold"> {{ price }}% </span>
+          <span :class="variation > 0 ? 'positive' : 'negative'" class="text-sm font-semibold"> {{ variation.toLocaleString() }}% </span>
         </div>
       </div>
     </div>

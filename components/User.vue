@@ -38,7 +38,7 @@ const authModal = ref(false);
   <div class="flex-1">
     <div class="flex-1" v-if="user">
       <UButton color="white" variant="soft" size="sm" class="flex-1 text-left font-semibold" @click="open = true">
-        <UAvatar size="sm" :src="user.avatar" />
+        <UAvatar size="sm" :src="user.avatar" imgClass="object-cover" />
         <span class="whitespace-nowrap">
           {{ user.username }}
         </span>
