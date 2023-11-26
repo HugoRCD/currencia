@@ -4,12 +4,24 @@ export enum Role {
 }
 
 export type User = {
-  id: string;
+  id: number;
   username: string;
   email: string;
   password: string;
   avatar: string;
   role: Role;
+  authToken: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type publicUser = {
+  id: number;
+  username: string;
+  email: string;
+  avatar: string;
+  role: Role;
+  authToken: string;
   createdAt: Date;
   updatedAt: Date;
 };

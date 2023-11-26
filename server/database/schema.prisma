@@ -1,0 +1,60 @@
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  username  String     @unique
+  email     String     @unique
+  password  String
+  avatar    String     @default("https://i.imgur.com/6VBx3io.png")
+  role      String     @default("user")
+  authToken String?    @unique @db.VarChar(500)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  portfolio Portfolio?
+}
+
+model Crypto {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique
+  symbol        String          @unique
+  logo          String
+  description   String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  portfolioData PortfolioData[]
+}
+
+model Portfolio {
+  id            Int             @id @default(autoincrement())
+  userId        Int             @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  user          User            @relation(fields: [userId], references: [id])
+  portfolioData PortfolioData[]
+
+  @@index([userId])
+}
+
+model PortfolioData {
+  id          Int       @id @default(autoincrement())
+  portfolioId Int
+  userId      Int
+  cryptoId    Int
+  price       Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  crypto      Crypto    @relation(fields: [cryptoId], references: [id])
+
+  @@index([portfolioId])
+  @@index([userId])
+  @@index([cryptoId])
+}

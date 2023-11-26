@@ -18,6 +18,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     private: {
+      authSecret: process.env.AUTH_TOKEN_SECRET,
       resendApiKey: process.env.RESEND_API_KEY,
     },
   },

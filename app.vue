@@ -16,6 +16,8 @@ useHead({
     },
   ],
 });
+
+await useUser();
 </script>
 
 <template>
