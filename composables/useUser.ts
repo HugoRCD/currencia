@@ -63,10 +63,8 @@ export async function useLogout() {
 }
 
 export async function useUser(): Promise<publicUser | null> {
-  const authCookie = useCookie("authToken").value;
+  const authCookie = useCookie("authToken");
   const user = useUserStore().getUser;
-  console.log("user", user);
-  console.log("authCookie", authCookie);
 
   if (authCookie && !user) {
     const cookieHeaders = useRequestHeaders(["cookie"]);
@@ -74,7 +72,6 @@ export async function useUser(): Promise<publicUser | null> {
       method: "GET",
       headers: cookieHeaders as HeadersInit,
     });
-    console.log(data);
     if (!data.value) {
       return null;
     }

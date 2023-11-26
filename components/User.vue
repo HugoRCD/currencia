@@ -45,7 +45,6 @@ const authModal = ref(false);
       </UButton>
       <UModal v-model="open">
         <UCard>
-          {{ user }}
           <div class="flex flex-col gap-3">
             <div class="flex flex-col justify-center items-center gap-3">
               <UAvatar :src="user.avatar" size="3xl" imgClass="object-cover" />
@@ -90,10 +89,10 @@ const authModal = ref(false);
               <template #login>
                 <form class="flex flex-col gap-3" @submit.prevent="useLogin(login)">
                   <UFormGroup label="Username" name="username">
-                    <UInput v-model="login.username" />
+                    <UInput v-model="login.username" type="username" />
                   </UFormGroup>
                   <UFormGroup label="Password" name="password">
-                    <UInput v-model="login.password" />
+                    <UInput v-model="login.password" type="password" />
                   </UFormGroup>
                   <div class="flex gap-2 justify-end mt-4">
                     <UButton variant="soft" @click="authModal = false">Cancel</UButton>
@@ -104,13 +103,13 @@ const authModal = ref(false);
               <template #signup>
                 <form class="flex flex-col gap-3" @submit.prevent="useSignup(signup)">
                   <UFormGroup label="Username" name="username">
-                    <UInput v-model="signup.username" />
+                    <UInput v-model="signup.username" type="username" />
                   </UFormGroup>
                   <UFormGroup label="Email" name="email">
-                    <UInput v-model="signup.email" />
+                    <UInput v-model="signup.email" type="email" />
                   </UFormGroup>
                   <UFormGroup label="Password" name="password">
-                    <UInput v-model="signup.password" />
+                    <UInput v-model="signup.password" type="password" />
                   </UFormGroup>
                   <div class="flex gap-2 justify-end mt-4">
                     <UButton variant="soft" @click="authModal = false">Cancel</UButton>
