@@ -7,7 +7,7 @@ function getRandomInt(min: number, max: number = 100) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const price = getRandomInt(20000, 40000);
+const price = getRandomInt(20000, 33000);
 const variation = getRandomInt(-30, 30);
 </script>
 

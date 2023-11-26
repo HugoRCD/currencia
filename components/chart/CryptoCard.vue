@@ -21,8 +21,8 @@ const crypto = reactive({
   name: props.cryptoItem.name,
   symbol: props.cryptoItem.symbol,
   logo: props.cryptoItem.logo,
-  price: getRandomInt(120, 40000),
-  change: getRandomInt(-100, 100),
+  price: getRandomInt(120, 33000),
+  change: getRandomInt(-30, 30),
 });
 </script>
 
