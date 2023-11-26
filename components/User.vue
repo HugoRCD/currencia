@@ -1,8 +1,9 @@
 <script setup lang="ts">
-const user = ref({
-  username: "HugoRCD",
-  email: "hrichard206@gmail.com",
-  avatar: "https://hrcd.fr/_vercel/image?url=/assets/hugo-richard-light.webp&w=256&q=100",
+import { useSignup, useLogin, useLogout } from "~/composables/useUser";
+const userStore = useUserStore();
+
+const user = computed(() => {
+  return userStore.getUser;
 });
 
 /*const user = ref();*/
@@ -37,7 +38,7 @@ const authModal = ref(false);
   <div class="flex-1">
     <div class="flex-1" v-if="user">
       <UButton color="white" variant="soft" size="sm" class="flex-1 text-left font-semibold" @click="open = true">
-        <UAvatar size="sm" :src="user.avatar" />
+        <UAvatar size="sm" :src="user.avatar" imgClass="object-cover" />
         <span class="whitespace-nowrap">
           {{ user.username }}
         </span>
@@ -64,7 +65,8 @@ const authModal = ref(false);
               </UFormGroup>
             </form>
             <div class="flex gap-2 justify-end mt-4">
-              <UButton variant="soft" @click="open = false"> Cancel</UButton>
+              <UButton variant="soft" color="red" @click="useLogout">Logout</UButton>
+              <UButton variant="soft" @click="open = false">Cancel</UButton>
               <UButton>Save</UButton>
             </div>
           </div>
@@ -73,7 +75,7 @@ const authModal = ref(false);
     </div>
     <div class="flex-1" v-else>
       <UButton color="white" variant="soft" size="sm" class="flex-1 text-left font-semibold" @click="authModal = true">
-        <span class="whitespace-nowrap"> Sign in </span>
+        <span class="whitespace-nowrap">Sign in</span>
       </UButton>
       <UModal v-model="authModal">
         <UCard>
@@ -85,33 +87,37 @@ const authModal = ref(false);
             </div>
             <UTabs :items="items" class="mt-4">
               <template #login>
-                <form class="flex flex-col gap-3">
+                <form class="flex flex-col gap-3" @submit.prevent="useLogin(login)">
                   <UFormGroup label="Username" name="username">
-                    <UInput v-model="login.username" />
+                    <UInput v-model="login.username" type="username" />
                   </UFormGroup>
                   <UFormGroup label="Password" name="password">
-                    <UInput v-model="login.password" />
+                    <UInput v-model="login.password" type="password" />
                   </UFormGroup>
+                  <div class="flex gap-2 justify-end mt-4">
+                    <UButton variant="soft" @click="authModal = false">Cancel</UButton>
+                    <UButton type="submit">Save</UButton>
+                  </div>
                 </form>
               </template>
               <template #signup>
-                <form class="flex flex-col gap-3">
+                <form class="flex flex-col gap-3" @submit.prevent="useSignup(signup)">
                   <UFormGroup label="Username" name="username">
-                    <UInput v-model="signup.username" />
+                    <UInput v-model="signup.username" type="username" />
                   </UFormGroup>
                   <UFormGroup label="Email" name="email">
-                    <UInput v-model="signup.email" />
+                    <UInput v-model="signup.email" type="email" />
                   </UFormGroup>
                   <UFormGroup label="Password" name="password">
-                    <UInput v-model="signup.password" />
+                    <UInput v-model="signup.password" type="password" />
                   </UFormGroup>
+                  <div class="flex gap-2 justify-end mt-4">
+                    <UButton variant="soft" @click="authModal = false">Cancel</UButton>
+                    <UButton type="submit">Save</UButton>
+                  </div>
                 </form>
               </template>
             </UTabs>
-            <div class="flex gap-2 justify-end mt-4">
-              <UButton variant="soft" @click="authModal = false"> Cancel</UButton>
-              <UButton>Save</UButton>
-            </div>
           </div>
         </UCard>
       </UModal>

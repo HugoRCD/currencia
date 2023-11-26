@@ -1,5 +1,5 @@
+import { adminCheck } from "~/server/app/userService";
 import { H3Event } from "h3";
-/*import { adminCheck } from "~/server/app/userService";*/
 
 export default eventHandler(async (event) => {
   const isAllowed = await protectAdminRoute(event);
@@ -21,6 +21,6 @@ async function protectAdminRoute(event: H3Event): Promise<boolean> {
   if (event.path === undefined || !protectedRoutes.some((route) => event.path?.startsWith(route))) {
     return true;
   } else {
-    return true; // await adminCheck(event);
+    return await adminCheck(event);
   }
 }

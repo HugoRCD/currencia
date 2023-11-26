@@ -93,7 +93,8 @@ const chartOptions = {
   tooltip: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-      return '<div class="px-4 py-1">' + "<span>" + series[seriesIndex][dataPointIndex] + "</span>" + "</div>";
+      const value = series[seriesIndex][dataPointIndex] as number;
+      return '<div class="px-4 py-1">' + "<span>" + value.toLocaleString() + "$</span>" + "</div>";
     },
     x: {
       format: "dd/MM/yy HH:mm",

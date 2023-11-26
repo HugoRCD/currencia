@@ -1,6 +1,6 @@
-import { H3Event } from "h3";
-/*import { getUserByAuthToken } from "~/server/app/userService";*/
+import { getUserByAuthToken } from "~/server/app/userService";
 import { isString } from "@vueuse/core";
+import { H3Event } from "h3";
 
 export default eventHandler(async (event) => {
   const isAllowed = await protectAuthRoute(event);
@@ -25,8 +25,8 @@ async function protectAuthRoute(event: H3Event): Promise<boolean> {
     const authToken = getCookie(event, "authToken");
     const hasAuthToken = isString(authToken);
     if (!hasAuthToken) return false;
-    /*const user = await getUserByAuthToken(authToken);
-    if (!user) return false;*/
+    const user = await getUserByAuthToken(authToken);
+    if (!user) return false;
   }
   return true;
 }

@@ -2,6 +2,7 @@ export type Crypto = {
   id: string;
   name: string;
   symbol: string;
+  logo: string;
   description: string;
   createdAt: Date;
   updatedAt: Date;

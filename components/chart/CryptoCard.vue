@@ -43,7 +43,7 @@ const crypto = reactive({
     </div>
     <div class="flex flex-col gap-1">
       <div class="flex flex-row items-center">
-        <span class="text-2xl font-semibold text-gray-700 dark:text-gray-200">{{ crypto.price }}</span>
+        <span class="text-2xl font-semibold text-gray-700 dark:text-gray-200">{{ crypto.price.toLocaleString() }}</span>
         <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">$</span>
       </div>
       <div class="flex flex-row items-center">
