@@ -4,6 +4,7 @@ import { isString } from "@vueuse/core";
 import { Role } from "~/types/User";
 import jwt from "jsonwebtoken";
 import { H3Event } from "h3";
+import bcrypt from "bcryptjs";
 
 export async function createUser(userData: CreateUserDto) {
   const foundUser = await prisma.user.findFirst({
@@ -24,7 +25,7 @@ export async function createUser(userData: CreateUserDto) {
       statusMessage: "User already exists",
     });
   }
-  const password = await Bun.password.hash(userData.password);
+  const password = await bcrypt.hash(userData.password, 10);
   const user = await prisma.user.create({
     data: {
       ...userData,
