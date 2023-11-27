@@ -39,7 +39,7 @@ const open = ref(true);
     </div>
     <div class="flex-1" />
     <!-- Bottom part -->
-    <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mb-4 sm:mb-0">
+    <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mb-4 sm:mb-0" :class="!open ? 'sm:flex-col' : ''">
       <UTooltip text="Change theme">
         <ThemeToggle />
       </UTooltip>

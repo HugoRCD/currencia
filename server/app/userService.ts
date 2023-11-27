@@ -1,4 +1,4 @@
-import type { CreateUserDto, UpdateUserDto, User } from "~/types/User";
+import type { CreateUserDto, UpdateUserDto } from "~/types/User";
 import prisma, { formatUser } from "~/server/database/client";
 import { isString } from "@vueuse/core";
 import { Role } from "~/types/User";
@@ -54,7 +54,7 @@ export async function getUserByLogin(login: string) {
 
 export async function getAllUsers() {
   const users = await prisma.user.findMany();
-  return users.map((user: User) => {
+  return users.map((user) => {
     return formatUser(user);
   });
 }
@@ -101,7 +101,7 @@ export async function adminCheck(event: H3Event): Promise<boolean> {
 }
 
 export async function deleteUser(userId: number) {
-  return await prisma.user.delete({
+  return prisma.user.delete({
     where: {
       id: userId,
     },
