@@ -4,9 +4,45 @@ const colorMode = useColorMode();
 
 const dayjs = useDayjs();
 
+/*type TimeFrame = {
+  value: string;
+  series: {
+    start: number; // timestamp
+    end: number; // timestamp
+  };
+};*/
+
 const timeframe = ref<TimeFrame>({
   value: "3M",
   series: getCurrent3Months(),
+});
+
+const firstTimeframeValue = computed(() => {
+  const start = timeframe.value.series.start;
+  const seriesData = series[0].data;
+
+  for (let i = 0; i < seriesData.length; i++) {
+    const dataPoint = seriesData[i];
+    if (dataPoint.x >= start) {
+      return dataPoint.y;
+    }
+  }
+
+  return null; // Si aucune valeur n'est trouvée dans la plage de temps sélectionnée
+});
+
+const lastTimeframeValue = computed(() => {
+  const end = timeframe.value.series.end;
+  const seriesData = series[0].data;
+
+  for (let i = seriesData.length - 1; i >= 0; i--) {
+    const dataPoint = seriesData[i];
+    if (dataPoint.x <= end) {
+      return dataPoint.y;
+    }
+  }
+
+  return null; // Si aucune valeur n'est trouvée dans la plage de temps sélectionnée
 });
 
 const series = [
@@ -16,6 +52,8 @@ const series = [
 ];
 
 const chart = ref();
+
+const currentValue = ref("");
 
 function updateTimeline() {
   const start = timeframe.value.series.start;
@@ -94,7 +132,8 @@ const chartOptions = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
       const value = series[seriesIndex][dataPointIndex] as number;
-      return '<div class="px-4 py-1">' + "<span>" + value.toLocaleString() + "$</span>" + "</div>";
+      currentValue.value = value.toLocaleString();
+      return "";
     },
     x: {
       format: "dd/MM/yy HH:mm",
@@ -136,10 +175,17 @@ watch(colorMode, () => {
     },
   });
 });
+
+const emit = defineEmits(["update:currentValue"]);
+
+watch(currentValue, () => {
+  emit("update:currentValue", currentValue.value);
+});
 </script>
 
 <template>
   <div>
+    <div class="flex justify-between items-center">{{ firstTimeframeValue }} - {{ lastTimeframeValue }}</div>
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
     <apexchart id="chart" ref="chart" height="300" type="area" :options="chartOptions" :series="series" />
   </div>

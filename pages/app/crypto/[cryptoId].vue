@@ -9,6 +9,12 @@ function getRandomInt(min: number, max: number = 100) {
 
 const price = getRandomInt(20000, 33000);
 const variation = getRandomInt(-30, 30);
+const currentValue = ref("");
+
+const displayedPrice = computed(() => {
+  if (!currentValue.value) return price;
+  return currentValue.value.split(",")[0];
+});
 </script>
 
 <template>
@@ -20,7 +26,7 @@ const variation = getRandomInt(-30, 30);
       </div>
       <div style="--stagger: 2; --delay: 100ms" data-animate class="flex flex-col gap-2">
         <div class="flex flex-row items-center">
-          <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">{{ price.toLocaleString() }}</span>
+          <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">{{ displayedPrice.toLocaleString() }}</span>
           <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">$</span>
         </div>
         <div class="flex flex-row items-center">
@@ -28,7 +34,13 @@ const variation = getRandomInt(-30, 30);
         </div>
       </div>
     </div>
-    <ChartLine style="--stagger: 3; --delay: 100ms" data-animate />
+    <ChartLine
+      style="--stagger: 3; --delay: 100ms"
+      data-animate
+      @update:currentValue="currentValue = $event"
+      @mouseout="currentValue = price.toLocaleString()"
+      :price="price"
+    />
     <div style="--stagger: 4; --delay: 100ms" data-animate v-if="crypto.description" class="flex flex-col gap-2">
       <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Overview</h3>
       <p class="text-gray-500 dark:text-gray-400 leading-relaxed text-sm">{{ crypto.description }}</p>
