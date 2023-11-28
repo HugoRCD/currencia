@@ -1,7 +1,4 @@
 export default defineNuxtRouteMiddleware(async () => {
-  /*await useUser();
   const user = useUserStore().getUser;
-  if (user) {
-    return "/app/settings";
-  }*/
+  if (user) return "/app/dashboard";
 });
