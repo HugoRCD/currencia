@@ -46,6 +46,13 @@ useHead({
 });
 
 await useUser();
+
+const route = useRoute();
+
+const userStore = useUserStore();
+if (route.path === "/" && userStore.getUser) {
+  navigateTo("/app/dashboard");
+}
 </script>
 
 <template>
