@@ -11,8 +11,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="main-container flex flex-col flex-1 rounded-t-2xl shadow-md border border-inherit">
-    <div class="flex flex-col gap-1 border-b border-inherit w-full px-5 py-2">
+  <div class="main-container flex flex-col flex-1 rounded-t-2xl overflow-hidden shadow-md border border-inherit">
+    <div class="flex flex-col gap-1 border-b border-inherit px-5 py-2">
       <div class="flex gap-2 items-center">
         <Transition name="slide-to-bottom" mode="out-in">
           <component :is="navigation.icon" class="w-5 h-5 font-bold" :key="navigation.icon" />
