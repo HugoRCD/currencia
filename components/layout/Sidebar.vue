@@ -4,6 +4,8 @@ import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
 const navigations = getNavigation("app");
 const admin_navigations = getNavigation("admin");
 
+const userStore = useUserStore();
+
 const open = ref(true);
 </script>
 
@@ -27,10 +29,10 @@ const open = ref(true);
         <LayoutNavItem v-for="nav in navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
       </div>
 
-      <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
+      <hr v-if="userStore.isAdmin" class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
 
       <!-- Admin -->
-      <div v-if="true" class="flex flex-col gap-2">
+      <div v-if="userStore.isAdmin" class="flex flex-col gap-2">
         <div class="text-xs text-center sm:text-left sm:text-sm font-semibold text-gray-500 dark:text-gray-400" :class="!open ? 'text-center' : 'text-left'">
           Admin
         </div>

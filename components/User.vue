@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useSignup, useLogin, useLogout } from "~/composables/useUser";
+import type { CreateUserDto, LoginUserDto } from "~/types/User";
 const userStore = useUserStore();
+
+const loading = ref(false);
+const authModal = ref(false);
 
 const user = computed(() => {
   return userStore.getUser;
 });
-
-/*const user = ref();*/
 
 const login = {
   username: "HugoRCD",
@@ -31,7 +33,26 @@ const items = [
 ];
 
 const open = ref(false);
-const authModal = ref(false);
+
+async function signin(login: LoginUserDto) {
+  loading.value = true;
+  await useLogin(login);
+  loading.value = false;
+  authModal.value = false;
+}
+
+async function createAccount(signup: CreateUserDto) {
+  loading.value = true;
+  await useSignup(signup);
+  loading.value = false;
+  authModal.value = false;
+}
+
+async function logout() {
+  loading.value = true;
+  await useLogout();
+  loading.value = false;
+}
 </script>
 
 <template>
@@ -64,10 +85,12 @@ const authModal = ref(false);
                 <UInput v-model="user.email" />
               </UFormGroup>
             </form>
-            <div class="flex gap-2 justify-end mt-4">
-              <UButton variant="soft" color="red" @click="useLogout">Logout</UButton>
-              <UButton variant="soft" @click="open = false">Cancel</UButton>
-              <UButton>Save</UButton>
+            <div class="flex gap-2 justify-between mt-4">
+              <UButton :loading="loading" variant="soft" color="red" @click="logout">Logout</UButton>
+              <div class="flex gap-2">
+                <UButton variant="soft" @click="open = false">Cancel</UButton>
+                <UButton :loading="loading">Save</UButton>
+              </div>
             </div>
           </div>
         </UCard>
@@ -87,7 +110,7 @@ const authModal = ref(false);
             </div>
             <UTabs :items="items" class="mt-4">
               <template #login>
-                <form class="flex flex-col gap-3" @submit.prevent="useLogin(login)">
+                <form class="flex flex-col gap-3" @submit.prevent="signin(login)">
                   <UFormGroup label="Username" name="username">
                     <UInput v-model="login.username" type="username" />
                   </UFormGroup>
@@ -96,12 +119,12 @@ const authModal = ref(false);
                   </UFormGroup>
                   <div class="flex gap-2 justify-end mt-4">
                     <UButton variant="soft" @click="authModal = false">Cancel</UButton>
-                    <UButton type="submit">Save</UButton>
+                    <UButton :loading="loading" type="submit">Save</UButton>
                   </div>
                 </form>
               </template>
               <template #signup>
-                <form class="flex flex-col gap-3" @submit.prevent="useSignup(signup)">
+                <form class="flex flex-col gap-3" @submit.prevent="createAccount(signup)">
                   <UFormGroup label="Username" name="username">
                     <UInput v-model="signup.username" type="username" />
                   </UFormGroup>
@@ -113,7 +136,7 @@ const authModal = ref(false);
                   </UFormGroup>
                   <div class="flex gap-2 justify-end mt-4">
                     <UButton variant="soft" @click="authModal = false">Cancel</UButton>
-                    <UButton type="submit">Save</UButton>
+                    <UButton :loading="loading" type="submit">Save</UButton>
                   </div>
                 </form>
               </template>

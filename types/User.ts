@@ -10,7 +10,7 @@ export type User = {
   password: string;
   avatar: string;
   role: Role;
-  authToken?: string;
+  authToken: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -21,7 +21,7 @@ export type publicUser = {
   email: string;
   avatar: string;
   role: Role;
-  authToken: string;
+  authToken: string | null;
   createdAt: Date;
   updatedAt: Date;
 };

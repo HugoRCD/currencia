@@ -11,12 +11,14 @@ export async function useSignup(createUserInput: CreateUserDto) {
       title: "Whoops! Something went wrong.",
       icon: "i-heroicons-x-circle",
       color: "red",
+      timeout: 2000,
     });
     return;
   }
   toast.add({
     title: "Signup successful!",
     icon: "i-heroicons-check-circle",
+    timeout: 2000,
   });
 }
 
@@ -29,8 +31,9 @@ export async function useLogin(loginInput: LoginUserDto) {
   if (data.value) {
     useUserStore().setUser(data.value);
     toast.add({
-      title: "Login successful!",
+      title: "Hello, " + data.value.username,
       icon: "i-heroicons-check-circle",
+      timeout: 2000,
     });
   }
   if (error.value || !data.value) {
@@ -38,6 +41,7 @@ export async function useLogin(loginInput: LoginUserDto) {
       title: "Whoops! Something went wrong.",
       icon: "i-heroicons-x-circle",
       color: "red",
+      timeout: 2000,
     });
   }
 }
@@ -52,6 +56,7 @@ export async function useLogout() {
       title: "Whoops! Something went wrong.",
       icon: "i-heroicons-x-circle",
       color: "red",
+      timeout: 2000,
     });
     return;
   }
@@ -59,6 +64,7 @@ export async function useLogout() {
   toast.add({
     title: "Logout successful!",
     icon: "i-heroicons-check-circle",
+    timeout: 2000,
   });
 }
 
