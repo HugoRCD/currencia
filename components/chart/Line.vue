@@ -45,10 +45,10 @@ const lastValue = computed(() => {
   return null;
 });
 
-/*const isPositive = computed(() => {
+const isPositive = computed(() => {
   if (!firstValue.value || !lastValue.value) return false;
   return lastValue.value > firstValue.value;
-});*/
+});
 
 const series = [
   {
@@ -99,6 +99,7 @@ const chartOptions = {
       fillTo: "end",
     },
   },
+  colors: ["var(--graph-curve)"],
   fill: {
     type: "gradient",
     gradient: {
@@ -175,9 +176,6 @@ const chartOptions = {
 
 watch(timeframe, () => {
   updateTimeline();
-  /*chart.value.chart.updateOptions({
-    colors: [isPositive.value ? "#10B981" : "#EF4444"],
-  });*/
 });
 
 watch(colorMode, () => {
@@ -225,8 +223,25 @@ function mouseOut() {
 <template>
   <div>
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
-    <apexchart id="chart" ref="chart" height="300" type="area" :options="chartOptions" :series="series" @mouseout="mouseOut" />
+    <apexchart
+      id="chart"
+      ref="chart"
+      height="300"
+      type="area"
+      :options="chartOptions"
+      :series="series"
+      @mouseout="mouseOut"
+      :class="isPositive ? 'positive' : 'negative'"
+    />
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.positive {
+  --graph-curve: #10b981;
+}
+
+.negative {
+  --graph-curve: #ef4444;
+}
+</style>
