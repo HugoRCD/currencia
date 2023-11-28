@@ -56,8 +56,8 @@ export const getRandomDailyData = (): ApexChartSeries["data"] => {
   const days = dayjs().diff(start, "day") + 1;
   const data = [] as ApexChartSeries["data"];
 
-  const rangeMin = -1000;
-  const rangeMax = 1000;
+  const rangeMin = 300;
+  const rangeMax = 10000;
 
   const getRandomValue = () => {
     return Math.floor(Math.random() * (rangeMax - rangeMin + 1)) + rangeMin;

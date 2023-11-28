@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import { displayNumberValue } from "~/types/ApexChart";
+import type { Variations } from "~/types/ApexChart";
 import { cryptos } from "~/data/crypto";
+
 const cryptoId = useRoute().params.cryptoId;
 const crypto = cryptos.find((crypto) => crypto.symbol === cryptoId);
 
-function getRandomInt(min: number, max: number = 100) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const price = getRandomInt(20000, 33000);
-const variation = getRandomInt(-30, 30);
+const variations = ref<Variations>({
+  percent: -1,
+  value: -1,
+});
+const price = ref(0);
 </script>
 
 <template>
@@ -20,15 +22,18 @@ const variation = getRandomInt(-30, 30);
       </div>
       <div style="--stagger: 2; --delay: 100ms" data-animate class="flex flex-col gap-2">
         <div class="flex flex-row items-center">
-          <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">{{ price.toLocaleString() }}</span>
-          <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">$</span>
+          <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">{{ displayNumberValue(price) }} $</span>
         </div>
-        <div class="flex flex-row items-center">
-          <span :class="variation > 0 ? 'positive' : 'negative'" class="text-sm font-semibold"> {{ variation.toLocaleString() }}% </span>
+        <div class="flex flex-row gap-2 items-center text-sm font-medium font-sans" :class="variations.value > 0 ? 'positive' : 'negative'">
+          <div class="flex flex-row gap-1 items-center">
+            <UIcon name="i-heroicons-arrow-down-circle-solid" class="w-5 h-5 transition-transform" :class="[variations.value > 0 && 'transform rotate-180']" />
+            <span> {{ displayNumberValue(variations.value) }}$ </span>
+          </div>
+          <span class="text-xs"> ({{ displayNumberValue(variations.percent) }}%) </span>
         </div>
       </div>
     </div>
-    <ChartLine style="--stagger: 3; --delay: 100ms" data-animate />
+    <ChartLine style="--stagger: 3; --delay: 100ms" data-animate @update:currentValue="price = $event" @update:variation="variations = $event" :price="price" />
     <div style="--stagger: 4; --delay: 100ms" data-animate v-if="crypto.description" class="flex flex-col gap-2">
       <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Overview</h3>
       <p class="text-gray-500 dark:text-gray-400 leading-relaxed text-sm">{{ crypto.description }}</p>
