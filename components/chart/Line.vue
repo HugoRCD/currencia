@@ -1,49 +1,54 @@
 <script setup lang="ts">
-import type { ApexOptions, TimeFrame } from "~/types/ApexChart";
+import type { ApexOptions, TimeFrame, Variations } from "~/types/ApexChart";
+import { displayNumberValue } from "~/types/ApexChart";
 const colorMode = useColorMode();
 
 const dayjs = useDayjs();
 
-/*type TimeFrame = {
-  value: string;
-  series: {
-    start: number; // timestamp
-    end: number; // timestamp
-  };
-};*/
+const props = defineProps({
+  showTooltip: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const timeframe = ref<TimeFrame>({
   value: "3M",
   series: getCurrent3Months(),
 });
 
-const firstTimeframeValue = computed(() => {
+const firstValue = computed(() => {
   const start = timeframe.value.series.start;
   const seriesData = series[0].data;
 
   for (let i = 0; i < seriesData.length; i++) {
     const dataPoint = seriesData[i];
-    if (dataPoint.x >= start) {
-      return dataPoint.y;
+    if (dataPoint[0] >= start) {
+      return dataPoint[1];
     }
   }
 
-  return null; // Si aucune valeur n'est trouvée dans la plage de temps sélectionnée
+  return null;
 });
 
-const lastTimeframeValue = computed(() => {
+const lastValue = computed(() => {
   const end = timeframe.value.series.end;
   const seriesData = series[0].data;
 
   for (let i = seriesData.length - 1; i >= 0; i--) {
     const dataPoint = seriesData[i];
-    if (dataPoint.x <= end) {
-      return dataPoint.y;
+    if (dataPoint[0] <= end) {
+      return dataPoint[1];
     }
   }
 
-  return null; // Si aucune valeur n'est trouvée dans la plage de temps sélectionnée
+  return null;
 });
+
+/*const isPositive = computed(() => {
+  if (!firstValue.value || !lastValue.value) return false;
+  return lastValue.value > firstValue.value;
+});*/
 
 const series = [
   {
@@ -51,9 +56,22 @@ const series = [
   },
 ];
 
-const chart = ref();
+const price = ref(0);
 
-const currentValue = ref("");
+function getVariation(start: number, end: number): Variations {
+  const variation = ((end - start) / start) * 100;
+  return {
+    percent: variation,
+    value: end - start,
+  };
+}
+
+const variation = computed(() => {
+  if (!firstValue.value || !lastValue.value) return 0;
+  return getVariation(firstValue.value, price.value);
+});
+
+const chart = ref();
 
 function updateTimeline() {
   const start = timeframe.value.series.start;
@@ -132,8 +150,9 @@ const chartOptions = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
       const value = series[seriesIndex][dataPointIndex] as number;
-      currentValue.value = value.toLocaleString();
-      return "";
+      price.value = value;
+      if (!props.showTooltip) return "";
+      return `<div class="px-4 py-1"><span>${displayNumberValue(value)}$</span></div>`;
     },
     x: {
       format: "dd/MM/yy HH:mm",
@@ -156,6 +175,9 @@ const chartOptions = {
 
 watch(timeframe, () => {
   updateTimeline();
+  /*chart.value.chart.updateOptions({
+    colors: [isPositive.value ? "#10B981" : "#EF4444"],
+  });*/
 });
 
 watch(colorMode, () => {
@@ -176,18 +198,34 @@ watch(colorMode, () => {
   });
 });
 
-const emit = defineEmits(["update:currentValue"]);
+const emit = defineEmits(["update:currentValue", "update:variation"]);
 
-watch(currentValue, () => {
-  emit("update:currentValue", currentValue.value);
-});
+watch(
+  price,
+  () => {
+    emit("update:currentValue", price.value ? price.value : lastValue.value);
+  },
+  { immediate: true },
+);
+
+watch(
+  variation,
+  () => {
+    emit("update:variation", variation.value);
+  },
+  { immediate: true },
+);
+
+function mouseOut() {
+  emit("update:currentValue", lastValue.value);
+  emit("update:variation", getVariation(firstValue.value, lastValue.value));
+}
 </script>
 
 <template>
   <div>
-    <div class="flex justify-between items-center">{{ firstTimeframeValue }} - {{ lastTimeframeValue }}</div>
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
-    <apexchart id="chart" ref="chart" height="300" type="area" :options="chartOptions" :series="series" />
+    <apexchart id="chart" ref="chart" height="300" type="area" :options="chartOptions" :series="series" @mouseout="mouseOut" />
   </div>
 </template>
 
