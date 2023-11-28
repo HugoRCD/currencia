@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
+import { ViewColumnsIcon, ChartBarIcon } from "@heroicons/vue/24/outline";
 
 const navigations = getNavigation("app");
 const admin_navigations = getNavigation("admin");
@@ -7,6 +7,35 @@ const admin_navigations = getNavigation("admin");
 const userStore = useUserStore();
 
 const open = ref(true);
+
+// wtcher route change
+const route = useRoute();
+const newItems = ref([]);
+watch(
+  () => route.path,
+  () => {
+    if (route.path.includes("/app/crypto")) {
+      newItems.value = [
+        {
+          title: "Crypto details",
+          description: "Crypto",
+          icon: ChartBarIcon,
+          to: route.path,
+          name: "Crypto details",
+        },
+      ];
+      navigations.unshift(...newItems.value);
+    } else {
+      const indexToRemove = navigations.findIndex((item) => item.name === "Crypto details");
+
+      // Vérifier si l'index a été trouvé
+      if (indexToRemove !== -1) {
+        // Utiliser splice pour supprimer l'élément à l'index trouvé
+        navigations.splice(indexToRemove, 1);
+      }
+    }
+  },
+);
 </script>
 
 <template>
@@ -26,7 +55,9 @@ const open = ref(true);
       <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
 
       <div class="flex flex-col gap-2">
-        <LayoutNavItem v-for="nav in navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
+        <TransitionGroup name="fade" tag="ul" class="flex flex-col gap-2" @enter="enter" @leave="leave">
+          <LayoutNavItem v-for="nav in navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
+        </TransitionGroup>
       </div>
 
       <hr v-if="userStore.isAdmin" class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
