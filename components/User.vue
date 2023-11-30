@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useSignup, useLogin, useLogout } from "~/composables/useUser";
+import { useSignup, useLogin, useLogout, updateUser } from "~/composables/useUser";
 import type { CreateUserDto, LoginUserDto } from "~/types/User";
 const userStore = useUserStore();
 
@@ -14,6 +14,7 @@ const login = ref({
   username: "",
   password: "",
 });
+
 const signup = ref({
   username: "",
   email: "",
@@ -57,10 +58,17 @@ async function createAccount(signupUserDto: CreateUserDto) {
 }
 
 async function logout() {
-  loading.value = true;
   await useLogout();
   authModal.value = false;
+}
+
+async function updateCurrentUser() {
+  console.log(user.value);
+  if (!user.value) return;
+  loading.value = true;
+  await updateUser(user.value.id, user.value);
   loading.value = false;
+  open.value = false;
 }
 </script>
 
@@ -83,7 +91,7 @@ async function logout() {
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Here you can edit your information.</p>
               </div>
             </div>
-            <form class="space-y-3">
+            <form class="space-y-3" @submit.prevent="updateCurrentUser">
               <UFormGroup label="Avatar" name="avatar">
                 <UInput v-model="user.avatar" />
               </UFormGroup>
@@ -93,14 +101,14 @@ async function logout() {
               <UFormGroup label="Email" name="name">
                 <UInput v-model="user.email" disabled />
               </UFormGroup>
-            </form>
-            <div class="flex gap-2 justify-between mt-4">
-              <UButton :loading="loading" variant="soft" color="red" @click="logout">Logout</UButton>
-              <div class="flex gap-2">
-                <UButton variant="soft" @click="open = false">Cancel</UButton>
-                <UButton :loading="loading">Save</UButton>
+              <div class="flex gap-2 justify-between pt-4">
+                <UButton variant="soft" color="red" @click="logout">Logout</UButton>
+                <div class="flex gap-2">
+                  <UButton variant="soft" @click="open = false">Cancel</UButton>
+                  <UButton :loading="loading" type="submit">Save</UButton>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
         </UCard>
       </UModal>

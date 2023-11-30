@@ -110,6 +110,12 @@ export async function deleteUser(userId: number) {
 }
 
 export async function updateUser(userId: number, updateUserInput: UpdateUserDto) {
+  const foundUser = await prisma.user.findFirst({
+    where: {
+      username: updateUserInput.username,
+    },
+  });
+  if (foundUser) throw createError({ statusCode: 400, statusMessage: "Username already exists" });
   const user = await prisma.user.update({
     where: { id: userId },
     data: {

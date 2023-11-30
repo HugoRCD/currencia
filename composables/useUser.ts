@@ -1,4 +1,4 @@
-import type { CreateUserDto, LoginUserDto, publicUser, User } from "~/types/User";
+import type { CreateUserDto, LoginUserDto, publicUser, UpdateUserDto, User } from "~/types/User";
 
 export async function useSignup(createUserInput: CreateUserDto) {
   const toast = useToast();
@@ -48,6 +48,7 @@ export async function useLogin(loginInput: LoginUserDto) {
 
 export async function useLogout() {
   const toast = useToast();
+  useUserStore().logout();
   const { error } = await useFetch("/api/auth/logout", {
     method: "POST",
   });
@@ -60,7 +61,6 @@ export async function useLogout() {
     });
     return;
   }
-  useUserStore().logout();
   toast.add({
     title: "Logout successful!",
     icon: "i-heroicons-check-circle",
@@ -84,4 +84,27 @@ export async function useUser(): Promise<publicUser | null> {
     useUserStore().setUser(data.value);
   }
   return user;
+}
+
+export async function updateUser(id: number, updateUserInput: UpdateUserDto) {
+  const toast = useToast();
+  const { error, data } = await useFetch<User>(`/api/user/${id}`, {
+    method: "PUT",
+    body: updateUserInput,
+  });
+  if (error.value || !data.value) {
+    toast.add({
+      title: "Whoops! Something went wrong.",
+      icon: "i-heroicons-x-circle",
+      color: "red",
+      timeout: 2000,
+    });
+    return;
+  }
+  useUserStore().setUser(data.value);
+  toast.add({
+    title: "User updated!",
+    icon: "i-heroicons-check-circle",
+    timeout: 2000,
+  });
 }
