@@ -1,4 +1,4 @@
-import { HomeIcon, EnvelopeIcon, UserIcon, UsersIcon, CogIcon, ChatBubbleLeftIcon } from "@heroicons/vue/24/outline";
+import { HomeIcon, EnvelopeIcon, UserIcon, UsersIcon, CogIcon, ChatBubbleLeftIcon, ChartBarSquareIcon } from "@heroicons/vue/24/outline";
 import type { FunctionalComponent } from "vue";
 
 type Where = "home" | "app" | "user" | "admin";
@@ -34,6 +34,16 @@ export function getNavigation(where: Where): Navigation[] {
           title: "Latest Crypto News",
           description: "Where the community shares the latest news about the crypto world.",
         },
+        {
+          name: "Leaderboard",
+          to: "/app/leaderboard",
+          icon: ChartBarSquareIcon,
+          title: "Leaderboard",
+          description: "Check out the top current crypto.",
+        },
+      ];
+    case "user":
+      return [
         { name: "Profile", to: "/app/profile", icon: UserIcon, title: "Profile", description: "Here you can see your profile information and edit it." },
         {
           name: "Settings",

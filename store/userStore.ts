@@ -32,6 +32,9 @@ export const useUserStore = defineStore("user", {
     getUser(): publicUser | null {
       return this.user;
     },
+    isLoggedIn(): boolean {
+      return !!this.user;
+    },
   },
   actions: {
     setUser(user: publicUser) {

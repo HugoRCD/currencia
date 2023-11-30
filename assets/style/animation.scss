@@ -71,6 +71,38 @@
   }
 }
 
+.slide-enter-active {
+  animation: slide-in 0.3s ease-in-out;
+}
+
+.slide-leave-active {
+  animation: slide-out 0.3s ease-in-out;
+}
+
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-10%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-10%);
+  }
+}
+
 @keyframes enter {
   0% {
     opacity: 0;
