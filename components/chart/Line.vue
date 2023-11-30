@@ -103,8 +103,9 @@ const chartOptions = {
   fill: {
     type: "gradient",
     gradient: {
+      shade: colorMode.value,
       shadeIntensity: 0.1,
-      opacityFrom: 0.6,
+      opacityFrom: colorMode.value === "dark" ? 0.6 : 0,
       opacityTo: 0,
       stops: [0, 90, 100],
     },
@@ -117,7 +118,7 @@ const chartOptions = {
     width: 2,
   },
   grid: {
-    borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#E5E7EB",
+    borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#f2f3f4",
   },
   markers: {
     size: 0,
@@ -182,6 +183,12 @@ watch(colorMode, () => {
   chart.value.chart.updateOptions({
     theme: {
       mode: colorMode.value,
+    },
+    fill: {
+      gradient: {
+        shade: colorMode.value,
+        opacityFrom: colorMode.value === "dark" ? 0.6 : 0,
+      },
     },
     grid: {
       borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#E5E7EB",

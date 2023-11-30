@@ -43,7 +43,7 @@ onMounted(() => {
 
     <!-- Overall Chart -->
     <div style="--stagger: 2" data-animate class="flex flex-col gap-3 mt-8">
-      <h2 class="text-xl font-bold">Overall Market Chart</h2>
+      <h2 class="text-xl font-bold">Overall Market</h2>
       <ChartLine :series="series" show-tooltip />
     </div>
 

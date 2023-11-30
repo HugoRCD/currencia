@@ -80,7 +80,7 @@ export async function setAuthToken(userId: number) {
       email: user.email,
     },
     useRuntimeConfig().private.authSecret,
-    { expiresIn: "7d" },
+    { expiresIn: "30d" },
   );
   return prisma.user.update({
     where: {
