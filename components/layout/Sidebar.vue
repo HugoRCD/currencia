@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
+import { ViewColumnsIcon, ChartBarIcon } from "@heroicons/vue/24/outline";
 
 const navigations = getNavigation("app");
 const admin_navigations = getNavigation("admin");
@@ -7,6 +7,30 @@ const admin_navigations = getNavigation("admin");
 const userStore = useUserStore();
 
 const open = ref(true);
+
+const route = useRoute();
+const handleCryptoNavigation = () => {
+  const isCryptoRoute = route.path.includes("/app/crypto");
+  const cryptoNavigation = {
+    title: "Crypto details",
+    description: "Crypto",
+    icon: ChartBarIcon,
+    to: route.path,
+    name: "Crypto details",
+  };
+
+  if (isCryptoRoute) {
+    navigations.unshift(cryptoNavigation);
+  } else {
+    const indexToRemove = navigations.findIndex((item) => item.name === "Crypto details");
+
+    if (indexToRemove !== -1) {
+      navigations.splice(indexToRemove, 1);
+    }
+  }
+};
+
+watch(() => route.path, handleCryptoNavigation, { immediate: true });
 </script>
 
 <template>
@@ -26,7 +50,9 @@ const open = ref(true);
       <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
 
       <div class="flex flex-col gap-2">
-        <LayoutNavItem v-for="nav in navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
+        <TransitionGroup name="fade" tag="ul" class="flex flex-col gap-2" mode="out-in">
+          <LayoutNavItem v-for="nav in navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
+        </TransitionGroup>
       </div>
 
       <hr v-if="userStore.isAdmin" class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
@@ -51,3 +77,21 @@ const open = ref(true);
     </div>
   </div>
 </template>
+
+<style scoped lang="scss">
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+.fade-leave-active {
+  position: absolute;
+}
+</style>
