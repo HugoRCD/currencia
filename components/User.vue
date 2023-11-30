@@ -82,7 +82,7 @@ async function logout() {
                 <UInput v-model="user.username" />
               </UFormGroup>
               <UFormGroup label="Email" name="name">
-                <UInput v-model="user.email" />
+                <UInput v-model="user.email" disabled />
               </UFormGroup>
             </form>
             <div class="flex gap-2 justify-between mt-4">

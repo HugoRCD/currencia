@@ -1,12 +1,49 @@
 <script setup lang="ts">
-import type { ApexOptions, TimeFrame } from "~/types/ApexChart";
+import type { ApexOptions, TimeFrame, Variations } from "~/types/ApexChart";
+import { displayNumberValue } from "~/types/ApexChart";
 const colorMode = useColorMode();
 
 const dayjs = useDayjs();
 
+const props = defineProps({
+  showTooltip: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const timeframe = ref<TimeFrame>({
   value: "3M",
   series: getCurrent3Months(),
+});
+
+const firstValue = computed(() => {
+  const start = timeframe.value.series.start;
+  const seriesData = series[0].data;
+
+  for (let i = 0; i < seriesData.length; i++) {
+    const dataPoint = seriesData[i];
+    if (dataPoint[0] >= start) {
+      return dataPoint[1];
+    }
+  }
+});
+
+const lastValue = computed(() => {
+  const end = timeframe.value.series.end;
+  const seriesData = series[0].data;
+
+  for (let i = seriesData.length - 1; i >= 0; i--) {
+    const dataPoint = seriesData[i];
+    if (dataPoint[0] <= end) {
+      return dataPoint[1];
+    }
+  }
+});
+
+const isPositive = computed(() => {
+  if (!firstValue.value || !lastValue.value) return false;
+  return lastValue.value > firstValue.value;
 });
 
 const series = [
@@ -14,6 +51,21 @@ const series = [
     data: getRandomDailyData(),
   },
 ];
+
+const price = ref(0);
+
+function getVariation(start: number, end: number): Variations {
+  const variation = ((end - start) / start) * 100;
+  return {
+    percent: variation,
+    value: end - start,
+  };
+}
+
+const variation = computed(() => {
+  if (!firstValue.value || !lastValue.value) return 0;
+  return getVariation(firstValue.value, price.value);
+});
 
 const chart = ref();
 
@@ -43,11 +95,13 @@ const chartOptions = {
       fillTo: "end",
     },
   },
+  colors: ["var(--graph-curve)"],
   fill: {
     type: "gradient",
     gradient: {
+      shade: colorMode.value,
       shadeIntensity: 0.1,
-      opacityFrom: 0.6,
+      opacityFrom: colorMode.value === "dark" ? 0.6 : 0,
       opacityTo: 0,
       stops: [0, 90, 100],
     },
@@ -60,7 +114,7 @@ const chartOptions = {
     width: 2,
   },
   grid: {
-    borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#E5E7EB",
+    borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#f2f3f4",
   },
   markers: {
     size: 0,
@@ -94,7 +148,9 @@ const chartOptions = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
       const value = series[seriesIndex][dataPointIndex] as number;
-      return '<div class="px-4 py-1">' + "<span>" + value.toLocaleString() + "$</span>" + "</div>";
+      price.value = value;
+      if (!props.showTooltip) return "";
+      return `<div class="px-4 py-1"><span>${displayNumberValue(value)}$</span></div>`;
     },
     x: {
       format: "dd/MM/yy HH:mm",
@@ -124,6 +180,12 @@ watch(colorMode, () => {
     theme: {
       mode: colorMode.value,
     },
+    fill: {
+      gradient: {
+        shade: colorMode.value,
+        opacityFrom: colorMode.value === "dark" ? 0.6 : 0,
+      },
+    },
     grid: {
       borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#E5E7EB",
     },
@@ -136,13 +198,54 @@ watch(colorMode, () => {
     },
   });
 });
+
+const emit = defineEmits(["update:currentValue", "update:variation"]);
+
+watch(
+  price,
+  () => {
+    emit("update:currentValue", price.value ? price.value : lastValue.value);
+  },
+  { immediate: true },
+);
+
+watch(
+  variation,
+  () => {
+    emit("update:variation", variation.value);
+  },
+  { immediate: true },
+);
+
+function mouseOut() {
+  emit("update:currentValue", lastValue.value);
+  emit("update:variation", getVariation(firstValue.value, lastValue.value));
+}
+mouseOut();
 </script>
 
 <template>
-  <div>
+  <div class="select-none">
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
-    <apexchart id="chart" ref="chart" height="300" type="area" :options="chartOptions" :series="series" />
+    <apexchart
+      id="chart"
+      ref="chart"
+      height="300"
+      type="area"
+      :options="chartOptions"
+      :series="series"
+      @mouseout="mouseOut"
+      :class="isPositive ? 'positive' : 'negative'"
+    />
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.positive {
+  --graph-curve: #10b981;
+}
+
+.negative {
+  --graph-curve: #ef4444;
+}
+</style>

@@ -1,7 +1,6 @@
-export default defineNuxtRouteMiddleware(async () => {
-  /*const user = await useUser();
+import { Role } from "~/types/User";
 
-  if (user?.role !== Role.ADMIN) {
-    return "/";
-  }*/
+export default defineNuxtRouteMiddleware(async () => {
+  const userStore = useUserStore();
+  if (!userStore.isAdmin) return "/app/dashboard";
 });

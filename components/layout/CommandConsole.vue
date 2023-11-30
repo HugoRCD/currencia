@@ -88,13 +88,13 @@ onMounted(() => {
 <template>
   <div class="w-full">
     <UButton block size="lg" class="console-button whitespace-nowrap justify-start" @click="open = !open">
-      <UIcon name="i-heroicons-command-line" class="h-5 w-5" />
+      <UIcon name="i-heroicons-magnifying-glass" class="h-5 w-5" />
       <span class="text-sm font-medium hidden sm:block" v-if="sidebarOpen">Find a crypto</span>
     </UButton>
     <UModal v-model="open" :ui="{ container: 'flex min-h-full items-start sm:items-center justify-center text-center' }">
       <UCommandPalette
         placeholder="Search for a crypto..."
-        icon="i-heroicons-command-line"
+        icon="i-heroicons-magnifying-glass"
         ref="commandPaletteRef"
         :groups="groups"
         :autoselect="false"
