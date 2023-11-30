@@ -47,7 +47,7 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true });
     <div class="flex flex-col gap-3 mt-3">
       <LayoutCommandConsole :sidebarOpen="open" />
 
-      <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
+      <UDivider class="my-3" />
 
       <div class="flex flex-col gap-2">
         <TransitionGroup name="fade" tag="ul" class="flex flex-col gap-2" mode="out-in">
@@ -59,19 +59,13 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true });
         <div class="flex flex-col gap-2" v-if="userStore.isLoggedIn">
           <!-- User -->
           <div class="flex flex-col gap-2">
-            <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
+            <UDivider class="my-3" />
             <LayoutNavItem v-for="nav in user_navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
           </div>
 
           <!-- Admin -->
           <div class="flex flex-col gap-2" v-if="userStore.isAdmin">
-            <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
-            <div
-              class="text-xs text-center sm:text-left sm:text-sm font-semibold text-gray-500 dark:text-gray-400"
-              :class="!open ? 'text-center' : 'text-left'"
-            >
-              Admin
-            </div>
+            <UDivider class="my-3" />
             <LayoutNavItem v-for="nav in admin_navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
           </div>
         </div>
