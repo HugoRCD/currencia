@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ExclamationTriangleIcon, ChartBarIcon } from "@heroicons/vue/24/outline";
-const pages = [...getNavigation("app"), ...getNavigation("admin")];
+const pages = [...getNavigation("app"), ...getNavigation("admin"), ...getNavigation("user")];
 const route = useRoute();
 const currentPage = computed(() => {
   const page = pages.find((page) => page.to === route.path);

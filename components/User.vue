@@ -63,7 +63,6 @@ async function logout() {
 }
 
 async function updateCurrentUser() {
-  console.log(user.value);
   if (!user.value) return;
   loading.value = true;
   await updateUser(user.value.id, user.value);
