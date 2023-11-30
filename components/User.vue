@@ -10,16 +10,15 @@ const user = computed(() => {
   return userStore.getUser;
 });
 
-const login = {
-  username: "HugoRCD",
+const login = ref({
+  username: "",
   password: "",
-};
-
-const signup = {
-  username: "HugoRCD",
+});
+const signup = ref({
+  username: "",
   email: "",
   password: "",
-};
+});
 
 const items = [
   {
@@ -34,16 +33,25 @@ const items = [
 
 const open = ref(false);
 
-async function signin(login: LoginUserDto) {
+async function signin(loginUserDto: LoginUserDto) {
   loading.value = true;
-  await useLogin(login);
-  loading.value = false;
+  await useLogin(loginUserDto);
+  login.value = {
+    username: "",
+    password: "",
+  };
   authModal.value = false;
+  loading.value = false;
 }
 
-async function createAccount(signup: CreateUserDto) {
+async function createAccount(signupUserDto: CreateUserDto) {
   loading.value = true;
-  await useSignup(signup);
+  await useSignup(signupUserDto);
+  signup.value = {
+    username: "",
+    email: "",
+    password: "",
+  };
   loading.value = false;
   authModal.value = false;
 }
@@ -51,6 +59,7 @@ async function createAccount(signup: CreateUserDto) {
 async function logout() {
   loading.value = true;
   await useLogout();
+  authModal.value = false;
   loading.value = false;
 }
 </script>
