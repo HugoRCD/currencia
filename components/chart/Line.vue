@@ -27,8 +27,6 @@ const firstValue = computed(() => {
       return dataPoint[1];
     }
   }
-
-  return null;
 });
 
 const lastValue = computed(() => {
@@ -41,8 +39,6 @@ const lastValue = computed(() => {
       return dataPoint[1];
     }
   }
-
-  return null;
 });
 
 const isPositive = computed(() => {
@@ -225,10 +221,11 @@ function mouseOut() {
   emit("update:currentValue", lastValue.value);
   emit("update:variation", getVariation(firstValue.value, lastValue.value));
 }
+mouseOut();
 </script>
 
 <template>
-  <div>
+  <div class="select-none">
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
     <apexchart
       id="chart"
