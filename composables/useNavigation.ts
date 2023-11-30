@@ -1,4 +1,13 @@
-import { HomeIcon, EnvelopeIcon, UserIcon, UsersIcon, CogIcon, ChatBubbleLeftIcon, ChartBarSquareIcon } from "@heroicons/vue/24/outline";
+import {
+  HomeIcon,
+  EnvelopeIcon,
+  UserIcon,
+  UsersIcon,
+  CogIcon,
+  ChatBubbleLeftIcon,
+  ChartBarSquareIcon,
+  ArrowLeftOnRectangleIcon,
+} from "@heroicons/vue/24/outline";
 import type { FunctionalComponent } from "vue";
 
 type Where = "home" | "app" | "user" | "admin";
@@ -51,6 +60,13 @@ export function getNavigation(where: Where): Navigation[] {
           icon: CogIcon,
           title: "Settings",
           description: "You can change your settings here, change which coins you want to see, and more.",
+        },
+        {
+          name: "Logout",
+          to: "/",
+          icon: ArrowLeftOnRectangleIcon,
+          title: "Logout",
+          description: "Logout",
         },
       ];
     case "admin":

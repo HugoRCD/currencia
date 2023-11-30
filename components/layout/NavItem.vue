@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FunctionalComponent, PropType } from "vue";
+import { useLogout } from "~/composables/useUser";
 
 type NavItem = {
   name: string;
@@ -24,7 +25,11 @@ defineProps({
 </script>
 
 <template>
-  <div class="nav-item" @click="$router.push(nav_item.to)" :class="{ active: active }">
+  <div
+    class="nav-item"
+    @click="nav_item.name === 'Logout' ? useLogout() : $router.push(nav_item.to)"
+    :class="{ active: active, logout: nav_item.name === 'Logout' }"
+  >
     <component :is="nav_item.icon" class="w-5 h-5 text-gray-500 dark:text-gray-400" />
     <span class="text-sm font-medium hidden sm:block text-gray-500 dark:text-gray-400" v-if="open">
       {{ nav_item.name }}
@@ -33,6 +38,8 @@ defineProps({
 </template>
 
 <style scoped lang="scss">
+$logout-color: #c12121;
+
 .nav-item {
   @apply cursor-pointer rounded-lg px-3 py-2 flex flex-row items-center gap-2;
   border: 1px solid transparent;
@@ -44,10 +51,20 @@ defineProps({
     color: #575757;
     border: 1px solid #ececec;
     box-shadow: 0 1px 0 #cccccc, 0 -3px 0 #ececec inset;
+
+    &.logout {
+      color: $logout-color;
+      border: 1px solid $logout-color;
+      box-shadow: 0 1px 0 $logout-color, 0 -3px 0 $logout-color inset;
+    }
   }
 
   .nav-item:active {
     box-shadow: 0 1px 0 #cccccc, 0 -0.5px 0 #ececec inset;
+
+    &.logout {
+      box-shadow: 0 1px 0 $logout-color, 0 -0.5px 0 $logout-color inset;
+    }
   }
 
   .nav-item.active {
@@ -63,10 +80,20 @@ defineProps({
     color: #b5b3b3;
     border: 1px solid #414141;
     box-shadow: 0 1px 0 #2f2f2f, 0 -3px 0 #414141 inset;
+
+    &.logout {
+      color: $logout-color;
+      border: 1px solid $logout-color;
+      box-shadow: 0 1px 0 $logout-color, 0 -3px 0 $logout-color inset;
+    }
   }
 
   .nav-item:active {
     box-shadow: 0 1px 0 #2f2f2f, 0 -0.5px 0 #414141 inset;
+
+    &.logout {
+      box-shadow: 0 1px 0 $logout-color, 0 -0.5px 0 $logout-color inset;
+    }
   }
 
   .nav-item.active {
