@@ -8,34 +8,29 @@ const userStore = useUserStore();
 
 const open = ref(true);
 
-// wtcher route change
 const route = useRoute();
-const newItems = ref([]);
-watch(
-  () => route.path,
-  () => {
-    if (route.path.includes("/app/crypto")) {
-      newItems.value = [
-        {
-          title: "Crypto details",
-          description: "Crypto",
-          icon: ChartBarIcon,
-          to: route.path,
-          name: "Crypto details",
-        },
-      ];
-      navigations.unshift(...newItems.value);
-    } else {
-      const indexToRemove = navigations.findIndex((item) => item.name === "Crypto details");
+const handleCryptoNavigation = () => {
+  const isCryptoRoute = route.path.includes("/app/crypto");
+  const cryptoNavigation = {
+    title: "Crypto details",
+    description: "Crypto",
+    icon: ChartBarIcon,
+    to: route.path,
+    name: "Crypto details",
+  };
 
-      // Vérifier si l'index a été trouvé
-      if (indexToRemove !== -1) {
-        // Utiliser splice pour supprimer l'élément à l'index trouvé
-        navigations.splice(indexToRemove, 1);
-      }
+  if (isCryptoRoute) {
+    navigations.unshift(cryptoNavigation);
+  } else {
+    const indexToRemove = navigations.findIndex((item) => item.name === "Crypto details");
+
+    if (indexToRemove !== -1) {
+      navigations.splice(indexToRemove, 1);
     }
-  },
-);
+  }
+};
+
+watch(() => route.path, handleCryptoNavigation, { immediate: true });
 </script>
 
 <template>
