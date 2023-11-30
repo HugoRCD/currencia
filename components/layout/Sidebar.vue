@@ -55,7 +55,7 @@ watch(
       <hr class="border-gray-300 dark:border-gray-700 border-1 rounded-lg w-2/3 mx-auto my-3" />
 
       <div class="flex flex-col gap-2">
-        <TransitionGroup name="fade" tag="ul" class="flex flex-col gap-2" @enter="enter" @leave="leave">
+        <TransitionGroup name="fade" tag="ul" class="flex flex-col gap-2" mode="out-in">
           <LayoutNavItem v-for="nav in navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
         </TransitionGroup>
       </div>
@@ -82,3 +82,21 @@ watch(
     </div>
   </div>
 </template>
+
+<style scoped lang="scss">
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+.fade-leave-active {
+  position: absolute;
+}
+</style>
