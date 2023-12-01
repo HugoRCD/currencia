@@ -5,6 +5,7 @@ import plugin from "tailwindcss/plugin";
 export default {
   darkMode: "class",
   content: [
+    "docs/content/**/*.md",
     "./components/**/*.{js,vue,ts}",
     "./layouts/**/*.vue",
     "./pages/**/*.vue",

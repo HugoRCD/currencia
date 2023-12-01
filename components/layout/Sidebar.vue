@@ -36,9 +36,9 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true });
 <template>
   <div class="m-2 flex flex-col transition-all duration-300 ease-in-out" :class="open ? 'sm:w-[250px] pr-0 sm:pr-2' : 'sm:w-[45px]'">
     <!-- Top part -->
-    <div class="hidden sm:flex justify-center items-center gap-2 my-2">
-      <User :class="!open ? 'hidden' : 'flex'" />
-      <UTooltip text="Toggle sidebar">
+    <div class="flex justify-center items-center gap-2 my-1 sm:my-2" :class="!open ? 'sm:flex-col-reverse' : ''">
+      <User :side-bar-open="open" />
+      <UTooltip text="Toggle sidebar" class="select-none hidden sm:block">
         <UButton size="sm" color="white" variant="soft" class="select-none hidden sm:block" @click="open = !open">
           <ViewColumnsIcon class="w-5 h-5" />
         </UButton>

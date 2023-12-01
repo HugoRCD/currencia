@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { useSignup, useLogin, useLogout, updateUser } from "~/composables/useUser";
 import type { CreateUserDto, LoginUserDto } from "~/types/User";
+
+defineProps({
+  sideBarOpen: {
+    type: Boolean,
+    default: true,
+  },
+});
+
 const userStore = useUserStore();
 
 const loading = ref(false);
@@ -72,11 +80,11 @@ async function updateCurrentUser() {
 </script>
 
 <template>
-  <div class="flex-1">
-    <div class="flex-1" v-if="user">
-      <UButton color="white" variant="soft" size="sm" class="flex-1 text-left font-semibold" @click="open = true">
+  <div class="w-full flex items-center gap-2" :class="sideBarOpen ? 'justify-center sm:justify-between' : 'justify-center'">
+    <div v-if="user">
+      <UButton color="white" variant="soft" size="sm" class="text-left font-semibold" @click="open = true" :ui="{ padding: { sm: 'px-0' } }">
         <UAvatar size="sm" :src="user.avatar" imgClass="object-cover" />
-        <span class="whitespace-nowrap">
+        <span class="whitespace-nowrap" :class="sideBarOpen ? 'hidden sm:flex' : 'hidden'">
           {{ user.username }}
         </span>
       </UButton>
@@ -112,9 +120,10 @@ async function updateCurrentUser() {
         </UCard>
       </UModal>
     </div>
-    <div class="flex-1" v-else>
-      <UButton color="white" variant="soft" size="sm" class="flex-1 text-left font-semibold" @click="authModal = true">
-        <span class="whitespace-nowrap">Sign in</span>
+    <div v-else>
+      <UButton color="white" variant="soft" size="sm" class="text-left font-semibold" @click="authModal = true" :ui="{ padding: { sm: 'px-0' } }">
+        <UAvatar icon="i-heroicons-user-circle" size="sm" :ui="{ icon: { size: { sm: 'w-5 h-5' } } }" />
+        <span class="whitespace-nowrap" :class="sideBarOpen ? 'hidden sm:flex' : 'hidden'">Sign in</span>
       </UButton>
       <UModal v-model="authModal">
         <UCard>
