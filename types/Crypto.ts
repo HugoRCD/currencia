@@ -1,9 +1,10 @@
 export type Crypto = {
-  id: string;
+  id: number;
   name: string;
   symbol: string;
   logo: string;
   description: string;
+  visible: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -11,11 +12,14 @@ export type Crypto = {
 export type CreateCryptoDto = {
   name: string;
   symbol: string;
+  logo: string;
   description: string;
+  visible: boolean;
 };
 
 export type UpdateCryptoDto = {
   name?: string;
   symbol?: string;
   description?: string;
+  visible?: boolean;
 };
