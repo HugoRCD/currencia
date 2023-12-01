@@ -4,23 +4,23 @@ import type { TimeFrame } from "~/types/ApexChart";
 const timeframes = [
   {
     value: "1W",
-    series: getCurrentWeek(),
+    series: getLastWeek(),
   },
   {
     value: "1M",
-    series: getCurrentMonth(),
+    series: getLastMonth(),
   },
   {
     value: "3M",
-    series: getCurrent3Months(),
+    series: getLast3Months(),
   },
   {
     value: "6M",
-    series: getCurrent6Months(),
+    series: getLast6Months(),
   },
   {
     value: "1Y",
-    series: getCurrentYear(),
+    series: getLastYear(),
   },
 ] as TimeFrame[];
 

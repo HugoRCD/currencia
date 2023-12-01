@@ -1,26 +1,26 @@
 import type { ApexChartSeries } from "~/types/ApexChart";
 
-export const getCurrentWeek = () => {
+export const getLastWeek = () => {
   const dayjs = useDayjs();
-  const start = dayjs().startOf("week").valueOf();
-  const end = dayjs().endOf("week").valueOf();
+  const start = dayjs().subtract(7, "day").valueOf();
+  const end = dayjs().valueOf();
   return {
     start,
     end,
   };
 };
 
-export const getCurrentMonth = () => {
+export const getLastMonth = () => {
   const dayjs = useDayjs();
-  const start = dayjs().startOf("month").valueOf();
-  const end = dayjs().endOf("month").valueOf();
+  const start = dayjs().subtract(1, "month").valueOf();
+  const end = dayjs().valueOf();
   return {
     start,
     end,
   };
 };
 
-export const getCurrent3Months = () => {
+export const getLast3Months = () => {
   const dayjs = useDayjs();
   const start = dayjs().subtract(3, "month").valueOf();
   const end = dayjs().valueOf();
@@ -30,7 +30,7 @@ export const getCurrent3Months = () => {
   };
 };
 
-export const getCurrent6Months = () => {
+export const getLast6Months = () => {
   const dayjs = useDayjs();
   const start = dayjs().subtract(6, "month").valueOf();
   const end = dayjs().valueOf();
@@ -40,10 +40,10 @@ export const getCurrent6Months = () => {
   };
 };
 
-export const getCurrentYear = () => {
+export const getLastYear = () => {
   const dayjs = useDayjs();
-  const start = dayjs().startOf("year").valueOf();
-  const end = dayjs().endOf("year").valueOf();
+  const start = dayjs().subtract(1, "year").valueOf();
+  const end = dayjs().valueOf();
   return {
     start,
     end,
@@ -52,7 +52,7 @@ export const getCurrentYear = () => {
 
 export const getRandomDailyData = (): ApexChartSeries["data"] => {
   const dayjs = useDayjs();
-  const start = dayjs().startOf("year").valueOf();
+  const start = dayjs().subtract(1, "year").valueOf();
   const days = dayjs().diff(start, "day") + 1;
   const data = [] as ApexChartSeries["data"];
 

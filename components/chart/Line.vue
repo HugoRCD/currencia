@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApexOptions, TimeFrame, Variations } from "~/types/ApexChart";
-import { displayNumberValue } from "~/types/ApexChart";
+import { type ApexChartSeries, displayNumberValue } from "~/types/ApexChart";
+import type { PropType } from "vue";
 const colorMode = useColorMode();
 const dayjs = useDayjs();
 
@@ -9,11 +10,16 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  cryptoData: {
+    type: Array as PropType<ApexChartSeries["data"]>,
+    required: false,
+  },
 });
+const emit = defineEmits(["update:currentValue", "update:variation"]);
 
 const timeframe = ref<TimeFrame>({
   value: "3M",
-  series: getCurrent3Months(),
+  series: getLast3Months(),
 });
 
 const firstValue = computed(() => {
@@ -54,15 +60,14 @@ const series = [
 const price = ref(0);
 
 function getVariation(start: number, end: number): Variations {
-  const variation = ((end - start) / start) * 100;
+  if (start === 0) return { percent: 0, value: 0 };
   return {
-    percent: variation,
+    percent: ((end - start) / start) * 100,
     value: end - start,
   };
 }
 
 const variation = computed(() => {
-  if (!firstValue.value || !lastValue.value) return 0;
   return getVariation(firstValue.value, price.value);
 });
 
@@ -91,8 +96,6 @@ watch(colorMode, () => {
     },
   });
 });
-
-const emit = defineEmits(["update:currentValue", "update:variation"]);
 
 watch(
   price,
