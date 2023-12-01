@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CreateCryptoDto, Crypto, UpdateCryptoDto } from "~/types/Crypto";
+import type { CreateCryptoDto, UpdateCryptoDto } from "~/types/Crypto";
 const { data, loading, refresh } = await useFetch("/api/admin/crypto/crypto");
 const dayjs = useDayjs();
 const toast = useToast();
@@ -12,6 +12,7 @@ const columns = [
   {
     key: "name",
     label: "Name",
+    sortable: true,
   },
   {
     key: "symbol",
@@ -28,10 +29,12 @@ const columns = [
   {
     key: "createdAt",
     label: "Created At",
+    sortable: true,
   },
   {
     key: "updatedAt",
     label: "Updated At",
+    sortable: true,
   },
 ];
 
@@ -108,7 +111,7 @@ const modal = ref(false);
     </div>
     <UTable :rows="data" :columns="columns" :loading="loading">
       <template #logo-data="{ row }">
-        <img :src="row.logo" :alt="row.name" class="w-7 h-7" />
+        <UAvatar :src="row.logo" :alt="row.name" class="w-7 h-7" :ui="{ rounded: 'rounded-none' }" />
       </template>
       <template #description-data="{ row }">
         <span class="text-sm text-gray-500 dark:text-gray-400">{{ row.description.slice(0, 50) }}...</span>s
