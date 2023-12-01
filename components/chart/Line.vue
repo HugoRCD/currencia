@@ -2,7 +2,6 @@
 import type { ApexOptions, TimeFrame, Variations } from "~/types/ApexChart";
 import { displayNumberValue } from "~/types/ApexChart";
 const colorMode = useColorMode();
-
 const dayjs = useDayjs();
 
 const props = defineProps({
@@ -69,11 +68,60 @@ const variation = computed(() => {
 
 const chart = ref();
 
-function updateTimeline() {
+watch(colorMode, () => {
+  chart.value.chart.updateOptions({
+    theme: {
+      mode: colorMode.value,
+    },
+    fill: {
+      gradient: {
+        shade: colorMode.value,
+        opacityFrom: colorMode.value === "dark" ? 0.6 : 0,
+      },
+    },
+    grid: {
+      borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#E5E7EB",
+    },
+    xaxis: {
+      labels: {
+        style: {
+          colors: colorMode.value === "dark" ? "#9CA3AF" : "#4B5563",
+        },
+      },
+    },
+  });
+});
+
+const emit = defineEmits(["update:currentValue", "update:variation"]);
+
+watch(
+  price,
+  () => {
+    emit("update:currentValue", price.value ? price.value : lastValue.value);
+  },
+  { immediate: true },
+);
+
+watch(
+  variation,
+  () => {
+    emit("update:variation", variation.value);
+  },
+  { immediate: true },
+);
+
+function mouseOut() {
+  emit("update:currentValue", lastValue.value);
+  emit("update:variation", getVariation(firstValue.value, lastValue.value));
+}
+mouseOut();
+
+watch(timeframe, () => {
   const start = timeframe.value.series.start;
   const end = timeframe.value.series.end;
   chart.value.chart.zoomX(start, end);
-}
+  mouseOut();
+});
 
 const chartOptions = {
   chart: {
@@ -146,7 +194,7 @@ const chartOptions = {
   },
   tooltip: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+    custom: function ({ series, seriesIndex, dataPointIndex }) {
       const value = series[seriesIndex][dataPointIndex] as number;
       price.value = value;
       if (!props.showTooltip) return "";
@@ -170,58 +218,6 @@ const chartOptions = {
     },
   },
 } satisfies ApexOptions;
-
-watch(timeframe, () => {
-  updateTimeline();
-});
-
-watch(colorMode, () => {
-  chart.value.chart.updateOptions({
-    theme: {
-      mode: colorMode.value,
-    },
-    fill: {
-      gradient: {
-        shade: colorMode.value,
-        opacityFrom: colorMode.value === "dark" ? 0.6 : 0,
-      },
-    },
-    grid: {
-      borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#E5E7EB",
-    },
-    xaxis: {
-      labels: {
-        style: {
-          colors: colorMode.value === "dark" ? "#9CA3AF" : "#4B5563",
-        },
-      },
-    },
-  });
-});
-
-const emit = defineEmits(["update:currentValue", "update:variation"]);
-
-watch(
-  price,
-  () => {
-    emit("update:currentValue", price.value ? price.value : lastValue.value);
-  },
-  { immediate: true },
-);
-
-watch(
-  variation,
-  () => {
-    emit("update:variation", variation.value);
-  },
-  { immediate: true },
-);
-
-function mouseOut() {
-  emit("update:currentValue", lastValue.value);
-  emit("update:variation", getVariation(firstValue.value, lastValue.value));
-}
-mouseOut();
 </script>
 
 <template>

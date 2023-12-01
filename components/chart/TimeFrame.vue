@@ -28,10 +28,10 @@ const selectedTimeframe = ref<TimeFrame>(timeframes[2]);
 
 const emit = defineEmits(["update:timeframe"]);
 
-watch(selectedTimeframe, (value) => {
-  const timeframe = timeframes.find((timeframe) => timeframe.value === value.value);
+function selectNewTimeframe(timeframe: TimeFrame) {
+  selectedTimeframe.value = timeframe;
   emit("update:timeframe", timeframe);
-});
+}
 </script>
 
 <template>
@@ -43,7 +43,7 @@ watch(selectedTimeframe, (value) => {
           'not-active': selectedTimeframe.value !== timeframe.value,
         }"
         class="timeframe"
-        @click="selectedTimeframe = timeframe"
+        @click="selectNewTimeframe(timeframe)"
       >
         {{ timeframe.value }}
       </button>
