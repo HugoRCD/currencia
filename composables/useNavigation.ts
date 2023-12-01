@@ -1,13 +1,4 @@
-import {
-  HomeIcon,
-  EnvelopeIcon,
-  UserIcon,
-  UsersIcon,
-  CogIcon,
-  ChatBubbleLeftIcon,
-  ChartBarSquareIcon,
-  ArrowLeftOnRectangleIcon,
-} from "@heroicons/vue/24/outline";
+import { HomeIcon, EnvelopeIcon, UserIcon, UsersIcon, CogIcon, ChartBarSquareIcon, ArrowLeftOnRectangleIcon, NewspaperIcon } from "@heroicons/vue/24/outline";
 import type { FunctionalComponent } from "vue";
 
 type Where = "home" | "app" | "user" | "admin";
@@ -37,9 +28,9 @@ export function getNavigation(where: Where): Navigation[] {
           description: "You can see all the market information, latest news, and more.",
         },
         {
-          name: "Articles",
-          to: "/app/articles",
-          icon: ChatBubbleLeftIcon,
+          name: "News",
+          to: "/app/news",
+          icon: NewspaperIcon,
           title: "Latest Crypto News",
           description: "Where the community shares the latest news about the crypto world.",
         },
