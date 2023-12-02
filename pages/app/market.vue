@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useCurrentUser } from "~/composables/useUser";
-
 const cryptos = usePublicCrypto();
 
 const series = {

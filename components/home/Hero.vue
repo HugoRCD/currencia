@@ -15,7 +15,7 @@
     </h2>
     <HomeCircleSystem />
     <div class="flex gap-4 mt-6 z-10">
-      <NuxtLink to="/app/dashboard">
+      <NuxtLink to="/app/market">
         <UButton>
           <span class="font-semibold">Get started</span>
         </UButton>

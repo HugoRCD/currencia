@@ -119,7 +119,7 @@ async function updateCurrentUser() {
     <div v-else>
       <UButton color="white" variant="soft" size="sm" class="text-left font-semibold" @click="authModal = true" :ui="{ padding: { sm: 'px-0' } }">
         <UAvatar icon="i-heroicons-user-circle" size="sm" :ui="{ icon: { size: { sm: 'w-5 h-5' } } }" />
-        <span class="whitespace-nowrap" :class="sideBarOpen ? 'hidden sm:flex' : 'hidden'">Sign in</span>
+        <span class="whitespace-nowrap" :class="sideBarOpen ? 'hidden sm:flex' : 'hidden'">Sign / Signup</span>
       </UButton>
       <UModal v-model="authModal">
         <UCard>

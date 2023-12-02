@@ -5,6 +5,7 @@ import {
   UsersIcon,
   CogIcon,
   ChartBarSquareIcon,
+  StarIcon,
   ArrowLeftOnRectangleIcon,
   NewspaperIcon,
   CurrencyDollarIcon,
@@ -31,9 +32,9 @@ export function getNavigation(where: Where): Navigation[] {
     case "app":
       return [
         {
-          name: "Dashboard",
-          to: "/app/dashboard",
-          icon: HomeIcon,
+          name: "Market overview",
+          to: "/app/market",
+          icon: ChartBarSquareIcon,
           title: "Market overview",
           description: "You can see all the market information, latest news, and more.",
         },
@@ -47,7 +48,7 @@ export function getNavigation(where: Where): Navigation[] {
         {
           name: "Leaderboard",
           to: "/app/leaderboard",
-          icon: ChartBarSquareIcon,
+          icon: StarIcon,
           title: "Leaderboard",
           description: "Check out the top current crypto.",
         },
