@@ -6,8 +6,6 @@ const navigations = getNavigation("app");
 const user_navigations = getNavigation("user");
 const admin_navigations = getNavigation("admin");
 
-const userStore = useUserStore();
-
 const open = ref(true);
 
 const route = useRoute();
@@ -56,7 +54,7 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true });
       </div>
 
       <Transition name="slide" mode="out-in">
-        <div class="flex flex-col gap-2" v-if="userStore.isLoggedIn">
+        <div class="flex flex-col gap-2" v-if="isLoggedIn">
           <!-- User -->
           <div class="flex flex-col gap-2">
             <UDivider class="my-3" />
@@ -64,7 +62,7 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true });
           </div>
 
           <!-- Admin -->
-          <div class="flex flex-col gap-2" v-if="userStore.isAdmin">
+          <div class="flex flex-col gap-2" v-if="isAdmin">
             <UDivider class="my-3" />
             <LayoutNavItem v-for="nav in admin_navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open="open" />
           </div>

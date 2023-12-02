@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useSignup, useLogin, useLogout, updateUser } from "~/composables/useUser";
+import { useSignup, useLogin, useLogout, updateUser, useCurrentUser } from "~/composables/useUser";
 import type { CreateUserDto, LoginUserDto } from "~/types/User";
 
 defineProps({
@@ -9,14 +9,10 @@ defineProps({
   },
 });
 
-const userStore = useUserStore();
-
 const loading = ref(false);
 const authModal = ref(false);
 
-const user = computed(() => {
-  return userStore.getUser;
-});
+const user = useCurrentUser();
 
 const login = ref({
   username: "",

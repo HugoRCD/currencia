@@ -1,4 +1,17 @@
 import type { CreateUserDto, LoginUserDto, publicUser, UpdateUserDto, User } from "~/types/User";
+import { Role } from "~/types/User";
+
+export const useCurrentUser = () => {
+  return useState<publicUser>("user", () => null);
+};
+
+export const isLoggedIn = computed(() => {
+  return !!useCurrentUser().value;
+});
+
+export const isAdmin = computed(() => {
+  return useCurrentUser().value?.role === Role.Admin;
+});
 
 export async function useSignup(createUserInput: CreateUserDto) {
   const toast = useToast();
@@ -29,7 +42,7 @@ export async function useLogin(loginInput: LoginUserDto) {
     body: loginInput,
   });
   if (data.value) {
-    useUserStore().setUser(data.value);
+    useCurrentUser().value = data.value;
     toast.add({
       title: "Hello, " + data.value.username,
       icon: "i-heroicons-check-circle",
@@ -48,7 +61,7 @@ export async function useLogin(loginInput: LoginUserDto) {
 
 export async function useLogout() {
   const toast = useToast();
-  useUserStore().logout();
+  useCurrentUser().value = null;
   const { error } = await useFetch("/api/auth/logout", {
     method: "POST",
   });
@@ -70,7 +83,7 @@ export async function useLogout() {
 
 export async function useUser(): Promise<publicUser | null> {
   const authCookie = useCookie("authToken");
-  const user = useUserStore().getUser;
+  const user = useCurrentUser().value;
 
   if (authCookie && !user) {
     const cookieHeaders = useRequestHeaders(["cookie"]);
@@ -81,7 +94,7 @@ export async function useUser(): Promise<publicUser | null> {
     if (!data.value) {
       return null;
     }
-    useUserStore().setUser(data.value);
+    useCurrentUser().value = data.value;
   }
   return user;
 }
@@ -101,7 +114,7 @@ export async function updateUser(id: number, updateUserInput: UpdateUserDto) {
     });
     return;
   }
-  useUserStore().setUser(data.value);
+  useCurrentUser().value = data.value;
   toast.add({
     title: "User updated!",
     icon: "i-heroicons-check-circle",

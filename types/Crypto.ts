@@ -4,12 +4,12 @@ export type Crypto = {
   symbol: string;
   logo: string;
   description: string;
-  visible?: boolean;
+  visible: boolean;
   createdAt?: string;
   updatedAt?: string;
 };
 
-export type CreateCryptoDto = {
+export type UpsertCryptoDto = {
   name: string;
   symbol: string;
   logo: string;

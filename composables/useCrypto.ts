@@ -1,4 +1,4 @@
-import type { CreateCryptoDto, Crypto } from "~/types/Crypto";
+import type { UpsertCryptoDto, Crypto } from "~/types/Crypto";
 
 export const usePublicCrypto = () => {
   return useState<Crypto[]>("cryptos", () => []);
@@ -33,7 +33,7 @@ export function useCrypto() {
     getLoading.value = false;
   }
 
-  async function upsertCrypto(upsertCryptoDto: CreateCryptoDto) {
+  async function upsertCrypto(upsertCryptoDto: UpsertCryptoDto) {
     loading.value = true;
     const { data, error } = await useFetch("/api/admin/crypto/crypto", {
       method: "POST",

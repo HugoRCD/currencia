@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CreateCryptoDto, Crypto } from "~/types/Crypto";
+import type { UpsertCryptoDto, Crypto } from "~/types/Crypto";
 
 const columns = [
   {
@@ -76,7 +76,7 @@ const items = (row: Crypto) => [
   ],
 ];
 
-const newCrypto = ref<CreateCryptoDto>({
+const newCrypto = ref<UpsertCryptoDto>({
   name: "",
   symbol: "",
   logo: "",

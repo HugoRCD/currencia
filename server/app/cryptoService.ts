@@ -1,4 +1,4 @@
-import type { CreateCryptoDto } from "~/types/Crypto";
+import type { UpsertCryptoDto } from "~/types/Crypto";
 import prisma from "~/server/database/client";
 
 export async function getAllCryptos(all: boolean = false) {
@@ -13,7 +13,7 @@ export async function getAllCryptos(all: boolean = false) {
   }
 }
 
-export async function upsertCrypto(upsertCryptoDto: CreateCryptoDto) {
+export async function upsertCrypto(upsertCryptoDto: UpsertCryptoDto) {
   return prisma.crypto.upsert({
     where: {
       name: upsertCryptoDto.name,
