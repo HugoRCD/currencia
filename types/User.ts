@@ -31,7 +31,6 @@ export type CreateUserDto = {
   email: string;
   password: string;
   avatar?: string;
-  role?: Role;
 };
 
 export type UpdateUserDto = {
@@ -39,7 +38,6 @@ export type UpdateUserDto = {
   email?: string;
   password?: string;
   avatar?: string;
-  role?: Role;
 };
 
 export type LoginUserDto = {

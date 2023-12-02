@@ -124,3 +124,13 @@ export async function updateUser(userId: number, updateUserInput: UpdateUserDto)
   });
   return formatUser(user);
 }
+
+export async function updateRoleUser(userId: number, role: Role) {
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      role,
+    },
+  });
+  return formatUser(user);
+}
