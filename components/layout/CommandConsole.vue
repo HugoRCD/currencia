@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Crypto } from "~/types/Crypto";
-
 const open = ref(false);
 const commandPaletteRef = ref();
 
@@ -25,24 +23,22 @@ const actions = [
 
 const cryptos = usePublicCrypto();
 
-const cryptosOptions = cryptos.value.map((crypto) => ({
-  id: crypto.symbol,
-  label: crypto.name,
-  avatar: {
-    src: crypto.logo,
-    loading: "lazy",
-  },
-  click: () => {
-    useRouter().push(`/app/crypto/${crypto.symbol}`);
-    open.value = false;
-  },
-}));
-
 const groups = computed(() =>
   [
     {
       key: "cryptos",
-      commands: cryptosOptions,
+      commands: cryptos.value.map((crypto) => ({
+        id: crypto.symbol,
+        label: crypto.name,
+        avatar: {
+          src: crypto.logo,
+          loading: "lazy",
+        },
+        click: () => {
+          useRouter().push(`/app/crypto/${crypto.symbol}`);
+          open.value = false;
+        },
+      })),
     },
     {
       key: "actions",

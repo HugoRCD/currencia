@@ -10,10 +10,6 @@ export default defineNuxtConfig({
 
   css: ["~/assets/style/main.scss"],
 
-  imports: {
-    dirs: ["store"],
-  },
-
   devtools: { enabled: true },
 
   runtimeConfig: {
@@ -23,7 +19,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@vueuse/nuxt", "@nuxtjs/i18n", "@pinia/nuxt", "@nuxt/ui", "nuxt-svgo", "@nuxt/image", "dayjs-nuxt"],
+  modules: ["@vueuse/nuxt", "@nuxtjs/i18n", "@nuxt/ui", "nuxt-svgo", "@nuxt/image", "dayjs-nuxt"],
 
   colorMode: {
     preference: "system",

@@ -49,8 +49,8 @@ await useUser();
 
 const route = useRoute();
 
-const userStore = useUserStore();
-if (route.path === "/" && userStore.getUser) {
+const user = useCurrentUser();
+if (route.path === "/" && user.value) {
   navigateTo("/app/dashboard");
 }
 </script>
