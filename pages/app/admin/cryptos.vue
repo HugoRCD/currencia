@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import type { UpsertCryptoDto, Crypto } from "~/types/Crypto";
+import type { Crypto, UpsertCryptoDto } from "~/types/Crypto";
+
+const { cryptos, loading, getLoading, fetchCryptos, upsertCrypto, deleteCrypto } = useCrypto();
 
 const columns = [
   {
     key: "logo",
-    label: "",
+    label: "Logo",
   },
   {
     key: "name",
@@ -35,10 +37,9 @@ const columns = [
   },
   {
     key: "actions",
+    label: "Actions",
   },
 ];
-
-const { cryptos, loading, getLoading, fetchCryptos, upsertCrypto, deleteCrypto } = useCrypto();
 
 const items = (row: Crypto) => [
   [
@@ -86,22 +87,61 @@ const newCrypto = ref<UpsertCryptoDto>({
 
 const modal = ref(false);
 
+// Selected Columns
+const selectedColumns = ref(columns);
+const columnsTable = computed(() => columns.filter((column) => selectedColumns.value.includes(column)));
+
+// Pagination
+/*const page = ref(1);
+const pageCount = ref(10);
+const pageTotal = computed(() => Math.ceil(filteredCryptos.value.length / pageCount.value));*/
+
+// Filters
+const search = ref("");
+
+const filteredCryptos = computed(() =>
+  cryptos.value.filter((crypto) => {
+    const name = crypto.name.toLowerCase();
+    const symbol = crypto.symbol.toLowerCase();
+    const searchValue = search.value.toLowerCase();
+    return name.includes(searchValue) || symbol.includes(searchValue);
+  }),
+);
+
+/*const paginatedCryptos = computed(() => {
+  const start = (page.value - 1) * pageCount.value;
+  const end = start + pageCount.value;
+  return filteredCryptos.value.slice(start, end);
+});*/
+
 onMounted(async () => {
   await fetchCryptos();
 });
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
-    <div class="flex justify-end">
+  <div class="flex flex-col gap-4 mt-1">
+    <div class="flex justify-end sm:items-center gap-4 flex-col sm:flex-row">
+      <UInput v-model="search" label="Search" placeholder="Search a crypto" icon="i-heroicons-magnifying-glass-20-solid" />
+      <!--      <USelect v-model="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="w-20" />-->
+      <USelectMenu v-model="selectedColumns" :options="columns" multiple>
+        <UButton icon="i-heroicons-view-columns" color="gray" class="w-full sm:w-40"> Columns </UButton>
+      </USelectMenu>
       <UButton label="Add a crypto" icon="i-heroicons-plus-circle" @click="modal = true" />
     </div>
-    <UTable :rows="cryptos" :columns="columns" :loading="getLoading">
+    <UTable :rows="filteredCryptos" :columns="columnsTable" :loading="getLoading">
       <template #logo-data="{ row }">
         <UAvatar :src="row.logo" :alt="row.name" class="w-7 h-7" :ui="{ rounded: 'rounded-none' }" />
       </template>
       <template #description-data="{ row }">
-        <span class="text-sm text-gray-500 dark:text-gray-400">{{ row.description.slice(0, 50) }}...</span>
+        <UPopover mode="hover">
+          <span class="text-sm text-gray-500 dark:text-gray-400">{{ row.description.slice(0, 50) }}...</span>
+          <template #panel>
+            <div class="p-4 w-96" style="white-space: pre-wrap">
+              <span class="text-sm text-gray-500 dark:text-gray-400">{{ row.description }}</span>
+            </div>
+          </template>
+        </UPopover>
       </template>
       <template #createdAt-data="{ row }">
         <span class="text-sm text-gray-500 dark:text-gray-400">{{ formatDate(row.createdAt) }}</span>
@@ -122,6 +162,7 @@ onMounted(async () => {
         </UDropdown>
       </template>
     </UTable>
+    <!--    <UPagination v-model="page" :page-count="pageCount" :total="pageTotal" />-->
     <UModal v-model="modal">
       <UCard>
         <form class="flex flex-col gap-4" @submit.prevent="upsertCrypto(newCrypto)">

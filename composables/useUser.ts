@@ -2,7 +2,7 @@ import type { CreateUserDto, LoginUserDto, publicUser, UpdateUserDto, User } fro
 import { Role } from "~/types/User";
 
 export const useCurrentUser = () => {
-  return useState<publicUser>("user", () => null);
+  return useState<publicUser | null>("user", () => null);
 };
 
 export const isLoggedIn = computed(() => {
