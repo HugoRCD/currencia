@@ -1,4 +1,14 @@
-import { HomeIcon, EnvelopeIcon, UserIcon, UsersIcon, CogIcon, ChartBarSquareIcon, ArrowLeftOnRectangleIcon, NewspaperIcon } from "@heroicons/vue/24/outline";
+import {
+  HomeIcon,
+  EnvelopeIcon,
+  UserIcon,
+  UsersIcon,
+  CogIcon,
+  ChartBarSquareIcon,
+  ArrowLeftOnRectangleIcon,
+  NewspaperIcon,
+  CurrencyDollarIcon,
+} from "@heroicons/vue/24/outline";
 import type { FunctionalComponent } from "vue";
 
 type Where = "home" | "app" | "user" | "admin";
@@ -63,7 +73,7 @@ export function getNavigation(where: Where): Navigation[] {
     case "admin":
       return [
         { name: "Users", to: "/app/admin/users", icon: UsersIcon, title: "Users", description: "Users page" },
-        { name: "App Settings", to: "/app/admin/settings", icon: CogIcon, title: "App Settings", description: "App Settings page" },
+        { name: "Cryptos", to: "/app/admin/cryptos", icon: CurrencyDollarIcon, title: "Cryptos", description: "Cryptos page" },
       ];
     default:
       return [];

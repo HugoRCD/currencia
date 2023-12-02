@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import { cryptos } from "~/data/crypto";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="relative flex flex-col justify-center items-center">
@@ -23,11 +21,11 @@ import { cryptos } from "~/data/crypto";
         </UButton>
       </NuxtLink>
     </div>
-    <div class="flex gap-4 mt-6 z-10 relative">
+    <!--    <div class="flex gap-4 mt-6 z-10 relative">
       <div v-for="(crypto, index) in cryptos" :key="index" class="crypto-logo">
         <img :src="crypto.logo" class="w-8 h-8" alt="" />
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 

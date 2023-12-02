@@ -73,3 +73,8 @@ export const getRandomDailyData = (): ApexChartSeries["data"] => {
 
   return data;
 };
+
+export function formatDate(date: string) {
+  const dayjs = useDayjs();
+  return dayjs(date).format("DD/MM/YYYY");
+}

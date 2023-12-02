@@ -1,21 +1,32 @@
-import type { CreateCryptoDto, UpdateCryptoDto } from "~/types/Crypto";
+import type { CreateCryptoDto } from "~/types/Crypto";
 import prisma from "~/server/database/client";
 
-export async function getAllCryptos() {
-  return prisma.crypto.findMany();
+export async function getAllCryptos(all: boolean = false) {
+  if (!all) {
+    return prisma.crypto.findMany({
+      where: {
+        visible: true,
+      },
+    });
+  } else {
+    return prisma.crypto.findMany();
+  }
 }
 
-export async function createCrypto(createCryptoDto: CreateCryptoDto) {
-  return prisma.crypto.create({
-    data: createCryptoDto,
+export async function upsertCrypto(upsertCryptoDto: CreateCryptoDto) {
+  return prisma.crypto.upsert({
+    where: {
+      name: upsertCryptoDto.name,
+    },
+    update: upsertCryptoDto,
+    create: upsertCryptoDto,
   });
 }
 
-export async function updateCrypto(cryptoId: number, updateCryptoDto: UpdateCryptoDto) {
-  return prisma.crypto.update({
+export async function deleteCrypto(cryptoId: number) {
+  return prisma.crypto.delete({
     where: {
       id: cryptoId,
     },
-    data: updateCryptoDto,
   });
 }

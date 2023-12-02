@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { displayNumberValue } from "~/types/ApexChart";
 import type { Variations } from "~/types/ApexChart";
-import { cryptos } from "~/data/crypto";
+import type { Crypto } from "~/types/Crypto";
+const cryptos = usePublicCrypto();
 
 const cryptoId = useRoute().params.cryptoId;
-const crypto = cryptos.find((crypto) => crypto.symbol === cryptoId);
+const crypto = cryptos.value.find((crypto: Crypto) => crypto.symbol === cryptoId);
 
 const variations = ref<Variations>({
   percent: -1,

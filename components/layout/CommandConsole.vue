@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+import type { Crypto } from "~/types/Crypto";
+
 const open = ref(false);
 const commandPaletteRef = ref();
 
@@ -18,13 +20,12 @@ const actions = [
       useRouter().push("/");
       open.value = false;
     },
-    shortcuts: ["⌘", "Z"],
   },
 ];
 
-import { cryptos } from "~/data/crypto";
+const cryptos = usePublicCrypto();
 
-const cryptosOptions = cryptos.map((crypto) => ({
+const cryptosOptions = cryptos.value.map((crypto) => ({
   id: crypto.symbol,
   label: crypto.name,
   avatar: {
@@ -59,30 +60,6 @@ function onSelect(option) {
     window.open(option.href, "_blank");
   }
 }
-
-onMounted(() => {
-  if (process.client) {
-    document.addEventListener("keydown", (event) => {
-      if (event.metaKey && event.key === "k") open.value = !open.value;
-    });
-    document.addEventListener("keydown", (event) => {
-      if (event.metaKey && event.key === "z") {
-        event.preventDefault();
-        actions.find((action) => action.id === "back_to_home").click();
-      }
-
-      if (event.metaKey && event.key === "f") {
-        event.preventDefault();
-        actions.find((action) => action.id === "switch_french").click();
-      }
-
-      if (event.metaKey && event.key === "e") {
-        event.preventDefault();
-        actions.find((action) => action.id === "switch_english").click();
-      }
-    });
-  }
-});
 </script>
 
 <template>

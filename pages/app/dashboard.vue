@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { cryptos } from "~/data/crypto";
+const cryptos = usePublicCrypto();
 
 const series = {
   data: [],
