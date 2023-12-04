@@ -133,7 +133,6 @@
   animation: none;
 }
 
-// desactive all slide animation if prefers-reduced-motion is set to reduce
 @media (prefers-reduced-motion: reduce) {
   .slide-enter-active,
   .slide-leave-active,
