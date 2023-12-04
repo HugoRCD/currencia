@@ -20,6 +20,11 @@
           <span class="font-semibold">Get started</span>
         </UButton>
       </NuxtLink>
+      <NuxtLink to="/auth">
+        <UButton>
+          <span class="font-semibold">Login</span>
+        </UButton>
+      </NuxtLink>
     </div>
     <!--    <div class="flex gap-4 mt-6 z-10 relative">
       <div v-for="(crypto, index) in cryptos" :key="index" class="crypto-logo">
