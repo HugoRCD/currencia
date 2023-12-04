@@ -32,7 +32,7 @@ onUnmounted(() => {
     <h2 class="text-xl font-bold">Principally</h2>
     <div class="flex lg:flex-row flex-col">
       <div class="lg:w-2/3 w-full h-full relative">
-        <img :src="activeArticle.image" class="lg:rounded-bl-xl lg:rounded-tl-xl rounded-xl md:rounded-tr-xl h-full" alt="Bitcoin" />
+        <img :src="activeArticle.image" class="lg:rounded-bl-xl lg:rounded-tl-xl rounded-xl md:rounded-tr-xl w-full" alt="Bitcoin" />
         <div class="absolute w-full bottom-5 flex items-center justify-center">
           <div class="flex justify-between w-35 absolute">
             <div
