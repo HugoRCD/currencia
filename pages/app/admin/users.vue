@@ -164,7 +164,7 @@ onMounted(async () => {
     </div>
     <UTable :rows="filteredUsers" :columns="columnsTable" :loading="loading">
       <template #avatar-data="{ row }">
-        <UAvatar :src="row.avatar" :alt="row.name" class="w-7 h-7" />
+        <UAvatar :src="row.avatar" :alt="row.name" size="sm" imgClass="object-cover" />
       </template>
       <template #role-data="{ row }">
         <UBadge :label="row.role.toUpperCase()" :color="row.role === 'admin' ? 'primary' : 'gray'" />
