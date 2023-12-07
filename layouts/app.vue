@@ -14,8 +14,9 @@ useCrypto().fetchPublicCryptos();
 </script>
 
 <template>
-  <div class="flex h-screen pt-4 max-layout-width">
-    <LayoutSidebar />
+  <div class="flex h-screen pt-4 max-layout-width relative">
+    <LayoutSidebar class="hidden sm:flex" />
+    <LayoutMobileNavbar class="sm:hidden absolute bottom-0 left-0 right-0 z-20" />
     <LayoutSectionWrapper :navigation="currentPage">
       <slot />
     </LayoutSectionWrapper>
