@@ -7,6 +7,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  mobileMode: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const actions = [
@@ -59,11 +63,20 @@ function onSelect(option) {
 </script>
 
 <template>
-  <div class="w-full">
-    <UButton block size="lg" class="console-button whitespace-nowrap justify-start" @click="open = !open">
+  <div class="sm:w-full">
+    <UButton block size="lg" class="console-button whitespace-nowrap justify-start" @click="open = !open" v-if="!mobileMode">
       <UIcon name="i-heroicons-magnifying-glass" class="h-5 w-5" />
       <span class="text-sm font-medium hidden sm:block" v-if="sidebarOpen">Find a crypto</span>
     </UButton>
+    <UButton
+      :ui="{ rounded: 'rounded-xl' }"
+      size="xl"
+      icon="i-heroicons-magnifying-glass"
+      class="whitespace-nowrap justify-center"
+      color="black"
+      @click="open = !open"
+      v-else
+    />
     <UModal v-model="open" :ui="{ container: 'flex min-h-full items-start sm:items-center justify-center text-center' }">
       <UCommandPalette
         placeholder="Search for a crypto..."
