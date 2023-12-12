@@ -2,8 +2,8 @@
 import { useArticle } from "~/composables/useArticle";
 
 const articles = usePublicArticle();
-const { loading, fetchPublicArticles } = useArticle();
-fetchPublicArticles();
+const { loading, fetchPublicArticles } = await useArticle();
+await fetchPublicArticles();
 </script>
 
 <template>

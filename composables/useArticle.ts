@@ -4,7 +4,7 @@ export const usePublicArticle = () => {
   return useState<Article[]>("articles", () => []);
 };
 
-export function useArticle() {
+export async function useArticle() {
   const toast = useToast();
   const publicArticles = usePublicArticle();
 

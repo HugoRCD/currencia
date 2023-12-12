@@ -14,7 +14,7 @@ const interval = ref();
 onMounted(() => {
   interval.value = setInterval(() => {
     const index = props.articles.findIndex((article) => article.id === activeArticle.value.id);
-    if (index === props.articles.length - 1) {
+    if (index >= 2) {
       activeArticle.value = props.articles[0];
     } else {
       activeArticle.value = props.articles[index + 1];
@@ -31,12 +31,17 @@ onUnmounted(() => {
   <div class="flex flex-col gap-3">
     <h2 class="text-xl font-bold">Principally</h2>
     <div class="flex lg:flex-row flex-col">
-      <div class="lg:w-2/3 w-full h-full relative">
-        <img :src="activeArticle.preview" class="lg:rounded-bl-xl lg:rounded-tl-xl rounded-xl md:rounded-tr-xl w-full" alt="Bitcoin" />
+      <div class="lg:w-2/3 w-full h-[30rem] relative">
+        <img
+          v-if="activeArticle && activeArticle.preview"
+          :src="activeArticle.preview"
+          class="lg:rounded-bl-xl lg:rounded-tl-xl rounded-xl md:rounded-tr-xl w-full h-full object-cover"
+          alt="Bitcoin"
+        />
         <div class="absolute w-full bottom-5 flex items-center justify-center">
           <div class="flex justify-between w-35 absolute">
             <div
-              v-for="(article, index) in articles"
+              v-for="(article, index) in articles.slice(0, 3)"
               :key="index"
               class="h-2 bg-white rounded-full cursor-pointer transition duration-300 m-2"
               :class="activeArticle.id === article.id ? 'w-4' : 'w-2'"
@@ -47,7 +52,7 @@ onUnmounted(() => {
       </div>
       <div class="lg:w-1/3 w-full h-full flex flex-col">
         <NewsPrincipalActuCard
-          v-for="(article, index) in articles"
+          v-for="(article, index) in articles.slice(0, 3)"
           :key="index"
           :article="article"
           :index="index"
