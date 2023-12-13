@@ -54,8 +54,6 @@ model Article {
   visible     Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  publishedAt DateTime
-  visible     Boolean  @default(true)
 }
 
 model Watchlist {
