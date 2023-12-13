@@ -1,10 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model User {
@@ -14,9 +14,9 @@ model User {
   password  String
   avatar    String     @default("https://i.imgur.com/6VBx3io.png") @db.VarChar(500)
   role      String     @default("user")
-  authToken String?    @unique @db.VarChar(500)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  authToken String?    @unique @db.VarChar(500)
   portfolio Portfolio?
   watchlist Watchlist?
 }
@@ -27,9 +27,9 @@ model Crypto {
   symbol        String          @unique
   logo          String
   description   String          @db.VarChar(500)
-  visible       Boolean         @default(true)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
+  visible       Boolean         @default(true)
   portfolioData PortfolioData[]
   cryptoData    CryptoData[]
 }
@@ -54,6 +54,8 @@ model Article {
   visible     Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  publishedAt DateTime
+  visible     Boolean  @default(true)
 }
 
 model Watchlist {

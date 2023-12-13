@@ -11,8 +11,13 @@ defineProps({
 </script>
 
 <template>
-  <div class="relative overflow-hidden flex flex-col gap-2 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800">
-    <img :src="article.image" class="w-full h-auto" :alt="article.title" />
+  <NuxtLink
+    class="relative overflow-hidden flex flex-col gap-2 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 cursor-pointer"
+    :to="article.link"
+  >
+    <div class="w-full h-[15rem]">
+      <img :src="article.preview" class="w-full h-full object-cover" :alt="article.title" />
+    </div>
     <div class="flex flex-col gap-1 p-4 pt-0">
       <div class="flex flex-row items-center">
         <span v-if="article" class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ article.title }}</span>
@@ -23,7 +28,7 @@ defineProps({
         </span>
       </div>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <style scoped lang="scss">
