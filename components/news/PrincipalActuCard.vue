@@ -16,7 +16,7 @@ defineProps({
 
 <template>
   <div
-    class="lg:rounded-tr-xl lg:rounded-br-xl rounded-xl border-none hover:bg-neutral-950/10 black:hover:bg-neutral-50/50 transition-colors duration-300 w-full flex-1 p-4 cursor-pointer gap-2"
+    class="lg:rounded-tr-xl lg:rounded-br-xl rounded-xl border-none hover:bg-neutral-950/10 black:hover:bg-neutral-50/50 transition-colors duration-300 w-full p-4 cursor-pointer gap-2 h-1/3"
     :class="active ? 'bg-neutral-950/10 dark:bg-neutral-50/10' : ''"
   >
     <div class="w-full">

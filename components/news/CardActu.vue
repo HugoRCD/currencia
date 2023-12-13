@@ -8,10 +8,17 @@ defineProps({
     required: true,
   },
 });
+
+function openArticle(link: string) {
+  window.open(link, "_blank");
+}
 </script>
 
 <template>
-  <div class="relative overflow-hidden flex flex-col gap-2 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800">
+  <div
+    class="relative overflow-hidden flex flex-col gap-2 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 cursor-pointer"
+    @click="openArticle(article.link)"
+  >
     <div class="w-full h-[15rem]">
       <img :src="article.preview" class="w-full h-full object-cover" :alt="article.title" />
     </div>
