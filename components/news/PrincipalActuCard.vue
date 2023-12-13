@@ -24,7 +24,7 @@ defineProps({
       <span class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ article.title }}</span>
     </div>
     <div class="w-full h-full">
-      <span class="text-sm text-gray-500 dark:text-gray-400 description max-h-20" ref="description">
+      <span class="text-sm text-gray-500 dark:text-gray-400 description lg:max-h-20 max-h-14" ref="description">
         {{ article.description }}
       </span>
     </div>
@@ -35,7 +35,7 @@ defineProps({
 .description {
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 </style>

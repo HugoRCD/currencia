@@ -70,10 +70,10 @@ const changeArticle = (article: Article) => {
             :key="article.id"
             :src="article.preview"
             :class="{
-              'lg:w-full': index === activeArticle.id - 1,
-              'lg:w-0': index !== activeArticle.id - 1,
+              'w-full': index === activeArticle.id - 1,
+              'w-0': index !== activeArticle.id - 1,
             }"
-            class="lg:rounded-bl-xl lg:rounded-tl-xl rounded-xl md:rounded-tr-xl w-full object-cover transition-all duration-1000 ease-in-out"
+            class="lg:rounded-bl-xl lg:rounded-tl-xl rounded-xl md:rounded-tr-xl object-cover transition-all duration-1000 ease-in-out"
             alt="Article preview"
           />
         </div>
@@ -90,7 +90,7 @@ const changeArticle = (article: Article) => {
         </div>
       </div>
 
-      <div class="lg:w-1/3 w-full h-[30rem] flex lg:flex-col justify-between p-4">
+      <div class="lg:w-1/3 w-full h-[30rem] flex flex-col justify-between p-1">
         <NewsPrincipalActuCard
           v-for="(article, index) in articles.slice(0, 3)"
           :key="index"
