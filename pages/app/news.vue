@@ -12,7 +12,7 @@ await fetchPublicArticles();
       <NewsMainActu style="--stagger: 1" data-animate :articles="articles" />
       <NewsListActu style="--stagger: 2" data-animate :articles="articles" class="mt-8" />
     </div>
-    <div v-else>prout</div>
+    <div v-else>Loading</div>
   </div>
 </template>
 

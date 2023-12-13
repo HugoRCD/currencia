@@ -29,10 +29,6 @@ const startInterval = (article?: Article) => {
   }, 3000);
 };
 
-function openArticle(link: string) {
-  window.open(link, "_blank");
-}
-
 onMounted(() => {
   startInterval();
 });
@@ -101,7 +97,6 @@ const changeArticle = (article: Article) => {
           :article="article"
           :index="index"
           :active="article.id === activeArticle.id"
-          @click="openArticle(article.link)"
           @mouseover="handleMouseEnter(article)"
           @mouseleave="handleMouseLeave(article)"
         />
