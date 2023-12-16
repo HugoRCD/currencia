@@ -2,6 +2,7 @@
 definePageMeta({
   layout: "app",
 });
+await useCrypto().fetchPublicCryptos();
 </script>
 
 <template>

@@ -13,10 +13,12 @@
 
 html.light {
   background-color: #F8F8F8;
+  --dot-pattern-color: #111827;
 }
 
 html.dark {
   background-color: #131113;
+  --dot-pattern-color: #9ca3af;
 }
 
 @layer components {

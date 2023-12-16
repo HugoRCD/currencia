@@ -4,7 +4,7 @@ export const usePublicArticle = () => {
   return useState<Article[]>("articles", () => []);
 };
 
-export async function useArticle() {
+export function useArticle() {
   const toast = useToast();
   const publicArticles = usePublicArticle();
 
@@ -15,13 +15,13 @@ export async function useArticle() {
   const articles = ref<Article[]>([]);
 
   async function fetchPublicArticles() {
-    const { data } = await useFetch("/api/article");
+    const { data } = await useFetch<Article[]>("/api/article");
     if (data.value) publicArticles.value = data.value;
   }
 
   async function fetchArticles() {
     getLoading.value = true;
-    const { data, error } = await useFetch("/api/admin/article/article");
+    const { data, error } = await useFetch<Article[]>("/api/admin/article/article");
     if (error.value || !data.value)
       toast.add({
         title: "Whoops! Something went wrong.",

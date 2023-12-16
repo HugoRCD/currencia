@@ -9,8 +9,6 @@ const currentPage = computed(() => {
     : { title: "404", description: "Page not found", icon: ExclamationTriangleIcon, to: "/404", name: "404" };
   return page ?? fallback;
 });
-
-useCrypto().fetchPublicCryptos();
 </script>
 
 <template>

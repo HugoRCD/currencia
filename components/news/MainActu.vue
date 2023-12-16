@@ -60,47 +60,44 @@ const changeArticle = (article: Article) => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3">
-    <h2 class="text-xl font-bold">Principally</h2>
-    <div class="flex lg:flex-row flex-col">
-      <div class="lg:w-2/3 w-full h-[30rem] relative flex row">
-        <div class="absolute flex row w-full h-full overflow-hidden">
-          <img
-            v-for="(article, index) in articles.slice(0, 3)"
-            :key="article.id"
-            :src="article.preview"
-            :class="{
-              'w-full': index === activeArticle.id - 1,
-              'w-0': index !== activeArticle.id - 1,
-            }"
-            class="lg:rounded-bl-xl lg:rounded-tl-xl rounded-xl md:rounded-tr-xl object-cover transition-all duration-1000 ease-in-out"
-            alt="Article preview"
-          />
-        </div>
-        <div class="absolute w-full bottom-5 flex items-center justify-center">
-          <div class="flex justify-between w-35 absolute">
-            <div
-              v-for="(article, index) in articles.slice(0, 3)"
-              :key="index"
-              class="h-2 bg-white rounded-full cursor-pointer transition duration-300 m-2"
-              :class="activeArticle.id === article.id ? 'w-4' : 'w-2'"
-              @click="changeArticle(article)"
-            ></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="lg:w-1/3 w-full h-[30rem] flex flex-col justify-between p-1">
-        <NewsPrincipalActuCard
+  <div class="flex lg:flex-row flex-col">
+    <div class="lg:w-2/3 w-full h-[30rem] relative flex row">
+      <div class="absolute flex row w-full h-full overflow-hidden">
+        <img
           v-for="(article, index) in articles.slice(0, 3)"
-          :key="index"
-          :article="article"
-          :index="index"
-          :active="article.id === activeArticle.id"
-          @mouseover="handleMouseEnter(article)"
-          @mouseleave="handleMouseLeave(article)"
+          :key="article.id"
+          :src="article.preview"
+          :class="{
+            'w-full': index === activeArticle.id - 1,
+            'w-0': index !== activeArticle.id - 1,
+          }"
+          class="lg:rounded-bl-xl lg:rounded-tl-xl rounded-xl md:rounded-tr-xl object-cover transition-all duration-1000 ease-in-out"
+          alt="Article preview"
         />
       </div>
+      <div class="absolute w-full bottom-5 flex items-center justify-center">
+        <div class="flex justify-between w-35 absolute">
+          <div
+            v-for="(article, index) in articles.slice(0, 3)"
+            :key="index"
+            class="h-2 bg-white rounded-full cursor-pointer transition duration-300 m-2"
+            :class="activeArticle.id === article.id ? 'w-4' : 'w-2'"
+            @click="changeArticle(article)"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:w-1/3 w-full h-[30rem] flex flex-col justify-between p-1">
+      <NewsPrincipalActuCard
+        v-for="(article, index) in articles.slice(0, 3)"
+        :key="index"
+        :article="article"
+        :index="index"
+        :active="article.id === activeArticle.id"
+        @mouseover="handleMouseEnter(article)"
+        @mouseleave="handleMouseLeave(article)"
+      />
     </div>
   </div>
 </template>

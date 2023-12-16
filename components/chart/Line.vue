@@ -165,6 +165,7 @@ const chartOptions = {
     width: 2,
   },
   grid: {
+    show: false,
     borderColor: colorMode.value === "dark" ? "#2A2A2B" : "#f2f3f4",
   },
   markers: {
@@ -224,18 +225,21 @@ const chartOptions = {
 </script>
 
 <template>
-  <div class="select-none">
+  <div class="select-none relative">
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
-    <apexchart
-      id="chart"
-      ref="chart"
-      height="300"
-      type="area"
-      :options="chartOptions"
-      :series="series"
-      @mouseout="mouseOut"
-      :class="isPositive ? 'positive' : 'negative'"
-    />
+    <div class="relative">
+      <DotPattern />
+      <apexchart
+        id="chart"
+        ref="chart"
+        height="300"
+        type="area"
+        :options="chartOptions"
+        :series="series"
+        @mouseout="mouseOut"
+        :class="isPositive ? 'positive' : 'negative'"
+      />
+    </div>
   </div>
 </template>
 
