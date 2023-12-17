@@ -1,24 +1,16 @@
-import { H3Event } from "h3";
 import { getRssFeed, insertItemArticle } from "~/server/app/feedService";
 
-export default eventHandler(async (event: H3Event) => {
-  // const body = await readBody(event);
-  const url = "https://Blockchain.News/RSS/";
-  const url2 = "https://www.cryptopolitan.com/feed/";
-  const urlArray = [url, url2];
+export default eventHandler(async () => {
+  console.log("Sync new articles");
+  const sources = ["https://Blockchain.News/RSS/", "https://www.cryptopolitan.com/feed/"];
   let data = null;
 
-  if (urlArray.length !== 0) {
-    for (const url1 of urlArray) {
-      data = await getRssFeed(url1);
-    }
+  for (const url of sources) {
+    data = await getRssFeed(url);
   }
   if (data !== null) {
     for (const article of data) {
       await insertItemArticle(article);
     }
-    console.log("Articles inserted");
   }
-
-  return data;
 });

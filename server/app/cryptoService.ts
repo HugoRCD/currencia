@@ -30,3 +30,11 @@ export async function deleteCrypto(cryptoId: number) {
     },
   });
 }
+
+export async function getCryptoData(symbol: string, from: string, to: string) {
+  const runtimeConfig = useRuntimeConfig().private.finageApiKey;
+  const response = await fetch(
+    `https://api.finage.co.uk/history/crypto/depth/${symbol}usd/${from}/${to}?apikey=${runtimeConfig}`
+  );
+  console.log(response);
+}
