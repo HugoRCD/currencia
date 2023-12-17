@@ -28,7 +28,7 @@ export async function insertItemArticle(article: CreateArticleDto) {
         title: article.title,
         description: article.description,
         link: article.link,
-        preview: article.preview,
+        preview: article.preview || "https://via.placeholder.com/150",
         publishedAt: new Date(article.publishedAt),
       },
     });
