@@ -90,12 +90,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             <USelectMenu v-model="selected" :options="demandTypes">
               <template #label>
                 <div class="rounded-full h-2 w-2" :class="selected.color"></div>
-                <span class="text-gray-400">{{ $t(selected.label) }}</span>
+                <span class="text-gray-400">{{ selected.label }}</span>
               </template>
               <template #option="{ option }">
                 <div class="flex items-center gap-3">
                   <div class="rounded-full h-2 w-2" :class="option.color"></div>
-                  <span>{{ $t(option.label) }}</span>
+                  <span>{{ option.label }}</span>
                 </div>
               </template>
             </USelectMenu>
