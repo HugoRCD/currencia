@@ -1,6 +1,6 @@
 import { getRssFeed, insertItemArticle } from "~/server/app/feedService";
 
-export default async function handler() {
+export default eventHandler(async () => {
   console.log("Sync new articles");
   const sources = ["https://Blockchain.News/RSS/", "https://www.cryptopolitan.com/feed/"];
   let data = null;
@@ -13,4 +13,4 @@ export default async function handler() {
       await insertItemArticle(article);
     }
   }
-}
+});
