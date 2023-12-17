@@ -72,7 +72,7 @@ if (process.client) {
 </script>
 
 <template>
-  <Html :lang="$i18n.locale">
+  <Html lang="en">
     <Body class="selection:bg-neutral-200 dark:selection:bg-neutral-700 relative">
       <LayoutScrollToTop />
       <LayoutHelpCenter class="hidden sm:block absolute bottom-3 right-3 z-20" />

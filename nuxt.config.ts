@@ -19,34 +19,12 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@vueuse/nuxt", "@nuxtjs/i18n", "@nuxt/ui", "nuxt-svgo", "@nuxt/image", "dayjs-nuxt"],
+  modules: ["@vueuse/nuxt", "@nuxt/ui", "nuxt-svgo", "@nuxt/image", "dayjs-nuxt"],
 
   colorMode: {
     preference: "system",
     fallback: "dark",
     storageKey: "currencia-color-mode",
-  },
-
-  i18n: {
-    strategy: "no_prefix",
-    detectBrowserLanguage: {
-      alwaysRedirect: true,
-      useCookie: true,
-      cookieKey: "i18n_redirected",
-      redirectOn: "root",
-    },
-    locales: [
-      {
-        code: "en",
-        iso: "en-US",
-      },
-      {
-        code: "fr",
-        iso: "fr-FR",
-      },
-    ],
-    baseUrl: "https://currencia.hrcd.fr",
-    vueI18n: "~/i18n.config.ts",
   },
 
   image: {
