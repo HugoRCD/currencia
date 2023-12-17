@@ -1,5 +1,5 @@
-import { useScheduler } from "#scheduler";
 import { getRssFeed, insertItemArticle } from "~/server/app/feedService";
+import { useScheduler } from "#scheduler";
 
 export default defineNitroPlugin(() => {
   startScheduler();
