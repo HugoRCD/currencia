@@ -44,6 +44,7 @@
     "eslint-plugin-vue": "^9.13.0",
     "jsonwebtoken": "^9.0.2",
     "nuxt": "^3.5.2",
+    "nuxt-scheduler": "^0.1.9",
     "nuxt-svgo": "^3.4.0",
     "openai": "^3.2.1",
     "prettier": "^2.8.8",
