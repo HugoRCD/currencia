@@ -3,6 +3,8 @@ export default defineNuxtConfig({
     layoutTransition: { name: "fade", mode: "out-in" },
   },
 
+  modules: ["@vueuse/nuxt", "@nuxt/ui", "nuxt-svgo", "@nuxt/image", "dayjs-nuxt"],
+
   routeRules: {
     "/": { isr: true, prerender: true },
     "/app/**": { ssr: false },
@@ -19,8 +21,6 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@vueuse/nuxt", "@nuxt/ui", "nuxt-svgo", "@nuxt/image", "dayjs-nuxt"],
-
   colorMode: {
     preference: "system",
     fallback: "dark",
@@ -34,7 +34,6 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ["/sitemap.xml"],
     },
   },
 
