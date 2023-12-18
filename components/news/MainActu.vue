@@ -64,12 +64,12 @@ const changeArticle = (article: Article) => {
     <div class="lg:w-2/3 w-full h-[30rem] relative flex row">
       <div class="absolute flex row w-full h-full overflow-hidden">
         <img
-          v-for="(article, index) in articles.slice(0, 3)"
+          v-for="article in articles.slice(0, 3)"
           :key="article.id"
           :src="article.preview"
           :class="{
-            'w-full': index === activeArticle.id - 1,
-            'w-0': index !== activeArticle.id - 1,
+            'w-full': article.id === activeArticle.id,
+            'w-0': article.id !== activeArticle.id,
           }"
           class="lg:rounded-bl-xl lg:rounded-tl-xl rounded-xl md:rounded-tr-xl object-cover transition-all duration-1000 ease-in-out"
           alt="Article preview"
