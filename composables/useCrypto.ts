@@ -7,6 +7,7 @@ export const usePublicCrypto = () => {
 export function useCrypto() {
   const toast = useToast();
   const publicCryptos = usePublicCrypto();
+  const user = useCurrentUser();
 
   const getLoading = ref(false);
   const loading = ref(false);
@@ -16,7 +17,7 @@ export function useCrypto() {
 
   async function fetchPublicCryptos() {
     const { data } = await useFetch("/api/crypto");
-    if (data.value) publicCryptos.value = data.value;
+    if (data.value) publicCryptos.value = user.value ? data.value : data.value.slice(0, 4);
   }
 
   async function fetchCryptos() {
