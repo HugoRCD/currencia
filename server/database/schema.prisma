@@ -94,10 +94,3 @@ model PortfolioData {
   crypto      Crypto    @relation(fields: [cryptoId], references: [id])
   portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
 }
-
-model RssFeed {
-  id        Int      @id @default(autoincrement())
-  link      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-}
