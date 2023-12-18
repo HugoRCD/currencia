@@ -15,5 +15,6 @@ export function formatUser(user: PrismaUser): publicUser {
     authToken: user.authToken || "",
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
+    watchlist: user.watchlist,
   };
 }
