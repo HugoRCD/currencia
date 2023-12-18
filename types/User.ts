@@ -3,6 +3,14 @@ export enum Role {
   User = "user",
 }
 
+export type UserWatchlist = {
+  id: number;
+  userId: number;
+  cryptoId: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type User = {
   id: number;
   username: string;
@@ -13,6 +21,7 @@ export type User = {
   authToken: string | null;
   createdAt: Date;
   updatedAt: Date;
+  watchlist: UserWatchlist[];
 };
 
 export type publicUser = {
@@ -24,6 +33,7 @@ export type publicUser = {
   authToken: string | null;
   createdAt: Date;
   updatedAt: Date;
+  watchlist: UserWatchlist[];
 };
 
 export type CreateUserDto = {

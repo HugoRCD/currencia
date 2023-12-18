@@ -1,22 +1,44 @@
 <script setup lang="ts">
+import { StarIcon } from "@heroicons/vue/24/outline";
+import { StarIcon as filledStar } from "@heroicons/vue/24/solid";
 import type { Crypto } from "~/types/Crypto";
+import type { publicUser } from "~/types/User";
+
+const toast = useToast();
 
 const loading = ref(false);
 
 const user = useCurrentUser();
+const userWatchlist = ref(user.value!.watchlist);
 const cryptos = usePublicCrypto();
 
-const favoritesCryptos = ref<Crypto[]>([]);
+async function togglefavorite(crypto: Crypto) {
+  const { data, error } = await useFetch<publicUser>(`/api/user/crypto/${crypto.id}`, {
+    method: "POST",
+    body: {
+      userId: user.value!.id,
+    },
+  });
+  if (error.value) {
+    toast.add({
+      title: "Whoops! Something went wrong.",
+      icon: "i-heroicons-x-circle",
+      color: "red",
+      timeout: 2000,
+    });
+    return;
+  }
+  userWatchlist.value = data.value!.watchlist;
+  toast.add({
+    title: userWatchlist.value.some((c) => c.cryptoId === crypto.id) ? "Added to watchlist" : "Removed from watchlist",
+    icon: "i-heroicons-check-circle",
+    timeout: 2000,
+  });
+}
 
-onMounted(() => {
-  if (!user.value) return;
-  const favoriteCrypto = useLocalStorage("favoriteCrypto", []);
-  favoritesCryptos.value = favoriteCrypto.value;
-});
-
-function addTofavorite(crypto: Crypto) {
-  favoritesCryptos.value.push(crypto);
-  useLocalStorage("favoriteCrypto", favoritesCryptos.value);
+function isFavorite(crypto: Crypto) {
+  if (!userWatchlist.value) return false;
+  return userWatchlist.value.some((c) => c.cryptoId === crypto.id);
 }
 
 async function updateCurrentUser() {
@@ -65,7 +87,12 @@ async function updateCurrentUser() {
         <h2 class="text-base font-semibold leading-7">Cryptos</h2>
         <p class="text-sm leading-6 text-gray-500">Add your favorite cryptos.</p>
       </div>
-      <div v-for="crypto in cryptos" :key="crypto.id" class="flex justify-between items-center bg-white dark:bg-gray-800 rounded-lg shadow-sm py-2 px-3">
+      <div
+        v-for="crypto in cryptos"
+        :key="crypto.id"
+        @click="togglefavorite(crypto)"
+        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out flex justify-between items-center bg-white dark:bg-gray-800 rounded-lg shadow-sm py-2 px-3"
+      >
         <div class="flex gap-2 items-center">
           <UAvatar :src="crypto.logo" :alt="crypto.name" class="w-7 h-7" :ui="{ rounded: 'rounded-none' }" />
           <div class="flex flex-col">
@@ -74,7 +101,8 @@ async function updateCurrentUser() {
           </div>
         </div>
         <div class="flex gap-2">
-          <UIcon name="i-heroicons-star" size="sm" class="text-yellow-400" />
+          <StarIcon v-if="!isFavorite(crypto)" class="w-5 h-5 text-gray-400" />
+          <filledStar v-else class="w-5 h-5 text-yellow-400" />
         </div>
       </div>
     </div>

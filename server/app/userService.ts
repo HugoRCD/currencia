@@ -40,6 +40,9 @@ export async function getUserById(userId: number) {
     where: {
       id: userId,
     },
+    include: {
+      watchlist: true,
+    },
   });
   if (!user) throw createError({ statusCode: 404, message: "User not found" });
   return formatUser(user);
@@ -49,6 +52,9 @@ export async function getUserByLogin(login: string) {
   return prisma.user.findFirst({
     where: {
       OR: [{ email: login }, { username: login }],
+    },
+    include: {
+      watchlist: true,
     },
   });
 }
@@ -64,6 +70,9 @@ export async function getUserByAuthToken(authToken: string) {
   const user = await prisma.user.findFirst({
     where: {
       authToken,
+    },
+    include: {
+      watchlist: true,
     },
   });
   if (!user) return null;
@@ -142,4 +151,30 @@ export async function updateRoleUser(userId: number, role: Role) {
     },
   });
   return formatUser(user);
+}
+
+export async function toggleCryptoWatchlist(userId: number, cryptoId: number) {
+  const foundUser = await getUserById(userId);
+  if (!foundUser) throw createError({ statusCode: 404, message: "User not found" });
+  const foundCrypto = await prisma.watchlist.findFirst({
+    where: {
+      userId: foundUser.id,
+      cryptoId,
+    },
+  });
+  if (foundCrypto) {
+    await prisma.watchlist.delete({
+      where: {
+        id: foundCrypto.id,
+      },
+    });
+  } else {
+    await prisma.watchlist.create({
+      data: {
+        userId: foundUser.id,
+        cryptoId,
+      },
+    });
+  }
+  return getUserById(userId);
 }
