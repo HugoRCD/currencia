@@ -5,8 +5,8 @@ const route = useRoute();
 const currentPage = computed(() => {
   const page = pages.find((page) => page.to === route.path);
   const fallback = route.path.includes("/app/crypto")
-    ? { title: "Crypto details", description: "Crypto", icon: ChartBarIcon, to: "/app/crypto", name: "crypto" }
-    : { title: "404", description: "Page not found", icon: ExclamationTriangleIcon, to: "/404", name: "404" };
+    ? { title: "Crypto details", description: "Crypto", icon: ChartBarIcon, to: "/app/crypto", name: "crypto", iconString: "i-heroicons-chart-bar" }
+    : { title: "404", description: "Page not found", icon: ExclamationTriangleIcon, to: "/404", name: "404", iconString: "i-heroicons-exclamation-triangle" };
   return page ?? fallback;
 });
 </script>
