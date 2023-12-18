@@ -32,8 +32,11 @@ const filteredArticles = computed(() =>
           <UInput v-model="search" label="Search" placeholder="Search a article" icon="i-heroicons-magnifying-glass-20-solid" />
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div v-if="filteredArticles.length !== 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <NewsCardActu v-for="(article, index) in filteredArticles" :key="index" :article="article" :index="index" />
+      </div>
+      <div class="w-full flex justify-center" v-if="filteredArticles.length === 0">
+        <p class="text-xl font-bold mt-10">No articles found</p>
       </div>
     </div>
   </div>
