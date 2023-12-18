@@ -56,3 +56,14 @@ export async function getAllArticles(all: boolean = false) {
     return prisma.article.findMany();
   }
 }
+
+export async function updateVisibleArticle(id: number, visible: boolean) {
+  return prisma.article.update({
+    where: {
+      id,
+    },
+    data: {
+      visible,
+    },
+  });
+}
