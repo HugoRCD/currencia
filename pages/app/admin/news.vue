@@ -2,8 +2,8 @@
 import type { Article } from "~/types/Article";
 import type { CreateArticleDto } from "~/types/Article";
 
-const { articles, getLoading, fetchArticles, updateArticle } = useArticle();
-
+const { articles, getLoading, fetchArticles, updateArticle, insertRssFeed, feeds, fetchFeed } = useArticle();
+const search = ref("");
 const columns = [
   {
     key: "title",
@@ -30,13 +30,61 @@ const columns = [
   },
 ];
 
+const columnsRssFeed = [
+  {
+    key: "link",
+    label: "Link",
+  },
+  {
+    key: "createdAt",
+    label: "Created At",
+    sortable: true,
+  },
+  {
+    key: "updatedAt",
+    label: "Updated At",
+    sortable: true,
+  },
+];
+
+function addRssFeed() {
+  if (search.value) {
+    insertRssFeed(search.value);
+  }
+}
+
 onMounted(() => {
   fetchArticles();
+  fetchFeed();
 });
 </script>
 
 <template>
   <div class="flex flex-col gap-4 mt-1">
+    <div class="flex justify-end sm:items-center gap-4 flex-col sm:flex-row">
+      <UInput v-model="search" label="Search" placeholder="Search a crypto" icon="i-heroicons-magnifying-glass-20-solid" />
+      <UButton label="Add RSS Feed" icon="i-heroicons-plus-circle" @click="addRssFeed()" />
+    </div>
+
+    <UTable :rows="feeds" :columns="columnsRssFeed" :loading="getLoading">
+      <template #title-data="{ row }">
+        <UPopover mode="hover">
+          <span class="text-sm text-gray-500 dark:text-gray-400">{{ row.link.slice(0, 30) }}...</span>
+          <template #panel>
+            <div class="p-4 w-96" style="white-space: pre-wrap">
+              <span class="text-sm text-gray-500 dark:text-gray-400">{{ row.link }}</span>
+            </div>
+          </template>
+        </UPopover>
+      </template>
+      <template #createdAt-data="{ row }">
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ formatDate(row.createdAt) }}</span>
+      </template>
+      <template #updatedAt-data="{ row }">
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ formatDate(row.updatedAt) }}</span>
+      </template>
+    </UTable>
+
     <UTable :rows="articles" :columns="columns" :loading="getLoading">
       <template #title-data="{ row }">
         <UPopover mode="hover">

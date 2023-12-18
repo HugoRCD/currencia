@@ -56,6 +56,13 @@ model Article {
   updatedAt   DateTime @updatedAt
 }
 
+model RssFeed {
+  id          Int      @id @default(autoincrement())
+  link        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Watchlist {
   id        Int      @id @default(autoincrement())
   userId    Int      @unique

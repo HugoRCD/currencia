@@ -1,4 +1,5 @@
 import type { Article } from "~/types/Article";
+import type { Feed } from "~/types/Feed";
 
 export const usePublicArticle = () => {
   return useState<Article[]>("articles", () => []);
@@ -13,6 +14,19 @@ export function useArticle() {
   const deleteLoading = ref(false);
 
   const articles = ref<Article[]>([]);
+  const feeds = ref<Feed[]>([]);
+
+  async function fetchFeed() {
+    const { data, error } = await useFetch<Feed[]>("/api/admin/feed");
+    if (error.value || !data.value)
+      toast.add({
+        title: "Whoops! Something went wrong.",
+        icon: "i-heroicons-x-circle",
+        color: "red",
+        timeout: 2000,
+      });
+    if (data.value) feeds.value = data.value;
+  }
 
   async function fetchPublicArticles() {
     const { data } = await useFetch<Article[]>("/api/article");
@@ -31,6 +45,27 @@ export function useArticle() {
       });
     if (data.value) articles.value = data.value;
     if (load) getLoading.value = false;
+  }
+
+  async function insertRssFeed(url: string) {
+    const { data, error } = await useFetch<Article[]>("/api/admin/feed", {
+      method: "POST",
+      body: { url },
+    });
+    if (error.value || !data.value)
+      toast.add({
+        title: "Whoops! Something went wrong.",
+        icon: "i-heroicons-x-circle",
+        color: "red",
+        timeout: 2000,
+      });
+    else {
+      toast.add({
+        title: "Feed updated successfully.",
+        icon: "i-heroicons-check-circle",
+        timeout: 2000,
+      });
+    }
   }
 
   async function updateArticle(id: number, visible: boolean) {
@@ -61,10 +96,13 @@ export function useArticle() {
   return {
     fetchPublicArticles,
     fetchArticles,
+    fetchFeed,
     updateArticle,
+    insertRssFeed,
     getLoading,
     loading,
     deleteLoading,
     articles,
+    feeds,
   };
 }

@@ -57,6 +57,32 @@ export async function getAllArticles(all: boolean = false) {
   }
 }
 
+export async function getFeedByLink(link: string) {
+  return prisma.rssFeed.findFirst({
+    where: {
+      link,
+    },
+  });
+}
+
+export async function getAllFeeds() {
+  return prisma.rssFeed.findMany();
+}
+
+export async function insertRssFeed(url: string) {
+  const foundFeed = await getFeedByLink(url);
+  if (foundFeed) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Feed already exists",
+    });
+  }
+  return prisma.rssFeed.create({
+    data: {
+      link: url,
+    },
+  });
+}
 export async function updateVisibleArticle(id: number, visible: boolean) {
   return prisma.article.update({
     where: {
