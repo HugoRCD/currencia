@@ -23,8 +23,10 @@ export async function getRssFeed(url: string) {
 
 export async function insertItemArticle(article: CreateArticleDto) {
   const foundArticle = await getArticlesByLink(article.link);
-  if (foundArticle != null && foundArticle.length > 0) return;
-  else {
+  console.log(foundArticle);
+  if (foundArticle != null && foundArticle.length > 0) {
+    return;
+  } else {
     return prisma.article.create({
       data: {
         title: article.title,

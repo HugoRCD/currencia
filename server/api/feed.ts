@@ -3,16 +3,19 @@ import { getAllFeeds, getRssFeed, insertItemArticle } from "~/server/app/feedSer
 
 export default eventHandler(async (event: H3Event) => {
   const feeds = await getAllFeeds();
-  let data = null;
-
+  const data = [];
+  console.log(feeds);
   if (feeds.length !== 0) {
-    for (const url1 of feeds) {
-      data = await getRssFeed(url1.link);
+    for (const url of feeds) {
+      data.push(await getRssFeed(url.link));
     }
   }
-  if (data !== null) {
+  if (data.length !== 0) {
+    console.log("Inserting articles");
     for (const article of data) {
-      await insertItemArticle(article);
+      for (const item of article) {
+        await insertItemArticle(item);
+      }
     }
     console.log("Articles inserted");
   }
