@@ -2,7 +2,7 @@
 import type { Article } from "~/types/Article";
 import type { CreateArticleDto } from "~/types/Article";
 
-const { articles, getLoading, fetchArticles, updateArticle, insertRssFeed, feeds, fetchFeed } = useArticle();
+const { articles, getLoading, fetchArticles, updateArticle, insertRssFeed, feeds, fetchFeed, fetchDailyArticles } = useArticle();
 const search = ref("");
 const columns = [
   {
@@ -64,6 +64,7 @@ onMounted(() => {
     <div class="flex justify-end sm:items-center gap-4 flex-col sm:flex-row">
       <UInput v-model="search" label="Search" placeholder="Search a crypto" icon="i-heroicons-magnifying-glass-20-solid" />
       <UButton label="Add RSS Feed" icon="i-heroicons-plus-circle" @click="addRssFeed()" />
+      <UButton label="Get Articles" icon="i-heroicons-plus-circle" variant="soft" @click="fetchDailyArticles()" />
     </div>
 
     <UTable :rows="feeds" :columns="columnsRssFeed" :loading="getLoading">

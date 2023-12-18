@@ -16,6 +16,10 @@ export function useArticle() {
   const articles = ref<Article[]>([]);
   const feeds = ref<Feed[]>([]);
 
+  async function fetchDailyArticles() {
+    await useFetch("/api/feed");
+  }
+
   async function fetchFeed() {
     const { data, error } = await useFetch<Feed[]>("/api/admin/feed");
     if (error.value || !data.value)
@@ -104,5 +108,6 @@ export function useArticle() {
     deleteLoading,
     articles,
     feeds,
+    fetchDailyArticles,
   };
 }
