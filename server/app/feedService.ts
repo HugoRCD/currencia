@@ -7,13 +7,15 @@ export async function getRssFeed(url: string) {
   const parsedFeed = (await rtj.parse(url)) as rssFeed;
   const articles = [] as CreateArticleDto[];
   parsedFeed.items.forEach((item: rssFeedItem) => {
-    articles.push({
-      title: item.title,
-      link: item.link,
-      description: item.description,
-      publishedAt: item.published,
-      preview: item.media.thumbnail.url,
-    });
+    if (item.media && item.media.thumbnail && item.media.thumbnail.url) {
+      articles.push({
+        title: item.title,
+        link: item.link,
+        description: item.description,
+        publishedAt: item.published,
+        preview: item.media.thumbnail.url,
+      });
+    }
   });
 
   return articles;

@@ -2,7 +2,6 @@ import { H3Event } from "h3";
 import { getRssFeed, insertItemArticle } from "~/server/app/feedService";
 
 export default eventHandler(async (event: H3Event) => {
-  // const body = await readBody(event);
   const url = "https://Blockchain.News/RSS/";
   const url2 = "https://www.cryptopolitan.com/feed/";
   const urlArray = [url, url2];
