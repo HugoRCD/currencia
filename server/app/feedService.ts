@@ -7,13 +7,15 @@ export async function getRssFeed(url: string) {
   const parsedFeed = (await rtj.parse(url)) as rssFeed;
   const articles = [] as CreateArticleDto[];
   parsedFeed.items.forEach((item: rssFeedItem) => {
-    articles.push({
-      title: item.title,
-      link: item.link,
-      description: item.description,
-      publishedAt: item.published,
-      preview: item.media.thumbnail.url,
-    });
+    if (item.media && item.media.thumbnail && item.media.thumbnail.url) {
+      articles.push({
+        title: item.title,
+        link: item.link,
+        description: item.description,
+        publishedAt: item.published,
+        preview: item.media.thumbnail.url,
+      });
+    }
   });
 
   return articles;
@@ -21,8 +23,10 @@ export async function getRssFeed(url: string) {
 
 export async function insertItemArticle(article: CreateArticleDto) {
   const foundArticle = await getArticlesByLink(article.link);
-  if (foundArticle != null && foundArticle.length > 0) return;
-  else {
+  console.log(foundArticle);
+  if (foundArticle != null && foundArticle.length > 0) {
+    return;
+  } else {
     return prisma.article.create({
       data: {
         title: article.title,
@@ -53,4 +57,41 @@ export async function getAllArticles(all: boolean = false) {
   } else {
     return prisma.article.findMany();
   }
+}
+
+export async function getFeedByLink(link: string) {
+  return prisma.rssFeed.findFirst({
+    where: {
+      link,
+    },
+  });
+}
+
+export async function getAllFeeds() {
+  return prisma.rssFeed.findMany();
+}
+
+export async function insertRssFeed(url: string) {
+  const foundFeed = await getFeedByLink(url);
+  if (foundFeed) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Feed already exists",
+    });
+  }
+  return prisma.rssFeed.create({
+    data: {
+      link: url,
+    },
+  });
+}
+export async function updateVisibleArticle(id: number, visible: boolean) {
+  return prisma.article.update({
+    where: {
+      id,
+    },
+    data: {
+      visible,
+    },
+  });
 }

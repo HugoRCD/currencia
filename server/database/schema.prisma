@@ -18,7 +18,7 @@ model User {
   updatedAt DateTime   @updatedAt
   authToken String?    @unique @db.VarChar(500)
   portfolio Portfolio?
-  watchlist Watchlist?
+  watchlist Watchlist[]
 }
 
 model Crypto {
@@ -30,15 +30,16 @@ model Crypto {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   visible       Boolean         @default(true)
-  portfolioData PortfolioData[]
   cryptoData    CryptoData[]
+  portfolioData PortfolioData[]
+  watchlist     Watchlist[]
 }
 
 model CryptoData {
   id        Int      @id @default(autoincrement())
   cryptoId  Int
   price     Float
-  timestamp String
+  timestamp BigInt
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   crypto    Crypto   @relation(fields: [cryptoId], references: [id])
@@ -50,18 +51,27 @@ model Article {
   description String   @db.VarChar(1000)
   link        String   @db.VarChar(500)
   preview     String   @db.VarChar(500)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   publishedAt DateTime
   visible     Boolean  @default(true)
+}
+
+model RssFeed {
+  id          Int      @id @default(autoincrement())
+  link        String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Watchlist {
   id        Int      @id @default(autoincrement())
-  userId    Int      @unique
+  userId    Int      
+  cryptoId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id])
+  crypto    Crypto   @relation(fields: [cryptoId], references: [id])
 }
 
 model Portfolio {
@@ -81,6 +91,6 @@ model PortfolioData {
   price       Float
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
   crypto      Crypto    @relation(fields: [cryptoId], references: [id])
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
 }

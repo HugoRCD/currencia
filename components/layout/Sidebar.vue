@@ -19,7 +19,12 @@ const handleCryptoNavigation = () => {
     name: "Crypto details",
   };
   if (isCryptoRoute) {
-    navigations.unshift(cryptoNavigation);
+    const indexToReplace = navigations.findIndex((item) => item.to.includes("/app/crypto"));
+    if (indexToReplace !== -1) {
+      navigations.splice(indexToReplace, 1, cryptoNavigation);
+    } else {
+      navigations.unshift(cryptoNavigation);
+    }
   } else {
     const indexToRemove = navigations.findIndex((item) => item.to.includes("/app/crypto"));
     if (indexToRemove !== -1) {

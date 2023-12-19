@@ -36,6 +36,16 @@ onMounted(() => {
 
 <template>
   <div>
+    <div v-if="!useCurrentUser().value" class="mb-4">
+      <UAlert
+        icon="i-heroicons-information-circle"
+        color="rose"
+        variant="soft"
+        title="You are not logged in."
+        description="Create an account to access the full features of the app."
+      />
+    </div>
+
     <!-- Crypto -->
     <div style="--stagger: 1" data-animate class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       <ChartCryptoCard v-for="(crypto, index) in cryptos.slice(0, 12)" :key="crypto.name" :cryptoItem="crypto" :index="index" />

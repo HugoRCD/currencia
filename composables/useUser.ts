@@ -48,6 +48,7 @@ export async function useLogin(loginInput: LoginUserDto) {
       icon: "i-heroicons-check-circle",
       timeout: 2000,
     });
+    useCrypto().fetchPublicCryptos();
   }
   if (error.value || !data.value) {
     toast.add({

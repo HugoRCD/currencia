@@ -56,10 +56,26 @@ function onSelect(option) {
     option.click();
   } else if (option.to) {
     useRouter().push(option.to);
-  } else if (option.href) {
-    window.open(option.href, "_blank");
   }
 }
+
+defineShortcuts({
+  meta_k: {
+    usingInput: true,
+    handler: () => {
+      open.value = true;
+    },
+  },
+});
+
+defineShortcuts({
+  escape: {
+    usingInput: true,
+    handler: () => {
+      open.value = false;
+    },
+  },
+});
 </script>
 
 <template>
