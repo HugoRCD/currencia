@@ -31,14 +31,42 @@ export async function deleteCrypto(cryptoId: number) {
   });
 }
 
-export async function getCryptoData(symbol: string, from: number, to: number) {
-  const runtimeConfig = useRuntimeConfig().private.finageApiKey;
-  const url = `https://api.finage.co.uk/history/crypto/depth/${symbol.toLowerCase()}usd/${from}/${to}?apikey=${runtimeConfig}`
-  console.log(url);
-  const response = await fetch(url, {
+export async function getCryptoData(name: string, cryptoId: number, length: number) {
+  const options = {
     method: "GET",
-  });
-  const data = await response.json();
-  console.log(data);
-  return data;
+    headers: {
+      accept: "application/json",
+      TI_API_KEY: process.env.TOKENINSIGHT_API_KEY,
+    },
+  };
+  const url = `https://api.tokeninsight.com/api/v1/history/coins/${name.toLowerCase()}?length=${length}`;
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    for (const crypto_info of data.data.market_chart) {
+      crypto_info.name = name;
+      //console.log(crypto_info.timestamp);
+      //console.log(crypto_info.price);
+      const cryptoData = await prisma.cryptoData.findFirst({
+        where: {
+          cryptoId,
+          timestamp: crypto_info.timestamp,
+        },
+      });
+      if (cryptoData) {
+        continue;
+      }
+      await prisma.cryptoData.create({
+        data: {
+          cryptoId,
+          timestamp: crypto_info.timestamp,
+          price: crypto_info.price,
+        },
+      });
+    }
+    return data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 }
