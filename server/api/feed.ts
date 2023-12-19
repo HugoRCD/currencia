@@ -17,8 +17,5 @@ export default eventHandler(async (event: H3Event) => {
         await insertItemArticle(item);
       }
     }
-    console.log("Articles inserted");
   }
-
-  return data;
 });
