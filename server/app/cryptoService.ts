@@ -3,11 +3,30 @@ import prisma from "~/server/database/client";
 
 export async function getAllCryptos(all: boolean = false) {
   if (!all) {
-    return prisma.crypto.findMany({
+    const cryptos = await prisma.crypto.findMany({
       where: {
         visible: true,
       },
     });
+    const cryptoData = await prisma.cryptoData.findMany({
+      where: {
+        cryptoId: {
+          in: cryptos.map((crypto) => crypto.id),
+        },
+      },
+      orderBy: {
+        timestamp: "desc",
+      },
+    });
+    for (const crypto of cryptos) {
+      const cryptoDataIndex = cryptoData.findIndex((cryptoData) => cryptoData.cryptoId === crypto.id);
+      if (cryptoDataIndex === -1) {
+        crypto.price = 0;
+        continue;
+      }
+      crypto.price = cryptoData[cryptoDataIndex].price;
+    }
+    return cryptos;
   } else {
     return prisma.crypto.findMany();
   }
@@ -69,4 +88,26 @@ export async function getCryptoData(name: string, cryptoId: number, length: numb
     console.log(err);
     throw err;
   }
+}
+
+export async function getCryptoLatestPrice() {
+  const cryptos = await getAllCryptos();
+  const cryptoLatestPrice = [];
+  for (const crypto of cryptos) {
+    const cryptoData = await prisma.cryptoData.findFirst({
+      where: {
+        cryptoId: crypto.id,
+      },
+      orderBy: {
+        timestamp: "desc",
+      },
+    });
+    if (!cryptoData) continue;
+    cryptoLatestPrice.push({
+      id: crypto.id,
+      name: crypto.name,
+      price: cryptoData.price,
+    });
+  }
+  return cryptoLatestPrice;
 }

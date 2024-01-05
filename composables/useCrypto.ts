@@ -16,8 +16,8 @@ export function useCrypto() {
   const cryptos = ref<Crypto[]>([]);
 
   async function fetchPublicCryptos() {
-    const { data } = await useFetch("/api/crypto");
-    if (data.value) publicCryptos.value = user.value ? data.value : data.value.slice(0, 4);
+    const data = await $fetch("/api/crypto");
+    if (data) publicCryptos.value = user.value ? data : data.slice(0, 4);
   }
 
   async function fetchCryptos() {

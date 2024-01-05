@@ -48,14 +48,6 @@ export function getNavigation(where: Where): Navigation[] {
           title: "Latest Crypto News",
           description: "Where the community shares the latest news about the crypto world.",
         },
-        {
-          name: "Leaderboard",
-          to: "/app/leaderboard",
-          icon: StarIcon,
-          iconString: "i-heroicons-star",
-          title: "Leaderboard",
-          description: "Check out the top current crypto.",
-        },
       ];
     case "user":
       return [

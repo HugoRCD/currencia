@@ -3,7 +3,6 @@ import { getAllCryptos, getCryptoData } from "~/server/app/cryptoService";
 export default eventHandler(async () => {
   console.log("Add new crypto data");
   const cryptos = await getAllCryptos(true);
-  // return from and to dates in timestamp format
   for (const crypto of cryptos) {
     try {
       console.log(crypto.name);

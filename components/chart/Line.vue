@@ -229,16 +229,8 @@ const chartOptions = {
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
     <div class="relative">
       <DotPattern />
-      <apexchart
-        id="chart"
-        ref="chart"
-        height="300"
-        type="area"
-        :options="chartOptions"
-        :series="series"
-        @mouseout="mouseOut"
-        :class="isPositive ? 'positive' : 'negative'"
-      />
+      <apexchart id="chart" ref="chart" height="300" type="area" :options="chartOptions" :series="series"
+        @mouseout="mouseOut" :class="isPositive ? 'positive' : 'negative'" />
     </div>
   </div>
 </template>
