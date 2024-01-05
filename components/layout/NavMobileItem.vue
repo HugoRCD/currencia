@@ -17,7 +17,7 @@ defineProps({
 
 <template>
   <div class="flex items-center" @click="nav_item.name === 'Logout' ? useLogout() : $router.push(nav_item.to)">
-    <UIcon :name="nav_item.iconString" class="h-8 w-8 text-neutral-400" :class="{ 'text-primary-500': active }" />
+    <UIcon :name="nav_item.iconString" class="h-7 w-7 text-neutral-400" :class="{ 'text-primary-500': active }" />
   </div>
 </template>
 
