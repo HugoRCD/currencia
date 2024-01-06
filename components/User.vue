@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useSignup, useLogin, useLogout, updateUser, useCurrentUser } from "~/composables/useUser";
 import type { CreateUserDto, LoginUserDto } from "~/types/User";
+const { signIn, signOut, session, status, cookies, getProviders } = useAuth();
 
 defineProps({
   sideBarOpen: {
@@ -110,6 +111,19 @@ async function updateCurrentUser() {
                   <UButton variant="soft" @click="open = false">Cancel</UButton>
                   <UButton :loading="loading" type="submit">Save</UButton>
                 </div>
+
+                <div>
+                  <div>
+                    <a href="/api/auth/signin" class="buttonPrimary">Native Link Sign in</a>
+                    <button @click="signIn(`github`)">JS Sign In</button>
+                    <button @click="signOut()">Sign Out</button>
+                  </div>
+                  <div>
+                    <pre>{{ status }}</pre>
+                    <pre>{{ session?.user }}</pre>
+                    <pre>{{ cookies }}</pre>
+                  </div>
+                </div>
               </div>
             </form>
           </div>
@@ -117,6 +131,24 @@ async function updateCurrentUser() {
       </UModal>
     </div>
     <div v-else>
+      <div>
+        <div>
+          <a href="/api/auth/signin" class="buttonPrimary">Native Link Sign in</a>
+          <button @click="signIn(`github`)">JS Sign In</button>
+          <button @click="signOut()">Sign Out</button>
+        </div>
+        <pre>{{ user }}</pre>
+        <div>
+          <pre>{{ status }}</pre>
+          <pre>{{ session?.user }}</pre>
+          <pre>{{ cookies }}</pre>
+        </div>
+        <NuxtLink to="/private"> Private </NuxtLink>
+        <hr />
+        <NuxtLink to="/"> Home </NuxtLink>
+        <NuxtLink to="/guest"> Guest </NuxtLink>
+      </div>
+
       <UButton color="white" variant="soft" size="sm" class="text-left font-semibold" @click="authModal = true" :ui="{ padding: { sm: 'px-0' } }">
         <UAvatar icon="i-heroicons-user-circle" size="sm" :ui="{ icon: { size: { sm: 'w-5 h-5' } } }" />
         <span class="whitespace-nowrap" :class="sideBarOpen ? 'hidden sm:flex' : 'hidden'">Sign / Signup</span>
