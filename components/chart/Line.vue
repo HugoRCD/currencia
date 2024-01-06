@@ -50,10 +50,9 @@ const isPositive = computed(() => {
   if (!firstValue.value || !lastValue.value) return false;
   return lastValue.value > firstValue.value;
 });
-
 const series = [
   {
-    data: getRandomDailyData(),
+    data: props.cryptoData ? props.cryptoData : getRandomDailyData(),
   },
 ];
 

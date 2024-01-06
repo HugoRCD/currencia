@@ -34,6 +34,18 @@ export function useCrypto() {
     getLoading.value = false;
   }
 
+  async function getOneYearCrypto(id: number) {
+    const { data, error } = await useFetch(`/api/crypto/${id}`);
+    if (error.value || !data.value)
+      toast.add({
+        title: "Whoops! Something went wrong.",
+        icon: "i-heroicons-x-circle",
+        color: "red",
+        timeout: 2000,
+      });
+    if (data.value) return data.value;
+  }
+
   async function upsertCrypto(upsertCryptoDto: UpsertCryptoDto) {
     loading.value = true;
     const { data, error } = await useFetch("/api/admin/crypto/crypto", {
@@ -88,5 +100,6 @@ export function useCrypto() {
     upsertCrypto,
     deleteCrypto,
     fetchPublicCryptos,
+    getOneYearCrypto,
   };
 }

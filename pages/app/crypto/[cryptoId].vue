@@ -12,6 +12,7 @@ const variations = ref<Variations>({
   value: -1,
 });
 const price = ref(crypto.price);
+const series = await useCrypto().getOneYearCrypto(crypto?.id);
 </script>
 
 <template>
@@ -37,7 +38,7 @@ const price = ref(crypto.price);
       </div>
     </div>
     <ChartLine style="--stagger: 3; --delay: 100ms" data-animate @update:currentValue="price = $event"
-      @update:variation="variations = $event" />
+      :cryptoData="series" @update:variation="variations = $event" />
     <div style="--stagger: 4; --delay: 100ms" data-animate v-if="crypto.description" class="flex flex-col gap-2">
       <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Overview</h3>
       <p class="text-gray-500 dark:text-gray-400 leading-relaxed text-sm">{{ crypto.description }}</p>
@@ -54,4 +55,5 @@ const price = ref(crypto.price);
 .negative {
   @apply text-red-500;
   text-shadow: 0 0 0.5rem rgba(245, 101, 101, 0.2);
-}</style>
+}
+</style>

@@ -111,3 +111,15 @@ export async function getCryptoLatestPrice() {
   }
   return cryptoLatestPrice;
 }
+
+export async function getCryptoOneYear(cryptoId: number) {
+  const cryptoData = await prisma.cryptoData.findMany({
+    where: {
+      cryptoId,
+    },
+    orderBy: {
+      timestamp: "asc",
+    },
+  });
+  return cryptoData.map((crypto) => [parseInt(crypto.timestamp.toString()), crypto.price]);
+}
