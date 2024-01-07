@@ -15,7 +15,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   runtimeConfig: {
+    public: {
+      googleClientId: process.env.GOOGLE_CLIENT_ID,
+      googleRedirectUri: process.env.GOOGLE_REDIRECT_URI,
+    },
     private: {
+      googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authSecret: process.env.AUTH_TOKEN_SECRET,
       resendApiKey: process.env.RESEND_API_KEY,
       tokeninsightApiKey: process.env.TOKENINSIGHT_API_KEY,

@@ -35,6 +35,26 @@ export async function createUser(userData: CreateUserDto) {
   return formatUser(user);
 }
 
+export async function createOrLoginWithGoogle(data: { email: string; name: string; picture: string }) {
+  const foundUser = await prisma.user.findFirst({
+    where: {
+      email: data.email,
+    },
+  });
+  if (foundUser) {
+    return setAuthToken(foundUser.id);
+  }
+  const user = await prisma.user.create({
+    data: {
+      username: data.name + Math.floor(Math.random() * 1000),
+      email: data.email,
+      avatar: data.picture,
+      password: "1234567",
+    },
+  });
+  return setAuthToken(user.id);
+}
+
 export async function getUserById(userId: number) {
   const user = await prisma.user.findUnique({
     where: {
