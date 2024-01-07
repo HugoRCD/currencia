@@ -129,6 +129,9 @@ async function updateCurrentUser() {
               <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome</h3>
               <p class="text-sm text-gray-500 dark:text-gray-400">Please sign in or sign up to continue.</p>
             </div>
+            <div class="flex gap-2 justify-center">
+              <auth-google />
+            </div>
             <UTabs :items="items" class="mt-4">
               <template #login>
                 <form class="flex flex-col gap-3" @submit.prevent="signin(login)">
