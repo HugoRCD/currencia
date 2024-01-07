@@ -1,6 +1,5 @@
 import type { UpsertCryptoDto } from "~/types/Crypto";
 import prisma from "~/server/database/client";
-import dayjs from "dayjs";
 
 export async function getAllCryptos(all: boolean = false) {
   if (!all) {
@@ -94,8 +93,6 @@ export async function getCryptoData(name: string, cryptoId: number, length: numb
 export async function getCryptoLatestPrice() {
   const cryptos = await getAllCryptos();
   const cryptoLatestPrice = [];
-  const FIVE_MINUTES = 5 * 60 * 1000; // 5 minutes en millisecondes
-
   for (const crypto of cryptos) {
     const cryptoData = await prisma.cryptoData.findFirst({
       where: {
@@ -105,39 +102,13 @@ export async function getCryptoLatestPrice() {
         timestamp: "desc",
       },
     });
-
-    if (!cryptoData) {
-      // Si aucune donnée n'est disponible, continuez avec le prochain crypto.
-      continue;
-    }
-
-    const currentTime = new Date().getTime();
-    const dataTime = new Date(parseInt(cryptoData.timestamp.toString)).getTime();
-
-    if (currentTime - dataTime < FIVE_MINUTES) {
-      // Utiliser les données en cache si elles sont récentes
-      cryptoLatestPrice.push({
-        id: crypto.id,
-        name: crypto.name,
-        price: cryptoData.price,
-      });
-    } else {
-      // Faire un appel API pour obtenir les dernières données
-      const updatedData = await getCryptoData(crypto.name, crypto.id, 1); // Assurez-vous que cette fonction renvoie les données nécessaires
-      // Ici, vous pouvez aussi mettre à jour la base de données avec les nouvelles données si nécessaire
-
-      // Utiliser les données mises à jour
-      if (updatedData && updatedData.data && updatedData.data.market_chart && updatedData.data.market_chart.length > 0) {
-        const latestData = updatedData.data.market_chart[0];
-        cryptoLatestPrice.push({
-          id: crypto.id,
-          name: crypto.name,
-          price: latestData.price,
-        });
-      }
-    }
+    if (!cryptoData) continue;
+    cryptoLatestPrice.push({
+      id: crypto.id,
+      name: crypto.name,
+      price: cryptoData.price,
+    });
   }
-
   return cryptoLatestPrice;
 }
 
