@@ -76,9 +76,11 @@ async function updateCurrentUser() {
 </script>
 
 <template>
-  <div class="w-full flex items-center gap-2" :class="sideBarOpen ? 'justify-center sm:justify-between' : 'justify-center'">
+  <div class="w-full flex items-center gap-2"
+    :class="sideBarOpen ? 'justify-center sm:justify-between' : 'justify-center'">
     <div v-if="user">
-      <UButton color="white" variant="soft" size="sm" class="text-left font-semibold" @click="open = true" :ui="{ padding: { sm: 'px-0' } }">
+      <UButton color="white" variant="soft" size="sm" class="text-left font-semibold" @click="open = true"
+        :ui="{ padding: { sm: 'px-0' } }">
         <UAvatar size="sm" :src="user.avatar" imgClass="object-cover" />
         <span class="whitespace-nowrap" :class="sideBarOpen ? 'hidden sm:flex' : 'hidden'">
           {{ user.username }}
@@ -90,7 +92,8 @@ async function updateCurrentUser() {
             <div class="flex flex-col justify-center items-center gap-3">
               <UAvatar :src="user.avatar" size="3xl" imgClass="object-cover" />
               <div class="flex flex-col justify-center items-center gap-1">
-                <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome back, {{ user.username }}</h3>
+                <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome back, {{ user.username
+                }}</h3>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Here you can edit your information.</p>
               </div>
             </div>
@@ -117,7 +120,8 @@ async function updateCurrentUser() {
       </UModal>
     </div>
     <div v-else>
-      <UButton color="white" variant="soft" size="sm" class="text-left font-semibold" @click="authModal = true" :ui="{ padding: { sm: 'px-0' } }">
+      <UButton color="white" variant="soft" size="sm" class="text-left font-semibold" @click="authModal = true"
+        :ui="{ padding: { sm: 'px-0' } }">
         <UAvatar icon="i-heroicons-user-circle" size="sm" :ui="{ icon: { size: { sm: 'w-5 h-5' } } }" />
         <span class="whitespace-nowrap" :class="sideBarOpen ? 'hidden sm:flex' : 'hidden'">Sign / Signup</span>
       </UButton>
@@ -129,10 +133,11 @@ async function updateCurrentUser() {
               <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Welcome</h3>
               <p class="text-sm text-gray-500 dark:text-gray-400">Please sign in or sign up to continue.</p>
             </div>
-            <div class="flex gap-2 justify-center">
-              <auth-google />
+            <div class="flex justify-center mt-2">
+              <SignWithGoogle />
             </div>
-            <UTabs :items="items" class="mt-4">
+            <UDivider label="OR" class="my-2" />
+            <UTabs :items="items">
               <template #login>
                 <form class="flex flex-col gap-3" @submit.prevent="signin(login)">
                   <UFormGroup label="Username" name="username">
