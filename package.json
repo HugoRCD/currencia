@@ -2,6 +2,26 @@
   "name": "nuxt-starter",
   "version": "1.0.0",
   "author": "HugoRCD",
+  "license": "MIT License",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "start": "node .output/server/index.mjs",
+    "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
+    "prisma:generate": "prisma generate",
+    "prisma:pull": "prisma db pull",
+    "prisma:push": "prisma db push",
+    "prisma:migrate": "prisma migrate dev",
+    "lint:fix": "eslint --ext .js,.ts,.vue --ignore-path .gitignore . --fix",
+    "vercel:env": "vercel env pull"
+  },
+  "prisma": {
+    "schema": "server/database/schema.prisma"
+  },
   "devDependencies": {
     "@heroicons/vue": "^2.0.18",
     "@nuxt/devtools": "^1.0.3",
@@ -36,25 +56,5 @@
     "vue3-apexcharts": "^1.4.4",
     "vue3-google-login": "^2.0.25",
     "zod": "^3.22.4"
-  },
-  "license": "MIT License",
-  "prisma": {
-    "schema": "server/database/schema.prisma"
-  },
-  "private": true,
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "start": "node .output/server/index.mjs",
-    "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
-    "prisma:generate": "prisma generate",
-    "prisma:pull": "prisma db pull",
-    "prisma:push": "prisma db push",
-    "prisma:migrate": "prisma migrate dev",
-    "lint:fix": "eslint --ext .js,.ts,.vue --ignore-path .gitignore . --fix",
-    "vercel:env": "vercel env pull"
   }
 }
