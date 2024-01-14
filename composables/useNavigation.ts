@@ -48,6 +48,14 @@ export function getNavigation(where: Where): Navigation[] {
           title: "Latest Crypto News",
           description: "Where the community shares the latest news about the crypto world.",
         },
+        {
+          name: "Watchlist",
+          to: "/app/watchlist",
+          icon: StarIcon,
+          iconString: "i-heroicons-star",
+          title: "Watchlist",
+          description: "Here you can see your watchlist and add or remove coins from it.",
+        },
       ];
     case "user":
       return [

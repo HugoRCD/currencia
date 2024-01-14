@@ -3,6 +3,10 @@
     {
       "path": "/api/feed",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/crypto/history",
+      "schedule": "0 4 * * *"
     }
   ]
 }
