@@ -1,5 +1,5 @@
-import { getAllCryptos } from "~/server/app/cryptoService";
+import { getAllCryptos, getCryptosLatestPrice } from "~/server/app/cryptoService";
 
 export default eventHandler(async () => {
-  return getAllCryptos();
+  return getCryptosLatestPrice();
 });

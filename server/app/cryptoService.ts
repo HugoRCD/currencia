@@ -1,5 +1,6 @@
 import type { UpsertCryptoDto } from "~/types/Crypto";
 import prisma from "~/server/database/client";
+import dayjs from "dayjs";
 
 export async function getAllCryptos(all: boolean = false) {
   if (!all) {
@@ -49,7 +50,6 @@ export async function deleteCrypto(cryptoId: number) {
     },
   });
 }
-
 export async function getCryptoData(name: string, cryptoId: number, length: number) {
   const options = {
     method: "GET",
@@ -58,14 +58,14 @@ export async function getCryptoData(name: string, cryptoId: number, length: numb
       TI_API_KEY: process.env.TOKENINSIGHT_API_KEY,
     },
   };
-  const url = `https://api.tokeninsight.com/api/v1/history/coins/${name.toLowerCase()}?length=${length}`;
+  const cryptoName = name.toLowerCase().replace(" ", "-");
+  const url = `https://api.tokeninsight.com/api/v1/history/coins/${cryptoName}?length=${length}`;
   try {
     const response = await fetch(url, options);
     const data = await response.json();
     for (const crypto_info of data.data.market_chart) {
       crypto_info.name = name;
-      //console.log(crypto_info.timestamp);
-      //console.log(crypto_info.price);
+
       const cryptoData = await prisma.cryptoData.findFirst({
         where: {
           cryptoId,
@@ -90,7 +90,43 @@ export async function getCryptoData(name: string, cryptoId: number, length: numb
   }
 }
 
-export async function getCryptoLatestPrice() {
+export async function getCurrentCryptoData(name: string, cryptoId: number, length: number) {
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      TI_API_KEY: process.env.TOKENINSIGHT_API_KEY,
+    },
+  };
+  const cryptoName = name.toLowerCase().replace(" ", "-");
+  const url = `https://api.tokeninsight.com/api/v1/coins/${cryptoName}`;
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    const cryptoData = await prisma.cryptoData.findFirst({
+      where: {
+        cryptoId,
+        timestamp: data.status.timestamp,
+      },
+    });
+    if (cryptoData) {
+      return;
+    }
+    const createdCrypto = await prisma.cryptoData.create({
+      data: {
+        cryptoId,
+        timestamp: data.status.timestamp,
+        price: data.data.market_data.price[0].price_latest,
+      },
+    });
+    return data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export async function getCryptosLatestPrice() {
   const cryptos = await getAllCryptos();
   const cryptoLatestPrice = [];
   for (const crypto of cryptos) {
@@ -102,14 +138,27 @@ export async function getCryptoLatestPrice() {
         timestamp: "desc",
       },
     });
-    if (!cryptoData) continue;
-    cryptoLatestPrice.push({
-      id: crypto.id,
-      name: crypto.name,
-      price: cryptoData.price,
-    });
+    if (!cryptoData) {
+      continue;
+    }
+    const timestamp = dayjs(parseInt(cryptoData.timestamp.toString())).unix();
+    const now = dayjs().unix();
+    const difference = now - timestamp;
+    if (difference > 300) {
+      await getCurrentCryptoData(crypto.name, crypto.id, 1);
+    }
+    cryptoLatestPrice.push([crypto.id, cryptoData.price]);
   }
-  return cryptoLatestPrice;
+  const updatedCryptos = await getAllCryptos();
+  return updatedCryptos.map((crypto) => {
+    const cryptoLatestPriceIndex = cryptoLatestPrice.findIndex((cryptoLatestPrice) => cryptoLatestPrice[0] === crypto.id);
+    if (cryptoLatestPriceIndex === -1) {
+      crypto.price = 0;
+      return crypto;
+    }
+    crypto.price = cryptoLatestPrice[cryptoLatestPriceIndex][1];
+    return crypto;
+  });
 }
 
 export async function getCryptoOneYear(cryptoId: number) {
