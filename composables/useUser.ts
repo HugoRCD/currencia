@@ -104,7 +104,11 @@ export async function updateUser(id: number, updateUserInput: UpdateUserDto) {
   const toast = useToast();
   const { error, data } = await useFetch<User>(`/api/user/${id}`, {
     method: "PUT",
-    body: updateUserInput,
+    body: {
+      username: updateUserInput.username,
+      email: updateUserInput.email,
+      avatar: updateUserInput.avatar,
+    },
   });
   if (error.value || !data.value) {
     toast.add({
