@@ -141,12 +141,12 @@ export async function getCryptosLatestPrice() {
     if (!cryptoData) {
       continue;
     }
-    const timestamp = dayjs(parseInt(cryptoData.timestamp.toString())).unix();
-    const now = dayjs().unix();
-    const difference = now - timestamp;
-    if (difference > 300) {
-      await getCurrentCryptoData(crypto.name, crypto.id, 1);
-    }
+    // const timestamp = dayjs(parseInt(cryptoData.timestamp.toString())).unix();
+    // const now = dayjs().unix();
+    // const difference = now - timestamp;
+    // if (difference > 300) {
+    //   await getCurrentCryptoData(crypto.name, crypto.id, 1);
+    // }
     cryptoLatestPrice.push([crypto.id, cryptoData.price]);
   }
   const updatedCryptos = await getAllCryptos();
