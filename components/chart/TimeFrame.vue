@@ -24,7 +24,7 @@ const timeframes = [
   },
 ] as TimeFrame[];
 
-const selectedTimeframe = ref<TimeFrame>(timeframes[2]);
+const selectedTimeframe = ref<TimeFrame>(timeframes[3]);
 
 const emit = defineEmits(["update:timeframe"]);
 

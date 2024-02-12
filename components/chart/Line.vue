@@ -18,8 +18,8 @@ const props = defineProps({
 const emit = defineEmits(["update:currentValue", "update:variation"]);
 
 const timeframe = ref<TimeFrame>({
-  value: "3M",
-  series: getLast3Months(),
+  value: "6M",
+  series: getLast6Months(),
 });
 
 const firstValue = computed(() => {
@@ -228,8 +228,16 @@ const chartOptions = {
     <ChartTimeFrame @update:timeframe="timeframe = $event" />
     <div class="relative">
       <DotPattern />
-      <apexchart id="chart" ref="chart" height="300" type="area" :options="chartOptions" :series="series"
-        @mouseout="mouseOut" :class="isPositive ? 'positive' : 'negative'" />
+      <apexchart
+        id="chart"
+        ref="chart"
+        height="300"
+        type="area"
+        :options="chartOptions"
+        :series="series"
+        @mouseout="mouseOut"
+        :class="isPositive ? 'positive' : 'negative'"
+      />
     </div>
   </div>
 </template>

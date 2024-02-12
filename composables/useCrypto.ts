@@ -17,7 +17,7 @@ export function useCrypto() {
 
   async function fetchPublicCryptos() {
     const data = await $fetch("/api/crypto");
-    if (data) publicCryptos.value = user.value ? data : data.slice(0, 4);
+    if (data) publicCryptos.value = user.value ? data : data.slice(0, 6);
   }
 
   async function fetchCryptos() {
@@ -32,18 +32,6 @@ export function useCrypto() {
       });
     if (data.value) cryptos.value = data.value;
     getLoading.value = false;
-  }
-
-  async function getOneYearCrypto(id: number) {
-    const { data, error } = await useFetch(`/api/crypto/${id}`);
-    if (error.value || !data.value)
-      toast.add({
-        title: "Whoops! Something went wrong.",
-        icon: "i-heroicons-x-circle",
-        color: "red",
-        timeout: 2000,
-      });
-    if (data.value) return data.value;
   }
 
   async function upsertCrypto(upsertCryptoDto: UpsertCryptoDto) {
@@ -100,6 +88,5 @@ export function useCrypto() {
     upsertCrypto,
     deleteCrypto,
     fetchPublicCryptos,
-    getOneYearCrypto,
   };
 }

@@ -16,14 +16,14 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      googleClientId: process.env.GOOGLE_CLIENT_ID,
-      googleRedirectUri: process.env.GOOGLE_REDIRECT_URI,
+      googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,
+      googleRedirectUri: process.env.NUXT_PUBLIC_GOOGLE_REDIRECT_URI,
     },
     private: {
-      googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      authSecret: process.env.AUTH_TOKEN_SECRET,
-      resendApiKey: process.env.RESEND_API_KEY,
-      tokeninsightApiKey: process.env.TOKENINSIGHT_API_KEY,
+      googleClientSecret: process.env.NUXT_PRIVATE_GOOGLE_CLIENT_SECRET,
+      authSecret: process.env.NUXT_PRIVATE_AUTH_TOKEN_SECRET,
+      resendApiKey: process.env.NUXT_PRIVATE_RESEND_API_KEY,
+      tokeninsightApiKey: process.env.NUXT_PRIVATE_TOKENINSIGHT_API_KEY,
     },
   },
 

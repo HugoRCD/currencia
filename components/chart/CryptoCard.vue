@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
-import type { Crypto } from "~/data/crypto";
+import type { Crypto } from "~/types/Crypto";
 
 const props = defineProps({
   cryptoItem: {
@@ -21,7 +21,7 @@ const crypto = reactive({
   name: props.cryptoItem.name,
   symbol: props.cryptoItem.symbol,
   logo: props.cryptoItem.logo,
-  price: props.cryptoItem.price,
+  price: props.cryptoItem.data[props.cryptoItem.data.length - 1][1],
   change: getRandomInt(-30, 30),
 });
 </script>
@@ -29,7 +29,8 @@ const crypto = reactive({
 <template>
   <div
     class="cursor-pointer relative overflow-hidden flex flex-col gap-2 p-4 rounded-xl shadow-sm bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 border border-inherit dark:border-gray-800 dark:hover:border-gray-700 hover:border-gray-200 hover:transition-all hover:duration-300"
-    @click="$router.push(`/app/crypto/${crypto.symbol}`)">
+    @click="$router.push(`/app/crypto/${crypto.symbol}`)"
+  >
     <div class="absolute -bottom-3 -right-2">
       <span class="text-7xl font-bold text-gray-700/20 dark:text-gray-200/20">
         {{ index + 1 }}
@@ -46,8 +47,7 @@ const crypto = reactive({
         <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">$</span>
       </div>
       <div class="flex flex-row items-center">
-        <span :class="crypto.change > 0 ? 'positive' : 'negative'" class="text-sm font-semibold"> {{ crypto.change }}%
-        </span>
+        <span :class="crypto.change > 0 ? 'positive' : 'negative'" class="text-sm font-semibold"> {{ crypto.change }}% </span>
       </div>
     </div>
   </div>
