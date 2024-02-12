@@ -15,7 +15,6 @@ const props = defineProps({
     required: false,
   },
 });
-console.log("props.cryptoData", props.cryptoData);
 const emit = defineEmits(["update:currentValue", "update:variation"]);
 
 const timeframe = ref<TimeFrame>({

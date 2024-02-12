@@ -15,8 +15,8 @@ const authModal = ref(false);
 const user = useCurrentUser();
 
 const login = ref({
-  username: "",
-  password: "",
+  username: "RickAstley",
+  password: "john",
 });
 
 const signup = ref({

@@ -5,7 +5,7 @@ import type { Crypto } from "~/types/Crypto";
 const cryptos = usePublicCrypto();
 
 const cryptoId = useRoute().params.cryptoId;
-const crypto = cryptos.value.find((crypto: Crypto) => crypto.symbol === cryptoId);
+const crypto = cryptos.value.find((crypto: Crypto) => crypto.symbol === cryptoId) as Crypto;
 if (!crypto) {
   useRouter().push("/404");
 }
@@ -16,9 +16,7 @@ const variations = ref<Variations>({
 });
 
 const price = ref(crypto.data[crypto.data.length - 1][1]);
-console.log("price", price.value);
 const series = crypto.data;
-console.log("series", series);
 </script>
 
 <template>
