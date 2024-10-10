@@ -1,6 +1,13 @@
 <script lang="ts" setup>
 import { Toaster } from 'vue-sonner'
 
+useScriptPlausibleAnalytics({
+  domain: 'currencia.hrcd.fr',
+  scriptInput: {
+    src: 'https://analytics.hrcd.fr/js/script.js',
+  }
+})
+
 useHead({
   title: 'Currencia - The Simplest Crypto Tracker',
   meta: [

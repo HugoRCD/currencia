@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
 import type { ApexOptions, TimeFrame, Variations, ApexChartSeries } from '~~/types/ApexChart'
+
+type ChartLineProps = {
+  showTooltip?: boolean
+  cryptoData?: ApexChartSeries['data']
+}
 
 const colorMode = useColorMode()
 const dayjs = useDayjs()
 
-const props = defineProps({
-  showTooltip: {
-    type: Boolean,
-    default: false,
-  },
-  cryptoData: {
-    type: Array as PropType<ApexChartSeries['data']>,
-    required: false,
-  },
-})
+const { showTooltip = false, cryptoData } = defineProps<ChartLineProps>()
 const emit = defineEmits(['update:currentValue', 'update:variation'])
 
 const timeframe = ref<TimeFrame>({
@@ -52,7 +47,7 @@ const isPositive = computed(() => {
 })
 const series = [
   {
-    data: props.cryptoData ? props.cryptoData : getRandomDailyData(),
+    data: cryptoData ? cryptoData : getRandomDailyData(),
   },
 ]
 
@@ -200,7 +195,7 @@ const chartOptions = {
     custom: function({ series, seriesIndex, dataPointIndex }) {
       const value = series[seriesIndex][dataPointIndex] as number
       price.value = value
-      if (!props.showTooltip) return ''
+      if (!showTooltip) return ''
       return `<div class="px-4 py-1"><span>${displayNumberValue(value)}$</span></div>`
     },
     x: {

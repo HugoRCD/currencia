@@ -1,27 +1,23 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
 import type { Crypto } from '~~/types/Crypto'
 
-const props = defineProps({
-  cryptoItem: {
-    type: Object as PropType<Crypto>,
-    required: true,
-  },
-  index: {
-    type: Number,
-    required: true,
-  },
-})
+type CryptoCardProps = {
+  cryptoItem: Crypto
+  index: number
+}
+
+const { cryptoItem, index } = defineProps<CryptoCardProps>()
+console.log(cryptoItem)
 
 function getRandomInt(min: number, max: number = 100) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 const crypto = reactive({
-  name: props.cryptoItem.name,
-  symbol: props.cryptoItem.symbol,
-  logo: props.cryptoItem.logo,
-  price: props.cryptoItem.data[props.cryptoItem.data.length - 1][1],
+  name: cryptoItem.name,
+  symbol: cryptoItem.symbol,
+  logo: cryptoItem.logo,
+  price: cryptoItem.data[cryptoItem.data.length - 1][1],
   change: getRandomInt(-30, 30),
 })
 </script>

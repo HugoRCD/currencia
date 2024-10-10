@@ -5,14 +5,25 @@ const breakpoints = useBreakpoints(breakpointsTailwind)
 
 const smAndLarger = breakpoints.greaterOrEqual('sm')
 
-const pages = [...getNavigation('app'), ...getNavigation('admin'), ...getNavigation('user')]
 const route = useRoute()
-const currentPage = computed(() => {
-  const page = pages.find((page) => page.to === route.path)
-  const fallback = route.path.includes('/app/crypto')
-    ? { title: 'Crypto details', description: 'Crypto', icon: 'heroicons:chart-bar', to: '/app/crypto', name: 'crypto', iconString: 'heroicons:chart-bar' }
-    : { title: '404', description: 'Page not found', icon: 'heroicons:exclamation-triangle', to: '/404', name: '404', iconString: 'heroicons:exclamation-triangle' }
-  return page ?? fallback
+
+const pages = [
+  ...getNavigation('app'),
+  ...getNavigation('admin'),
+  ...getNavigation('user')
+]
+
+const navigation = computed(() => {
+  if (route.path.includes('/app/crypto')) {
+    return {
+      title: 'Crypto details',
+      description: 'Crypto',
+      icon: 'lucide:chart-line',
+      to: '/app/crypto',
+      name: 'crypto'
+    }
+  }
+  return pages.find((page) => page.to === route.path)
 })
 </script>
 
@@ -20,7 +31,7 @@ const currentPage = computed(() => {
   <div class="max-layout-width relative flex h-screen pt-4">
     <LayoutSidebar class="hidden sm:flex" />
     <LayoutMobileNavbar v-if="!smAndLarger" class="absolute inset-x-0 bottom-0 z-20 sm:hidden" />
-    <LayoutSectionWrapper :navigation="currentPage">
+    <LayoutSectionWrapper :navigation>
       <Suspense>
         <slot />
         <template #fallback>
@@ -32,4 +43,3 @@ const currentPage = computed(() => {
     </LayoutSectionWrapper>
   </div>
 </template>
-

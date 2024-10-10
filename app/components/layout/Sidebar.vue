@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { ViewColumnsIcon, ChartBarIcon } from '@heroicons/vue/24/outline'
-
 const navigations = getNavigation('app')
 const userNavigations = getNavigation('user')
 const adminNavigations = getNavigation('admin')
 
-const { user, clear, loggedIn } = useUserSession()
+const { user, loggedIn } = useUserSession()
 
 const open = ref(true)
 
@@ -15,7 +13,7 @@ const handleCryptoNavigation = () => {
   const cryptoNavigation = {
     title: 'Crypto details',
     description: 'Crypto',
-    icon: ChartBarIcon,
+    icon: 'lucide:chart-line',
     to: route.path,
     name: 'Crypto details',
   }
@@ -44,7 +42,7 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true })
       <User :side-bar-open="open" />
       <UTooltip text="Toggle sidebar" class="hidden select-none sm:block">
         <UButton size="sm" color="white" variant="soft" class="hidden select-none sm:block" @click="open = !open">
-          <ViewColumnsIcon class="size-5" />
+          <UIcon name="lucide:view-columns" class="size-5" />
         </UButton>
       </UTooltip>
     </div>
