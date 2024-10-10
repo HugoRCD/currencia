@@ -7,7 +7,7 @@ export async function upsertUser(createUserInput: CreateUserInput): Promise<publ
     },
   })
   const newUsername = foundUser ? `${createUserInput.username}_#${Math.floor(Math.random() * 1000)}` : createUserInput.username
-  const user = await prisma.user.upsert({
+  return prisma.user.upsert({
     where: {
       email: createUserInput.email,
     },
@@ -19,11 +19,10 @@ export async function upsertUser(createUserInput: CreateUserInput): Promise<publ
       username: newUsername,
     },
   })
-  return formatUser(user)
 }
 
-export async function getUserById(userId: number) {
-  const user = await prisma.user.findUnique({
+export function getUserById(userId: number) {
+  return prisma.user.findUniqueOrThrow({
     where: {
       id: userId,
     },
@@ -31,15 +30,10 @@ export async function getUserById(userId: number) {
       watchlist: true,
     },
   })
-  if (!user) throw createError({ statusCode: 404, message: 'User not found' })
-  return formatUser(user)
 }
 
-export async function getAllUsers() {
-  const users = await prisma.user.findMany()
-  return users.map((user) => {
-    return formatUser(user)
-  })
+export function getAllUsers() {
+  return prisma.user.findMany()
 }
 
 export function deleteUser(userId: number) {
@@ -66,23 +60,21 @@ export async function updateUser(userId: number, updateUserInput: UpdateUserDto)
     })
     if (usernameTaken) throw createError({ statusCode: 400, message: 'Username already taken' })
   }
-  const user = await prisma.user.update({
+  return prisma.user.update({
     where: { id: userId },
     data: {
       ...updateUserInput,
     },
   })
-  return formatUser(user)
 }
 
-export async function updateRoleUser(userId: number, role: Role) {
-  const user = await prisma.user.update({
+export function updateRoleUser(userId: number, role: Role) {
+  return prisma.user.update({
     where: { id: userId },
     data: {
       role,
     },
   })
-  return formatUser(user)
 }
 
 export async function toggleCryptoWatchlist(userId: number, cryptoId: number) {

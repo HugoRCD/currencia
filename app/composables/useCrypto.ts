@@ -5,7 +5,6 @@ export const usePublicCrypto = () => {
 }
 
 export function useCrypto() {
-  const toast = useToast()
   const publicCryptos = usePublicCrypto()
   const { user } = useUserSession()
 
@@ -22,36 +21,27 @@ export function useCrypto() {
 
   async function fetchCryptos() {
     getLoading.value = true
-    const { data, error } = await useFetch('/api/admin/crypto/crypto')
-    if (error.value || !data.value)
-      toast.add({
-        title: 'Whoops! Something went wrong.',
-        icon: 'heroicons:x-circle',
-        color: 'red',
-        timeout: 2000,
-      })
-    if (data.value) cryptos.value = data.value
+    try {
+      const response = await $fetch('/api/admin/crypto/crypto')
+      if (response.value) cryptos.value = response.value
+    } catch (error) {
+      toast.error('Whoops! Something went wrong.')
+    }
     getLoading.value = false
   }
 
   async function upsertCrypto(upsertCryptoDto: UpsertCryptoDto) {
     loading.value = true
-    const { data, error } = await useFetch('/api/admin/crypto/crypto', {
-      method: 'POST',
-      body: upsertCryptoDto,
-    })
-    if (error.value || !data.value)
-      toast.add({
-        title: 'Whoops! Something went wrong.',
-        icon: 'heroicons:x-circle',
-        color: 'red',
-        timeout: 2000,
+    try {
+      const response = await $fetch('/api/admin/crypto/crypto', {
+        method: 'POST',
+        body: upsertCryptoDto,
       })
-    toast.add({
-      title: 'Crypto created successfully.',
-      icon: 'heroicons:check-circle',
-      timeout: 2000,
-    })
+      toast.success('Crypto created successfully.')
+      if (response.value) cryptos.value = response.value
+    } catch (error) {
+      toast.error('Whoops! Something went wrong.')
+    }
     loading.value = false
     await fetchCryptos()
     await fetchPublicCryptos()
@@ -59,21 +49,15 @@ export function useCrypto() {
 
   async function deleteCrypto(id: number) {
     deleteLoading.value = true
-    const { data, error } = await useFetch(`/api/admin/crypto/${id}`, {
-      method: 'DELETE',
-    })
-    if (error.value || !data.value)
-      toast.add({
-        title: 'Whoops! Something went wrong.',
-        icon: 'heroicons:x-circle',
-        color: 'red',
-        timeout: 2000,
+    try {
+      const response = await $fetch(`/api/admin/crypto/${id}`, {
+        method: 'DELETE',
       })
-    toast.add({
-      title: 'Crypto deleted successfully.',
-      icon: 'heroicons:check-circle',
-      timeout: 2000,
-    })
+      toast.success('Crypto deleted successfully.')
+      if (response.value) cryptos.value = response.value
+    } catch (error) {
+      toast.error('Whoops! Something went wrong.')
+    }
     deleteLoading.value = false
     await fetchCryptos()
     await fetchPublicCryptos()

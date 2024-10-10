@@ -5,5 +5,10 @@ export default defineAppConfig({
   ui: {
     primary: 'orange',
     gray: 'neutral',
+    button: {
+      default: {
+        loadingIcon: 'lucide:loader',
+      }
+    },
   },
 })
