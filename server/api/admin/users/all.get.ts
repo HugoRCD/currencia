@@ -1,5 +1,5 @@
-import { getAllUsers } from "~/server/app/userService";
+import { getAllUsers } from '~~/server/app/userService'
 
 export default eventHandler(async () => {
-  return await getAllUsers();
-});
+  return await getAllUsers()
+})

@@ -1,4 +1,4 @@
-export interface ApexOptions {
+export type ApexOptions = {
   chart: {
     id?: string;
     width?: string | number;
@@ -197,6 +197,3 @@ export type Variations = {
   value: number;
 };
 
-export function displayNumberValue(value: number) {
-  return Math.abs(value).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}

@@ -1,0 +1,18 @@
+@import "animation.css";
+
+#__nuxt, #__layout, html, body {
+  height: 100% !important;
+  width: 100% !important;
+
+  font-family: Inter, sans-serif;
+}
+
+html.light {
+  background-color: #F8F8F8;
+  --dot-pattern-color: #111827;
+}
+
+html.dark {
+  background-color: #131113;
+  --dot-pattern-color: #9ca3af;
+}

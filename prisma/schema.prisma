@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int         @id @default(autoincrement())
+  username  String      @unique
+  email     String      @unique
+  avatar    String      @default("https://i.imgur.com/6VBx3io.png") @db.VarChar(500)
+  role      String      @default("user")
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  portfolio Portfolio?
+  watchlist Watchlist[]
+}
+
+model Crypto {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique
+  symbol        String          @unique
+  logo          String
+  description   String          @db.VarChar(500)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  visible       Boolean         @default(true)
+  portfolioData PortfolioData[]
+  watchlist     Watchlist[]
+}
+
+model Watchlist {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  cryptoId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  crypto    Crypto   @relation(fields: [cryptoId], references: [id])
+}
+
+model Portfolio {
+  id            Int             @id @default(autoincrement())
+  userId        Int             @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  user          User            @relation(fields: [userId], references: [id])
+  portfolioData PortfolioData[]
+}
+
+model PortfolioData {
+  id          Int       @id @default(autoincrement())
+  portfolioId Int
+  userId      Int
+  cryptoId    Int
+  price       Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  crypto      Crypto    @relation(fields: [cryptoId], references: [id])
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+}
