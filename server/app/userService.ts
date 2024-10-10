@@ -1,4 +1,4 @@
-import type { UpdateUserDto, Role } from '~~/types/User'
+import type { UpdateUserDto, Role, User } from '~~/types/User'
 
 export async function upsertUser(createUserInput: CreateUserInput): Promise<publicUser> {
   const foundUser = await prisma.user.findUnique({
@@ -44,7 +44,7 @@ export function deleteUser(userId: number) {
   })
 }
 
-export async function updateUser(userId: number, updateUserInput: UpdateUserDto) {
+export async function updateUser(userId: number, updateUserInput: UpdateUserDto): Promise<User> {
   const foundUser = await prisma.user.findFirst({
     where: {
       id: userId,

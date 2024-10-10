@@ -6,5 +6,14 @@ export default eventHandler(async (event: H3Event) => {
   if (!params) throw createError({ statusCode: 400, statusMessage: 'Missing params' })
   const userId = parseInt(params.userId)
   const updateUserInput = await readBody(event)
-  return await updateUser(userId, updateUserInput)
+  const updatedUser = await updateUser(userId, updateUserInput)
+  await setUserSession(event, {
+    user: {
+      username: updatedUser.username,
+      email: updatedUser.email,
+      avatar: updatedUser.avatar,
+      role: updatedUser.role,
+    },
+    loggedInAt: new Date().toISOString(),
+  })
 })
