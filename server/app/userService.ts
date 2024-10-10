@@ -24,35 +24,6 @@ export async function upsertUser(createUserInput: CreateUserInput): Promise<publ
   return formatUser(user)
 }
 
-export async function createUser(userData: CreateUserDto) {
-  const foundUser = await prisma.user.findFirst({
-    where: {
-      OR: [
-        {
-          username: userData.username,
-        },
-        {
-          email: userData.email,
-        },
-      ],
-    },
-  })
-  if (foundUser) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'User already exists',
-    })
-  }
-  const password = await bcrypt.hash(userData.password, 10)
-  const user = await prisma.user.create({
-    data: {
-      ...userData,
-      password,
-    },
-  })
-  return formatUser(user)
-}
-
 export async function getUserById(userId: number) {
   const user = await prisma.user.findUnique({
     where: {
@@ -64,17 +35,6 @@ export async function getUserById(userId: number) {
   })
   if (!user) throw createError({ statusCode: 404, message: 'User not found' })
   return formatUser(user)
-}
-
-export function getUserByLogin(login: string) {
-  return prisma.user.findFirst({
-    where: {
-      OR: [{ email: login }, { username: login }],
-    },
-    include: {
-      watchlist: true,
-    },
-  })
 }
 
 export async function getAllUsers() {

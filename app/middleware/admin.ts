@@ -1,4 +1,9 @@
-export default defineNuxtRouteMiddleware(async () => {
-  await useUser()
-  if (!isAdmin.value) return '/app/market'
+import { Role } from '~~/types/User'
+
+export default defineNuxtRouteMiddleware((): Promise<void> => {
+  const { user } = useUserSession()
+  if (!user.value.role === Role.ADMIN) {
+    toast.error('You need to be an admin to access this page.')
+    return '/app/dashboard'
+  }
 })

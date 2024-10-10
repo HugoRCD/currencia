@@ -54,7 +54,7 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true })
 
       <div class="flex flex-col gap-2">
         <TransitionGroup name="fade" tag="ul" class="flex flex-col gap-2" mode="out-in">
-          <LayoutNavItem v-for="nav in navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open />
+          <LayoutNavItem v-for="nav in navigations" :key="nav.name" :active="nav.to === $route.path" :nav-item="nav" :open />
         </TransitionGroup>
       </div>
 
@@ -63,13 +63,13 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true })
           <!-- User -->
           <div class="flex flex-col gap-2">
             <UDivider class="my-3" />
-            <LayoutNavItem v-for="nav in user_navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open />
+            <LayoutNavItem v-for="nav in user_navigations" :key="nav.name" :active="nav.to === $route.path" :nav-item="nav" :open />
           </div>
 
           <!-- Admin -->
           <div v-if="isAdmin" class="flex flex-col gap-2">
             <UDivider class="my-3" />
-            <LayoutNavItem v-for="nav in admin_navigations" :key="nav.name" :active="nav.to === $route.path" :nav_item="nav" :open />
+            <LayoutNavItem v-for="nav in admin_navigations" :key="nav.name" :active="nav.to === $route.path" :nav-item="nav" :open />
           </div>
         </div>
       </Transition>

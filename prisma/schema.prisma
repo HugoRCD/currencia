@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("NUXT_PRIVATE_DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -32,25 +32,6 @@ model Crypto {
   visible       Boolean         @default(true)
   portfolioData PortfolioData[]
   watchlist     Watchlist[]
-}
-
-model Article {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(500)
-  description String   @db.VarChar(1000)
-  link        String   @db.VarChar(500)
-  preview     String   @db.VarChar(500)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  publishedAt DateTime
-  visible     Boolean  @default(true)
-}
-
-model RssFeed {
-  id        Int      @id @default(autoincrement())
-  link      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Watchlist {

@@ -12,12 +12,14 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/fonts',
     '@vueuse/nuxt',
+    '@nuxt/scripts',
     'nuxt-build-cache',
     'nuxt-auth-utils',
-    '@nuxt/scripts',
     'nuxt-svgo',
     'dayjs-nuxt'
   ],
+
+  css: ['~/assets/style/main.css'],
 
   routeRules: {
     '/': { isr: true, prerender: true },
@@ -25,8 +27,6 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2024-10-10',
-
-  css: ['~/assets/style/main.css'],
 
   devtools: { enabled: true },
 

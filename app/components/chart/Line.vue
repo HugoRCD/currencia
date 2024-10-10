@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { ApexOptions, TimeFrame, Variations, type ApexChartSeries, displayNumberValue } from '~/types/ApexChart'
+import type { ApexOptions, TimeFrame, Variations, ApexChartSeries, displayNumberValue } from '~~/types/ApexChart'
 
 const colorMode = useColorMode()
 const dayjs = useDayjs()

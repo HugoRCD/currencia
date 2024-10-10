@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const cryptos = usePublicCrypto()
+const { loggedIn } = useUserSession()
 
 const series = {
   data: [],
@@ -36,7 +37,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div v-if="!useCurrentUser().value" class="mb-4">
+    <div v-if="!loggedIn" class="mb-4">
       <UAlert
         icon="i-heroicons-information-circle"
         color="rose"

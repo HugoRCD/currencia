@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useSignup, useLogin, useLogout, updateUser, useCurrentUser } from '~/composables/useUser'
-import type { CreateUserDto, LoginUserDto } from '~/types/User'
+import { updateUser } from '~/composables/useUser'
 
 defineProps({
   sideBarOpen: {
@@ -9,60 +8,24 @@ defineProps({
   },
 })
 
+const route = useRoute()
+
+if (route.query.error === 'github') {
+  toast.error('An error occurred while logging in with GitHub.', {
+    duration: Infinity,
+    closeButton: true,
+  })
+}
+
 const loading = ref(false)
 const authModal = ref(false)
 
-const user = useCurrentUser()
-
-const login = ref({
-  username: 'RickAstley',
-  password: 'john',
-})
-
-const signup = ref({
-  username: '',
-  email: '',
-  password: '',
-})
-
-const items = [
-  {
-    slot: 'login',
-    label: 'Sign in',
-  },
-  {
-    slot: 'signup',
-    label: 'Sign up',
-  },
-]
+const { user, fetch, clear } = useUserSession()
 
 const open = ref(false)
 
-async function signin(loginUserDto: LoginUserDto) {
-  loading.value = true
-  await useLogin(loginUserDto)
-  login.value = {
-    username: '',
-    password: '',
-  }
-  authModal.value = false
-  loading.value = false
-}
-
-async function createAccount(signupUserDto: CreateUserDto) {
-  loading.value = true
-  await useSignup(signupUserDto)
-  signup.value = {
-    username: '',
-    email: '',
-    password: '',
-  }
-  loading.value = false
-  authModal.value = false
-}
-
 async function logout() {
-  await useLogout()
+  await clear()
   authModal.value = false
 }
 
@@ -158,50 +121,13 @@ async function updateCurrentUser() {
               </p>
             </div>
             <div class="mt-2 flex justify-center">
-              <SignWithGoogle />
+              <a href="/auth/github" class="flex items-center gap-2 rounded-md bg-gray-200 px-5 py-1.5 text-sm text-black transition-colors duration-300 hover:bg-gray-300 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
+                <UIcon name="custom:github" class="size-5 fill-current" />
+                <span>
+                  Sign in with GitHub
+                </span>
+              </a>
             </div>
-            <UDivider label="OR" class="my-2" />
-            <UTabs :items>
-              <template #login>
-                <form class="flex flex-col gap-3" @submit.prevent="signin(login)">
-                  <UFormGroup label="Username" name="username">
-                    <UInput v-model="login.username" type="username" />
-                  </UFormGroup>
-                  <UFormGroup label="Password" name="password">
-                    <UInput v-model="login.password" type="password" />
-                  </UFormGroup>
-                  <div class="mt-4 flex justify-end gap-2">
-                    <UButton variant="soft" @click="authModal = false">
-                      Cancel
-                    </UButton>
-                    <UButton :loading type="submit">
-                      Save
-                    </UButton>
-                  </div>
-                </form>
-              </template>
-              <template #signup>
-                <form class="flex flex-col gap-3" @submit.prevent="createAccount(signup)">
-                  <UFormGroup label="Username" name="username">
-                    <UInput v-model="signup.username" type="username" />
-                  </UFormGroup>
-                  <UFormGroup label="Email" name="email">
-                    <UInput v-model="signup.email" type="email" />
-                  </UFormGroup>
-                  <UFormGroup label="Password" name="password">
-                    <UInput v-model="signup.password" type="password" />
-                  </UFormGroup>
-                  <div class="mt-4 flex justify-end gap-2">
-                    <UButton variant="soft" @click="authModal = false">
-                      Cancel
-                    </UButton>
-                    <UButton :loading type="submit">
-                      Save
-                    </UButton>
-                  </div>
-                </form>
-              </template>
-            </UTabs>
           </div>
         </UCard>
       </UModal>

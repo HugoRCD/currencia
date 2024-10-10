@@ -27,8 +27,8 @@ defineProps({
 <template>
   <div
     class="nav-item select-none"
-    :class="{ active: active, logout: nav_item.name === 'Logout' }"
-    @click="navItem.name === 'Logout' ? useLogout() : $router.push(nav_item.to)"
+    :class="{ active: active, logout: navItem.name === 'Logout' }"
+    @click="navItem.name === 'Logout' ? useLogout() : $router.push(navItem.to)"
   >
     <span>
       <component :is="navItem.icon" as="span" class="size-5 text-gray-500 dark:text-gray-400" />
@@ -40,7 +40,9 @@ defineProps({
 </template>
 
 <style scoped>
---logout-color: #c12121;
+html {
+  --logout-color: #c12121;
+}
 
 .nav-item {
   @apply cursor-pointer rounded-lg px-3 py-2 flex flex-row items-center gap-2 transition-transform duration-200 ease-in-out;

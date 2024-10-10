@@ -41,14 +41,6 @@ export function getNavigation(where: Where): Navigation[] {
           description: 'You can see all the market information, latest news, and more.',
         },
         {
-          name: 'News',
-          to: '/app/news',
-          icon: NewspaperIcon,
-          iconString: 'i-heroicons-newspaper',
-          title: 'Latest Crypto News',
-          description: 'Where the community shares the latest news about the crypto world.',
-        },
-        {
           name: 'Watchlist',
           to: '/app/watchlist',
           icon: StarIcon,
@@ -88,7 +80,6 @@ export function getNavigation(where: Where): Navigation[] {
       return [
         { name: 'Users', to: '/app/admin/users', icon: UsersIcon, title: 'Users', description: 'Users page' },
         { name: 'Cryptos', to: '/app/admin/cryptos', icon: CurrencyDollarIcon, title: 'Cryptos', description: 'Cryptos page' },
-        { name: 'News', to: '/app/admin/news', icon: NewspaperIcon, title: 'News', description: 'News page' },
       ]
     default:
       return []

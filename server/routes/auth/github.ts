@@ -25,7 +25,7 @@ export default defineOAuthGitHubEventHandler({
         },
         loggedInAt: new Date().toISOString(),
       })
-      return sendRedirect(event, '/app/projects')
+      return sendRedirect(event, '/app/market')
     } catch (error) {
       console.error('GitHub OAuth error:', error)
       return sendRedirect(event, '/login?error=github')
@@ -33,6 +33,6 @@ export default defineOAuthGitHubEventHandler({
   },
   onError(event, error) {
     console.error('GitHub OAuth error:', error)
-    return sendRedirect(event, '/login?error=github')
+    return sendRedirect(event, '/app/market?error=github')
   },
 })
