@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { StarIcon } from '@heroicons/vue/24/outline'
-import { StarIcon as filledStar } from '@heroicons/vue/24/solid'
-
 definePageMeta({
   middleware: ['protected'],
 })
-
-const toast = useToast()
 
 const loading = ref(false)
 
@@ -15,27 +10,18 @@ const userWatchlist = ref(user.value!.watchlist)
 const cryptos = usePublicCrypto()
 
 async function toggleFavorite(crypto: Crypto) {
-  const { data, error } = await useFetch(`/api/user/crypto/${crypto.id}`, {
-    method: 'POST',
-    body: {
-      userId: user.value!.id,
-    },
-  })
-  if (error.value) {
-    toast.add({
-      title: 'Whoops! Something went wrong.',
-      icon: 'heroicons:x-circle',
-      color: 'red',
-      timeout: 2000,
+  try {
+    const response = await $fetch(`/api/user/crypto/${crypto.id}`, {
+      method: 'POST',
+      body: {
+        userId: user.value!.id,
+      },
     })
-    return
+    userWatchlist.value = response!.watchlist
+    toast.success(`${userWatchlist.value.some((c) => c.cryptoId === crypto.id) ? 'Added to watchlist' : 'Removed from watchlist'}`)
+  } catch (error) {
+    toast.error('Whoops! Something went wrong.')
   }
-  userWatchlist.value = data.value!.watchlist
-  toast.add({
-    title: userWatchlist.value.some((c) => c.cryptoId === crypto.id) ? 'Added to watchlist' : 'Removed from watchlist',
-    icon: 'heroicons:check-circle',
-    timeout: 2000,
-  })
 }
 
 function isFavorite(crypto: Crypto) {
@@ -117,8 +103,8 @@ async function updateCurrentUser() {
           </div>
         </div>
         <div class="flex gap-2">
-          <StarIcon v-if="!isFavorite(crypto)" class="size-5 text-gray-400" />
-          <filledStar v-else class="size-5 text-yellow-400" />
+          <UIcon v-if="!isFavorite(crypto)" name="lucide:star" class="size-5 text-gray-400" />
+          <UIcon v-else name="lucide:star" class="size-5 text-yellow-400" />
         </div>
       </div>
     </div>
