@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
-import type { Article } from "~/types/Article";
+import type { PropType } from 'vue'
+import type { Article } from '~/types/Article'
 
 defineProps({
   article: {
     type: Object as PropType<Article>,
     required: true,
   },
-});
+})
 </script>
 
 <template>
   <NuxtLink
-    class="relative overflow-hidden flex flex-col gap-2 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 cursor-pointer"
+    class="relative flex cursor-pointer flex-col gap-2 overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
     :to="article.link"
   >
-    <div class="w-full h-[15rem]">
-      <img :src="article.preview" class="w-full h-full object-cover" :alt="article.title" />
+    <div class="h-[15rem] w-full">
+      <img :src="article.preview" class="size-full object-cover" :alt="article.title">
     </div>
     <div class="flex flex-col gap-1 p-4 pt-0">
       <div class="flex flex-row items-center">
         <span v-if="article" class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ article.title }}</span>
       </div>
       <div class="flex flex-row items-center">
-        <span v-if="article" class="text-sm text-gray-500 dark:text-gray-400 description max-h-20" ref="description">
+        <span v-if="article" ref="description" class="description max-h-20 text-sm text-gray-500 dark:text-gray-400">
           {{ article.description }}
         </span>
       </div>

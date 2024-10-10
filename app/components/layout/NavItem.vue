@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FunctionalComponent, PropType } from "vue";
-import { useLogout } from "~/composables/useUser";
+import type { FunctionalComponent, PropType } from 'vue'
+import { useLogout } from '~/composables/useUser'
 
 type NavItem = {
   name: string;
@@ -9,7 +9,7 @@ type NavItem = {
 };
 
 defineProps({
-  nav_item: {
+  navItem: {
     type: Object as PropType<NavItem>,
     required: true,
   },
@@ -21,20 +21,20 @@ defineProps({
     type: Boolean,
     default: false,
   },
-});
+})
 </script>
 
 <template>
   <div
     class="nav-item select-none"
-    @click="nav_item.name === 'Logout' ? useLogout() : $router.push(nav_item.to)"
     :class="{ active: active, logout: nav_item.name === 'Logout' }"
+    @click="navItem.name === 'Logout' ? useLogout() : $router.push(nav_item.to)"
   >
     <span>
-      <component as="span" :is="nav_item.icon" class="w-5 h-5 text-gray-500 dark:text-gray-400" />
+      <component :is="navItem.icon" as="span" class="size-5 text-gray-500 dark:text-gray-400" />
     </span>
-    <span class="text-sm font-medium hidden sm:block text-gray-500 dark:text-gray-400" v-if="open">
-      {{ nav_item.name }}
+    <span v-if="open" class="hidden text-sm font-medium text-gray-500 sm:block dark:text-gray-400">
+      {{ navItem.name }}
     </span>
   </div>
 </template>

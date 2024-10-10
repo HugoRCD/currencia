@@ -1,99 +1,99 @@
-import type { Article } from "~/types/Article";
-import type { Feed } from "~/types/Feed";
+import type { Article } from '~/types/Article'
+import type { Feed } from '~/types/Feed'
 
 export const usePublicArticle = () => {
-  return useState<Article[]>("articles", () => []);
-};
+  return useState<Article[]>('articles', () => [])
+}
 
 export function useArticle() {
-  const toast = useToast();
-  const publicArticles = usePublicArticle();
+  const toast = useToast()
+  const publicArticles = usePublicArticle()
 
-  const getLoading = ref(false);
-  const loading = ref(false);
-  const deleteLoading = ref(false);
+  const getLoading = ref(false)
+  const loading = ref(false)
+  const deleteLoading = ref(false)
 
-  const articles = ref<Article[]>([]);
-  const feeds = ref<Feed[]>([]);
+  const articles = ref<Article[]>([])
+  const feeds = ref<Feed[]>([])
 
   async function fetchDailyArticles() {
-    await useFetch("/api/feed");
+    await useFetch('/api/feed')
   }
 
   async function fetchFeed() {
-    const { data, error } = await useFetch<Feed[]>("/api/admin/feed");
+    const { data, error } = await useFetch<Feed[]>('/api/admin/feed')
     if (error.value || !data.value)
       toast.add({
-        title: "Whoops! Something went wrong.",
-        icon: "i-heroicons-x-circle",
-        color: "red",
+        title: 'Whoops! Something went wrong.',
+        icon: 'i-heroicons-x-circle',
+        color: 'red',
         timeout: 2000,
-      });
-    if (data.value) feeds.value = data.value;
+      })
+    if (data.value) feeds.value = data.value
   }
 
   async function fetchPublicArticles() {
-    const { data } = await useFetch<Article[]>("/api/article");
-    if (data.value) publicArticles.value = data.value;
+    const { data } = await useFetch<Article[]>('/api/article')
+    if (data.value) publicArticles.value = data.value
   }
 
   async function fetchArticles(load: boolean = true) {
-    if (load) getLoading.value = true;
-    const { data, error } = await useFetch<Article[]>("/api/admin/article/article");
+    if (load) getLoading.value = true
+    const { data, error } = await useFetch<Article[]>('/api/admin/article/article')
     if (error.value || !data.value)
       toast.add({
-        title: "Whoops! Something went wrong.",
-        icon: "i-heroicons-x-circle",
-        color: "red",
+        title: 'Whoops! Something went wrong.',
+        icon: 'i-heroicons-x-circle',
+        color: 'red',
         timeout: 2000,
-      });
-    if (data.value) articles.value = data.value;
-    if (load) getLoading.value = false;
+      })
+    if (data.value) articles.value = data.value
+    if (load) getLoading.value = false
   }
 
   async function insertRssFeed(url: string) {
-    const { data, error } = await useFetch<Article[]>("/api/admin/feed", {
-      method: "POST",
+    const { data, error } = await useFetch<Article[]>('/api/admin/feed', {
+      method: 'POST',
       body: { url },
-    });
+    })
     if (error.value || !data.value)
       toast.add({
-        title: "Whoops! Something went wrong.",
-        icon: "i-heroicons-x-circle",
-        color: "red",
+        title: 'Whoops! Something went wrong.',
+        icon: 'i-heroicons-x-circle',
+        color: 'red',
         timeout: 2000,
-      });
+      })
     else {
       toast.add({
-        title: "Feed updated successfully.",
-        icon: "i-heroicons-check-circle",
+        title: 'Feed updated successfully.',
+        icon: 'i-heroicons-check-circle',
         timeout: 2000,
-      });
+      })
     }
   }
 
   async function updateArticle(id: number, visible: boolean) {
     const { data, error } = await useFetch<Article[]>(`/api/admin/article/${id}`, {
-      method: "PUT",
+      method: 'PUT',
       body: { visible },
-    });
+    })
     if (error.value || !data.value)
       toast.add({
-        title: "Whoops! Something went wrong.",
-        icon: "i-heroicons-x-circle",
-        color: "red",
+        title: 'Whoops! Something went wrong.',
+        icon: 'i-heroicons-x-circle',
+        color: 'red',
         timeout: 2000,
-      });
+      })
     else {
       toast.add({
-        title: "Article updated successfully.",
-        icon: "i-heroicons-check-circle",
+        title: 'Article updated successfully.',
+        icon: 'i-heroicons-check-circle',
         timeout: 2000,
-      });
+      })
     }
     if (data.value) {
-      await fetchArticles(false);
-      await fetchPublicArticles();
+      await fetchArticles(false)
+      await fetchPublicArticles()
     }
   }
 
@@ -109,5 +109,5 @@ export function useArticle() {
     articles,
     feeds,
     fetchDailyArticles,
-  };
+  }
 }

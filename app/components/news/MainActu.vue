@@ -1,68 +1,68 @@
 <script setup lang="ts">
-import type { Article } from "~/types/Article";
-import type { PropType } from "vue";
+import type { PropType } from 'vue'
+import type { Article } from '~/types/Article'
 
 const props = defineProps({
   articles: {
     type: Array as PropType<Article[]>,
     required: true,
   },
-});
+})
 
-const activeArticle = ref<Article>(props.articles[0]);
-const interval = ref();
-const isHovered = ref(false);
+const activeArticle = ref<Article>(props.articles[0])
+const interval = ref()
+const isHovered = ref(false)
 
 const startInterval = (article?: Article) => {
   interval.value = setInterval(() => {
     if (article) {
-      activeArticle.value = article;
+      activeArticle.value = article
     } else {
-      const index = props.articles.findIndex((article) => article.id === activeArticle.value.id);
+      const index = props.articles.findIndex((article) => article.id === activeArticle.value.id)
       if (index >= 2) {
-        activeArticle.value = props.articles[0];
+        activeArticle.value = props.articles[0]
       } else {
-        activeArticle.value = props.articles[index + 1];
+        activeArticle.value = props.articles[index + 1]
       }
     }
-    article = undefined;
-  }, 3000);
-};
+    article = undefined
+  }, 3000)
+}
 
 onMounted(() => {
-  startInterval();
-});
+  startInterval()
+})
 
 onUnmounted(() => {
-  clearInterval(interval.value);
-});
+  clearInterval(interval.value)
+})
 
 const resetTransition = () => {
-  clearInterval(interval.value);
-};
+  clearInterval(interval.value)
+}
 
 const handleMouseEnter = (article: Article) => {
-  activeArticle.value = article;
-  resetTransition();
-  isHovered.value = true;
-};
+  activeArticle.value = article
+  resetTransition()
+  isHovered.value = true
+}
 
 const handleMouseLeave = (article: Article) => {
-  isHovered.value = false;
-  startInterval(article);
-};
+  isHovered.value = false
+  startInterval(article)
+}
 
 const changeArticle = (article: Article) => {
-  activeArticle.value = article;
-  resetTransition();
-  startInterval(article);
-};
+  activeArticle.value = article
+  resetTransition()
+  startInterval(article)
+}
 </script>
 
 <template>
-  <div class="flex lg:flex-row flex-col">
-    <div class="lg:w-2/3 w-full h-[30rem] relative flex row">
-      <div class="absolute flex row w-full h-full overflow-hidden">
+  <div class="flex flex-col lg:flex-row">
+    <div class="row relative flex h-[30rem] w-full lg:w-2/3">
+      <div class="row absolute flex size-full overflow-hidden">
         <img
           v-for="article in articles.slice(0, 3)"
           :key="article.id"
@@ -71,29 +71,29 @@ const changeArticle = (article: Article) => {
             'w-full': article.id === activeArticle.id,
             'w-0': article.id !== activeArticle.id,
           }"
-          class="lg:rounded-bl-xl lg:rounded-tl-xl rounded-xl md:rounded-tr-xl object-cover transition-all duration-1000 ease-in-out"
+          class="rounded-xl object-cover transition-all duration-1000 ease-in-out md:rounded-tr-xl lg:rounded-l-xl"
           alt="Article preview"
-        />
+        >
       </div>
-      <div class="absolute w-full bottom-5 flex items-center justify-center">
-        <div class="flex justify-between w-35 absolute">
+      <div class="absolute bottom-5 flex w-full items-center justify-center">
+        <div class="w-35 absolute flex justify-between">
           <div
             v-for="(article, index) in articles.slice(0, 3)"
             :key="index"
-            class="h-2 bg-white rounded-full cursor-pointer transition duration-300 m-2"
+            class="m-2 h-2 cursor-pointer rounded-full bg-white transition duration-300"
             :class="activeArticle.id === article.id ? 'w-4' : 'w-2'"
             @click="changeArticle(article)"
-          ></div>
+          />
         </div>
       </div>
     </div>
 
-    <div class="lg:w-1/3 w-full h-[30rem] flex flex-col justify-between p-1">
+    <div class="flex h-[30rem] w-full flex-col justify-between p-1 lg:w-1/3">
       <NewsPrincipalActuCard
         v-for="(article, index) in articles.slice(0, 3)"
         :key="index"
-        :article="article"
-        :index="index"
+        :article
+        :index
         :active="article.id === activeArticle.id"
         @mouseover="handleMouseEnter(article)"
         @mouseleave="handleMouseLeave(article)"

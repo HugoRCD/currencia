@@ -1,3 +1,25 @@
+<script setup lang="ts">
+const colorMode = useColorMode()
+
+const switchTheme = () => {
+  colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark'
+  colorMode.preference = colorMode.value
+}
+
+function startViewTransition(theme) {
+  if (theme === colorMode.value) return
+  if (!document.startViewTransition) {
+    switchTheme()
+    return
+  }
+  if (window.innerWidth < 768) {
+    switchTheme()
+    return
+  }
+  document.startViewTransition(switchTheme)
+}
+</script>
+
 <template>
   <ClientOnly>
     <UButton
@@ -8,32 +30,10 @@
       @click="startViewTransition($colorMode.value === 'light' ? 'dark' : 'light')"
     />
     <template #fallback>
-      <div class="w-8 h-8" />
+      <div class="size-8" />
     </template>
   </ClientOnly>
 </template>
-
-<script setup>
-const colorMode = useColorMode();
-
-const switchTheme = () => {
-  colorMode.value = colorMode.value === "dark" ? "light" : "dark";
-  colorMode.preference = colorMode.value;
-};
-
-function startViewTransition(theme) {
-  if (theme === colorMode.value) return;
-  if (!document.startViewTransition) {
-    switchTheme();
-    return;
-  }
-  if (window.innerWidth < 768) {
-    switchTheme();
-    return;
-  }
-  document.startViewTransition(switchTheme);
-}
-</script>
 
 <style>
 /* Dark/Light reveal effect */

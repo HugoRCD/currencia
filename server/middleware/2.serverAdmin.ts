@@ -1,5 +1,5 @@
 import { H3Event } from 'h3'
-import { Role } from "../../types/User";
+import { Role } from '~~/types/User'
 
 export default defineEventHandler((event: H3Event) => {
   const protectedRoutes = ['/api/admin']

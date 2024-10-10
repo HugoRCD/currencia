@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import { googleSdkLoaded } from "vue3-google-login";
-import { useCurrentUser } from "~/composables/useUser";
+import { googleSdkLoaded } from 'vue3-google-login'
+import { useCurrentUser } from '~/composables/useUser'
 
 const login = () => {
-  const SCOPES = "profile";
+  const SCOPES = 'profile'
   googleSdkLoaded((google) => {
     google.accounts.oauth2
       .initTokenClient({
         client_id: useRuntimeConfig().public.googleClientId,
         scope: SCOPES,
         callback: async (response) => {
-          const user = await $fetch("/api/auth/google", {
-            method: "POST",
+          const user = await $fetch('/api/auth/google', {
+            method: 'POST',
             body: {
               access_token: response.access_token,
             },
-          });
+          })
           if (user) {
-            useCurrentUser().value = user;
-            useCrypto().fetchPublicCryptos();
+            useCurrentUser().value = user
+            useCrypto().fetchPublicCryptos()
           }
         },
       })
-      .requestAccessToken();
-  });
-};
+      .requestAccessToken()
+  })
+}
 </script>
 
 <template>

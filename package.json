@@ -4,19 +4,21 @@
   "author": "HugoRCD",
   "license": "MIT License",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
     "start": "node .output/server/index.mjs",
-    "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
+    "postinstall": "nuxt prepare && npm run prisma:generate",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate",
     "prisma:pull": "prisma db pull",
     "prisma:push": "prisma db push",
-    "prisma:migrate": "prisma migrate dev",
-    "lint:fix": "eslint --ext .js,.ts,.vue --ignore-path .gitignore . --fix"
+    "prisma:migrate": "prisma migrate dev"
   },
   "devDependencies": {
     "@heroicons/vue": "^2.0.18",

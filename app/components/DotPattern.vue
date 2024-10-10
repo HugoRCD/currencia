@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="dot-pattern"></div>
+  <div class="dot-pattern" />
 </template>
 
 <style scoped lang="scss">

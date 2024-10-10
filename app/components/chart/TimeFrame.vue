@@ -1,36 +1,36 @@
 <script setup lang="ts">
-import type { TimeFrame } from "~/types/ApexChart";
+import type { TimeFrame } from '~/types/ApexChart'
 
 const timeframes = [
   {
-    value: "1W",
+    value: '1W',
     series: getLastWeek(),
   },
   {
-    value: "1M",
+    value: '1M',
     series: getLastMonth(),
   },
   {
-    value: "3M",
+    value: '3M',
     series: getLast3Months(),
   },
   {
-    value: "6M",
+    value: '6M',
     series: getLast6Months(),
   },
   {
-    value: "1Y",
+    value: '1Y',
     series: getLastYear(),
   },
-] as TimeFrame[];
+] as TimeFrame[]
 
-const selectedTimeframe = ref<TimeFrame>(timeframes[3]);
+const selectedTimeframe = ref<TimeFrame>(timeframes[3])
 
-const emit = defineEmits(["update:timeframe"]);
+const emit = defineEmits(['update:timeframe'])
 
 function selectNewTimeframe(timeframe: TimeFrame) {
-  selectedTimeframe.value = timeframe;
-  emit("update:timeframe", timeframe);
+  selectedTimeframe.value = timeframe
+  emit('update:timeframe', timeframe)
 }
 </script>
 

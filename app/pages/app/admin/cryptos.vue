@@ -1,95 +1,95 @@
 <script setup lang="ts">
-import type { Crypto, UpsertCryptoDto } from "~/types/Crypto";
+import type { Crypto, UpsertCryptoDto } from '~/types/Crypto'
 
-const { cryptos, loading, getLoading, fetchCryptos, upsertCrypto, deleteCrypto } = useCrypto();
+const { cryptos, loading, getLoading, fetchCryptos, upsertCrypto, deleteCrypto } = useCrypto()
 
 const columns = [
   {
-    key: "logo",
-    label: "Logo",
+    key: 'logo',
+    label: 'Logo',
   },
   {
-    key: "name",
-    label: "Name",
+    key: 'name',
+    label: 'Name',
     sortable: true,
   },
   {
-    key: "symbol",
-    label: "Symbol",
+    key: 'symbol',
+    label: 'Symbol',
   },
   {
-    key: "description",
-    label: "Description",
+    key: 'description',
+    label: 'Description',
   },
   {
-    key: "visible",
-    label: "Visible",
+    key: 'visible',
+    label: 'Visible',
   },
   {
-    key: "createdAt",
-    label: "Created At",
+    key: 'createdAt',
+    label: 'Created At',
     sortable: true,
   },
   {
-    key: "updatedAt",
-    label: "Updated At",
+    key: 'updatedAt',
+    label: 'Updated At',
     sortable: true,
   },
   {
-    key: "actions",
-    label: "Actions",
+    key: 'actions',
+    label: 'Actions',
   },
-];
+]
 
 const items = (row: Crypto) => [
   [
     {
-      label: "Edit",
-      icon: "i-heroicons-pencil-square-20-solid",
+      label: 'Edit',
+      icon: 'i-heroicons-pencil-square-20-solid',
       click: () => {
-        modal.value = true;
+        modal.value = true
         newCrypto.value = {
           name: row.name,
           symbol: row.symbol,
           logo: row.logo,
           description: row.description,
           visible: row.visible,
-        };
+        }
       },
     },
     {
-      label: row.visible ? "Hide" : "Show",
-      icon: row.visible ? "i-heroicons-eye-slash-20-solid" : "i-heroicons-eye-20-solid",
+      label: row.visible ? 'Hide' : 'Show',
+      icon: row.visible ? 'i-heroicons-eye-slash-20-solid' : 'i-heroicons-eye-20-solid',
       click: () => {
-        upsertCrypto({ ...row, visible: !row.visible });
+        upsertCrypto({ ...row, visible: !row.visible })
       },
     },
   ],
   [
     {
-      label: "Delete",
-      icon: "i-heroicons-trash-20-solid",
-      iconClass: "text-red-500 dark:text-red-500",
+      label: 'Delete',
+      icon: 'i-heroicons-trash-20-solid',
+      iconClass: 'text-red-500 dark:text-red-500',
       click: () => {
-        deleteCrypto(row.id);
+        deleteCrypto(row.id)
       },
     },
   ],
-];
+]
 
 const newCrypto = ref<UpsertCryptoDto>({
-  name: "",
-  symbol: "",
-  logo: "",
-  description: "",
+  name: '',
+  symbol: '',
+  logo: '',
+  description: '',
   visible: true,
-});
+})
 
-const modal = ref(false);
+const modal = ref(false)
 
 // Selected Columns
-const selectedColumns = ref(columns);
-const columnsTable = computed(() => columns.filter((column) => selectedColumns.value.includes(column)));
+const selectedColumns = ref(columns)
+const columnsTable = computed(() => columns.filter((column) => selectedColumns.value.includes(column)))
 
 // Pagination
 /*const page = ref(1);
@@ -97,16 +97,16 @@ const pageCount = ref(10);
 const pageTotal = computed(() => Math.ceil(filteredCryptos.value.length / pageCount.value));*/
 
 // Filters
-const search = ref("");
+const search = ref('')
 
 const filteredCryptos = computed(() =>
   cryptos.value.filter((crypto) => {
-    const name = crypto.name.toLowerCase();
-    const symbol = crypto.symbol.toLowerCase();
-    const searchValue = search.value.toLowerCase();
-    return name.includes(searchValue) || symbol.includes(searchValue);
+    const name = crypto.name.toLowerCase()
+    const symbol = crypto.symbol.toLowerCase()
+    const searchValue = search.value.toLowerCase()
+    return name.includes(searchValue) || symbol.includes(searchValue)
   }),
-);
+)
 
 /*const paginatedCryptos = computed(() => {
   const start = (page.value - 1) * pageCount.value;
@@ -115,29 +115,31 @@ const filteredCryptos = computed(() =>
 });*/
 
 onMounted(async () => {
-  await fetchCryptos();
-});
+  await fetchCryptos()
+})
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 mt-1">
-    <div class="flex justify-end sm:items-center gap-4 flex-col sm:flex-row">
+  <div class="mt-1 flex flex-col gap-4">
+    <div class="flex flex-col justify-end gap-4 sm:flex-row sm:items-center">
       <UInput v-model="search" label="Search" placeholder="Search a crypto" icon="i-heroicons-magnifying-glass-20-solid" />
       <!--      <USelect v-model="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="w-20" />-->
       <USelectMenu v-model="selectedColumns" :options="columns" multiple>
-        <UButton icon="i-heroicons-view-columns" color="gray" class="w-full sm:w-40"> Columns </UButton>
+        <UButton icon="i-heroicons-view-columns" color="gray" class="w-full sm:w-40">
+          Columns
+        </UButton>
       </USelectMenu>
       <UButton label="Add a crypto" icon="i-heroicons-plus-circle" @click="modal = true" />
     </div>
     <UTable :rows="filteredCryptos" :columns="columnsTable" :loading="getLoading">
       <template #logo-data="{ row }">
-        <UAvatar :src="row.logo" :alt="row.name" class="w-7 h-7" :ui="{ rounded: 'rounded-none' }" />
+        <UAvatar :src="row.logo" :alt="row.name" class="size-7" :ui="{ rounded: 'rounded-none' }" />
       </template>
       <template #description-data="{ row }">
         <UPopover mode="hover">
           <span class="text-sm text-gray-500 dark:text-gray-400">{{ row.description.slice(0, 50) }}...</span>
           <template #panel>
-            <div class="p-4 w-96" style="white-space: pre-wrap">
+            <div class="w-96 p-4" style="white-space: pre-wrap">
               <span class="text-sm text-gray-500 dark:text-gray-400">{{ row.description }}</span>
             </div>
           </template>
@@ -152,7 +154,7 @@ onMounted(async () => {
       <template #visible-data="{ row }">
         <UIcon
           :name="row.visible ? 'i-heroicons-eye-20-solid' : 'i-heroicons-eye-slash-20-solid'"
-          class="w-5 h-5"
+          class="size-5"
           :class="row.visible ? 'text-green-500 dark:text-green-500' : 'text-red-500 dark:text-red-500'"
         />
       </template>
@@ -167,7 +169,7 @@ onMounted(async () => {
       <UCard>
         <form class="flex flex-col gap-4" @submit.prevent="upsertCrypto(newCrypto)">
           <div class="flex justify-center">
-            <UAvatar :src="newCrypto.logo" class="w-24 h-24" />
+            <UAvatar :src="newCrypto.logo" class="size-24" />
           </div>
           <UInput v-model="newCrypto.name" label="Name" placeholder="Bitcoin" />
           <UInput v-model="newCrypto.symbol" label="Symbol" placeholder="BTC" />
@@ -178,7 +180,7 @@ onMounted(async () => {
             placeholder="Bitcoin is a cryptocurrency invented in 2008 by an unknown person or group of people using the name Satoshi Nakamoto."
             autoresize
           />
-          <UButton label="Save" icon="i-heroicons-plus-circle" :loading="loading" type="submit" />
+          <UButton label="Save" icon="i-heroicons-plus-circle" :loading type="submit" />
         </form>
       </UCard>
     </UModal>

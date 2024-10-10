@@ -1,5 +1,5 @@
 <template>
-  <div class="linebreak"></div>
+  <div class="linebreak" />
 </template>
 
 <style scoped lang="scss">

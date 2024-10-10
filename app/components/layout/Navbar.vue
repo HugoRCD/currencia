@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-const navigation = getNavigation("home");
+const navigation = getNavigation('home')
 </script>
 
 <template>
-  <div class="flex items-center justify-center mx-auto w-full my-2">
+  <div class="mx-auto my-2 flex w-full items-center justify-center">
     <header class="rounded-full">
-      <div class="border border-white/10 rounded-full backdrop-blur-3xl bg-zinc-900/10 dark:bg-zinc-700/20 dark:border-zinc-900/20">
-        <nav class="z-10 h-[50px] sm:h-[45px] flex justify-around gap-2 sm:hover:gap-4 p-1 transition-all duration-300 ease-in-out">
+      <div class="rounded-full border border-white/10 bg-zinc-900/10 backdrop-blur-3xl dark:border-zinc-900/20 dark:bg-zinc-700/20">
+        <nav class="z-10 flex h-[50px] justify-around gap-2 p-1 transition-all duration-300 ease-in-out sm:h-[45px] sm:hover:gap-4">
           <NuxtLink
             v-for="item in navigation"
             :id="item.name.toLowerCase()"
@@ -14,14 +14,14 @@ const navigation = getNavigation("home");
             :aria-label="item.name + ' navigation link'"
             :class="[
               item.name === $route.name
-                ? 'text-black/80 dark:text-white/75 shadow-black/50 dark:shadow-white/50 shadow-2xl border border-white/5 backdrop-blur-3xl bg-zinc-900/10'
-                : 'text-black/60 dark:text-muted',
+                ? 'border border-white/5 bg-zinc-900/10 text-black/80 shadow-2xl shadow-black/50 backdrop-blur-3xl dark:text-white/75 dark:shadow-white/50'
+                : 'dark:text-muted text-black/60',
             ]"
             :to="item.to"
-            class="flex items-center rounded-full px-4 sm:px-6 py-1 border border-transparent hover:text-black hover:bg-white-900/50 hover:border-white/5 dark:hover:text-white/70 duration-300 ease-in-out transition-all"
+            class="hover:bg-white-900/50 flex items-center rounded-full border border-transparent px-4 py-1 transition-all duration-300 ease-in-out hover:border-white/5 hover:text-black sm:px-6 dark:hover:text-white/70"
           >
-            <component :is="item.icon" class="w-7 h-7 sm:w-6 sm:h-6 font-medium" />
-            <span class="hidden sm:inline-block ml-2 font-medium">{{ item.name }}</span>
+            <component :is="item.icon" class="size-7 font-medium sm:size-6" />
+            <span class="ml-2 hidden font-medium sm:inline-block">{{ item.name }}</span>
           </NuxtLink>
         </nav>
       </div>

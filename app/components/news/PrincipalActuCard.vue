@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Article } from "~/types/Article";
-import type { PropType } from "vue";
+import type { PropType } from 'vue'
+import type { Article } from '~/types/Article'
 
 defineProps({
   article: {
@@ -11,20 +11,20 @@ defineProps({
     type: Boolean,
     required: true,
   },
-});
+})
 </script>
 
 <template>
   <NuxtLink
-    class="lg:rounded-tr-xl lg:rounded-br-xl rounded-xl border-none hover:bg-neutral-950/10 black:hover:bg-neutral-50/50 transition-colors duration-300 w-full p-4 cursor-pointer gap-2 h-1/3"
+    class="black:hover:bg-neutral-50/50 h-1/3 w-full cursor-pointer gap-2 rounded-xl border-none p-4 transition-colors duration-300 hover:bg-neutral-950/10 lg:rounded-r-xl"
     :class="active ? 'bg-neutral-950/10 dark:bg-neutral-50/10' : ''"
     :to="article.link"
   >
     <div class="w-full">
       <span class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ article.title }}</span>
     </div>
-    <div class="w-full h-full">
-      <span class="text-sm text-gray-500 dark:text-gray-400 description lg:max-h-20 max-h-14" ref="description">
+    <div class="size-full">
+      <span ref="description" class="description max-h-14 text-sm text-gray-500 lg:max-h-20 dark:text-gray-400">
         {{ article.description }}
       </span>
     </div>

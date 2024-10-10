@@ -1,5 +1,5 @@
 import { type User as prismaUser, PrismaClient } from '@prisma/client'
-import { publicUser, Role } from "~/types/User";
+import { publicUser, Role } from '~/types/User'
 
 export const prisma = new PrismaClient()
 

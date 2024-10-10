@@ -1,17 +1,17 @@
-import { ContactEmail } from "~/types/ContactEmail";
-import { Resend } from "resend";
-import { H3Event } from "h3";
+import { Resend } from 'resend'
+import { H3Event } from 'h3'
+import { ContactEmail } from '~/types/ContactEmail'
 
-const resend = new Resend(process.env.NUXT_PRIVATE_RESEND_API_KEY);
+const resend = new Resend(process.env.NUXT_PRIVATE_RESEND_API_KEY)
 
 export default defineEventHandler(async (event: H3Event) => {
   try {
-    const body = (await readBody(event)) as ContactEmail;
-    const { email, subject, message, phone, fullname } = body;
+    const body = (await readBody(event)) as ContactEmail
+    const { email, subject, message, phone, fullname } = body
     return await resend.emails.send({
-      from: "Your <contact@yoursite.com>",
-      to: [""],
-      subject: "New message from your site",
+      from: 'Your <contact@yoursite.com>',
+      to: [''],
+      subject: 'New message from your site',
       html: `
       <p>A new message has been sent from your site.</p>
       <p>Here are the details:</p>
@@ -23,8 +23,8 @@ export default defineEventHandler(async (event: H3Event) => {
         <li>Message : ${message}</li>
       </ul>
       `,
-    });
+    })
   } catch (error) {
-    return { error };
+    return { error }
   }
-});
+})

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
-import type { Crypto } from "~/types/Crypto";
+import type { PropType } from 'vue'
+import type { Crypto } from '~/types/Crypto'
 
 const props = defineProps({
   cryptoItem: {
@@ -11,10 +11,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-});
+})
 
 function getRandomInt(min: number, max: number = 100) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 const crypto = reactive({
@@ -23,12 +23,12 @@ const crypto = reactive({
   logo: props.cryptoItem.logo,
   price: props.cryptoItem.data[props.cryptoItem.data.length - 1][1],
   change: getRandomInt(-30, 30),
-});
+})
 </script>
 
 <template>
   <div
-    class="cursor-pointer relative overflow-hidden flex flex-col gap-2 p-4 rounded-xl shadow-sm bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 border border-inherit dark:border-gray-800 dark:hover:border-gray-700 hover:border-gray-200 hover:transition-all hover:duration-300"
+    class="relative flex cursor-pointer flex-col gap-2 overflow-hidden rounded-xl border border-inherit bg-white p-4 shadow-sm hover:border-gray-200 hover:bg-gray-100 hover:transition-all hover:duration-300 dark:border-gray-800 dark:bg-gray-800 dark:hover:border-gray-700 dark:hover:bg-gray-900"
     @click="$router.push(`/app/crypto/${crypto.symbol}`)"
   >
     <div class="absolute -bottom-3 -right-2">
@@ -36,7 +36,7 @@ const crypto = reactive({
         {{ index + 1 }}
       </span>
     </div>
-    <img :src="crypto.logo" class="w-7 h-7" :alt="crypto.name" />
+    <img :src="crypto.logo" class="size-7" :alt="crypto.name">
     <div class="flex flex-row items-center">
       <span class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ crypto.name }}</span>
       <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">{{ crypto.symbol }}</span>
