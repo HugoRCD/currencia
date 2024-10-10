@@ -106,7 +106,7 @@ defineShortcuts({
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .console-button {
   @apply cursor-pointer rounded-lg px-3 py-2 flex flex-row items-center gap-2;
   @apply bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-gray-200;

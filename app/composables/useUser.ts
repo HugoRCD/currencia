@@ -1,5 +1,5 @@
 import type { CreateUserDto, LoginUserDto, publicUser, UpdateUserDto, User } from '~/types/User'
-import { Role } from '~/types/User'
+import { Role } from '~~/types/User'
 
 export const useCurrentUser = () => {
   return useState<publicUser | null>('user', () => null)

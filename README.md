@@ -7,7 +7,6 @@
 ### UI/UX
 - Translation with I18n for multiple languages support
 - Dark and light theme switchable by the user
-- Fully responsive design using SCSS
 
 ### SEO
 - SEO friendly with meta tags and Open Graph tags

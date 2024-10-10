@@ -1,4 +1,5 @@
 @import "animation.css";
+@tailwind base;
 
 #__nuxt, #__layout, html, body {
   height: 100% !important;
@@ -17,32 +18,35 @@ html.dark {
   --dot-pattern-color: #9ca3af;
 }
 
-.main-container {
-  @apply bg-[#FFFFFF] border-[#E5E7EB];
-  @apply dark:bg-[#1C1C1E] dark:border-[#303032];
-}
+@layer base {
+  .main-container {
+    @apply bg-[#FFFFFF] border-[#E5E7EB];
+    @apply dark:bg-[#1C1C1E] dark:border-[#303032];
+  }
 
-.input {
-  @apply border-sm rounded-md;
-  @apply focus:outline-none;
-  @apply px-4 py-2;
-}
+  .input {
+    @apply border-sm rounded-md;
+    @apply focus:outline-none;
+    @apply px-4 py-2;
+  }
 
-.gradient {
-  @apply bg-gradient-to-bl from-accent-main to-accent-secondary;
-}
+  .gradient {
+    @apply bg-gradient-to-bl from-accent-main to-accent-secondary;
+  }
 
-.text-gradient {
-  @apply bg-clip-text text-transparent;
-  @apply bg-gradient-to-bl from-accent-main to-accent-secondary;
-}
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    @apply bg-gradient-to-bl from-accent-main to-accent-secondary;
+  }
 
-.white-gradient {
-  @apply bg-gradient-to-br bg-clip-text text-transparent;
-  @apply from-black/90 to-black/30;
-  @apply dark:from-white/90 dark:to-white/30;
-}
+  .white-gradient {
+    @apply bg-gradient-to-br bg-clip-text text-transparent;
+    @apply from-black/90 to-black/30;
+    @apply dark:from-white/90 dark:to-white/30;
+  }
 
-.max-layout-width {
-  @apply max-w-[1700px] mx-auto;
+  .max-layout-width {
+    @apply max-w-[1700px] mx-auto;
+  }
+
 }

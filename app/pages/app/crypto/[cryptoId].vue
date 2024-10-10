@@ -60,7 +60,7 @@ const series = crypto.data
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .positive {
   @apply text-green-500;
   text-shadow: 0 0 0.5rem rgba(72, 187, 120, 0.2);

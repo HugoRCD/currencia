@@ -51,7 +51,7 @@ function selectNewTimeframe(timeframe: TimeFrame) {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .timeframe {
   @apply rounded-md;
   @apply text-gray-700 dark:text-gray-200;

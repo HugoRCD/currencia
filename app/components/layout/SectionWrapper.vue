@@ -33,7 +33,7 @@ defineProps({
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .custom-overflow {
   &::-webkit-scrollbar {
     width: 0;

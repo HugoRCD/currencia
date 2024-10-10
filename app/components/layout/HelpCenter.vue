@@ -123,4 +123,3 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   </div>
 </template>
 
-<style scoped lang="scss"></style>

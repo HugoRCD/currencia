@@ -87,7 +87,7 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true })
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .fade-move,
 .fade-enter-active,
 .fade-leave-active {

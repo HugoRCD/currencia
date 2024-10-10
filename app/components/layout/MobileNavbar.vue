@@ -19,5 +19,3 @@ const user_navigations = getNavigation('user')
     </div>
   </div>
 </template>
-
-<style scoped lang="scss"></style>

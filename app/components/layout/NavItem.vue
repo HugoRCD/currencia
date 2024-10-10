@@ -39,8 +39,8 @@ defineProps({
   </div>
 </template>
 
-<style scoped lang="scss">
-$logout-color: #c12121;
+<style scoped>
+--logout-color: #c12121;
 
 .nav-item {
   @apply cursor-pointer rounded-lg px-3 py-2 flex flex-row items-center gap-2 transition-transform duration-200 ease-in-out;

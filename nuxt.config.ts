@@ -7,7 +7,17 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
-  modules: ['@vueuse/nuxt', '@nuxt/ui', 'nuxt-svgo', '@nuxt/image', 'dayjs-nuxt'],
+  modules: [
+    '@nuxt/image',
+    '@nuxt/ui',
+    '@nuxt/fonts',
+    '@vueuse/nuxt',
+    'nuxt-build-cache',
+    'nuxt-auth-utils',
+    '@nuxt/scripts',
+    'nuxt-svgo',
+    'dayjs-nuxt'
+  ],
 
   routeRules: {
     '/': { isr: true, prerender: true },
@@ -41,5 +51,24 @@ export default defineNuxtConfig({
       crawlLinks: true,
       routes: ['/', '/app/market'],
     },
+  },
+
+  imports: {
+    presets: [
+      {
+        from: 'vue-sonner',
+        imports: ['toast']
+      }
+    ]
+  },
+
+  icon: {
+    mode: 'svg',
+    customCollections: [
+      {
+        prefix: 'custom',
+        dir: './app/assets/icons'
+      },
+    ],
   },
 })

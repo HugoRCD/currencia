@@ -18,4 +18,3 @@ await useCrypto().fetchPublicCryptos()
   </div>
 </template>
 
-<style scoped lang="scss"></style>

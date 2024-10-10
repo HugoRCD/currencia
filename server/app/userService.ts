@@ -2,6 +2,28 @@ import bcrypt from 'bcryptjs'
 import type { CreateUserDto, UpdateUserDto } from '~/types/User'
 import { Role } from '~/types/User'
 
+export async function upsertUser(createUserInput: CreateUserInput): Promise<publicUser> {
+  const foundUser = await prisma.user.findUnique({
+    where: {
+      username: createUserInput.username,
+    },
+  })
+  const newUsername = foundUser ? `${createUserInput.username}_#${Math.floor(Math.random() * 1000)}` : createUserInput.username
+  const user = await prisma.user.upsert({
+    where: {
+      email: createUserInput.email,
+    },
+    update: {
+      updatedAt: new Date(),
+    },
+    create: {
+      ...createUserInput,
+      username: newUsername,
+    },
+  })
+  return formatUser(user)
+}
+
 export async function createUser(userData: CreateUserDto) {
   const foundUser = await prisma.user.findFirst({
     where: {

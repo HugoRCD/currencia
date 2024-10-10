@@ -102,4 +102,3 @@ const changeArticle = (article: Article) => {
   </div>
 </template>
 
-<style scoped lang="scss"></style>

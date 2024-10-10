@@ -4,7 +4,7 @@
   <div class="dot-pattern" />
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .dot-pattern {
   position: absolute;
   inset: 0;

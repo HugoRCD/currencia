@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { Toaster } from 'vue-sonner'
+
 useHead({
   title: 'Currencia - The Simplest Crypto Tracker',
   meta: [
@@ -45,8 +47,6 @@ useHead({
   ],
 })
 
-await useUser()
-
 const route = useRoute()
 
 const user = useCurrentUser()
@@ -79,7 +79,10 @@ if (import.meta.client) {
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
-      <UNotifications />
+      <Toaster
+        close-button
+        position="top-center"
+      />
     </Body>
   </Html>
 </template>

@@ -88,7 +88,7 @@ watch(reduceMotion, () => {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .light {
   background-color: #fff;
   color: #000;

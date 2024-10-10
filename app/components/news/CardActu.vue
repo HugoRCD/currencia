@@ -31,7 +31,7 @@ defineProps({
   </NuxtLink>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .description {
   overflow: hidden;
   display: -webkit-box;

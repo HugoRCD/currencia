@@ -35,4 +35,3 @@ const currentPage = computed(() => {
   </div>
 </template>
 
-<style scoped lang="scss"></style>

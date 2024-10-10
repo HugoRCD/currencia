@@ -209,4 +209,3 @@ async function updateCurrentUser() {
   </div>
 </template>
 
-<style scoped lang="scss"></style>

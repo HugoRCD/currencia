@@ -196,7 +196,7 @@ const chartOptions = {
     },
   },
   tooltip: {
-     
+
     custom: function({ series, seriesIndex, dataPointIndex }) {
       const value = series[seriesIndex][dataPointIndex] as number
       price.value = value
@@ -242,7 +242,7 @@ const chartOptions = {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .positive {
   --graph-curve: #10b981;
 }
