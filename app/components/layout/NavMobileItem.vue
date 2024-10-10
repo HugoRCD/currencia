@@ -1,18 +1,12 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
-
 const { clear } = useUserSession()
 
-defineProps({
-  navItem: {
-    type: Object as PropType<Navigation>,
-    required: true,
-  },
-  active: {
-    type: Boolean,
-    default: false,
-  },
-})
+type NavMobileItem = {
+  navItem: Navigation
+  active: boolean
+}
+
+const { active = false } = defineProps<NavMobileItem>()
 </script>
 
 <template>
