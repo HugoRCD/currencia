@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Crypto, UpsertCryptoDto } from '~~/types/Crypto'
 
-const { cryptos, loading, getLoading, fetchCryptos, upsertCrypto, deleteCrypto } = useCrypto()
+const { modal, cryptos, loading, getLoading, fetchCryptos, upsertCrypto, deleteCrypto } = useCrypto()
 
 const columns = [
   {
@@ -84,8 +84,6 @@ const newCrypto = ref<UpsertCryptoDto>({
   description: '',
   visible: true,
 })
-
-const modal = ref(false)
 
 // Selected Columns
 const selectedColumns = ref(columns)
@@ -171,15 +169,23 @@ onMounted(async () => {
           <div class="flex justify-center">
             <UAvatar :src="newCrypto.logo" class="size-24" />
           </div>
-          <UInput v-model="newCrypto.name" label="Name" placeholder="Bitcoin" />
-          <UInput v-model="newCrypto.symbol" label="Symbol" placeholder="BTC" />
-          <UInput v-model="newCrypto.logo" label="Logo" placeholder="https://example.com/logo.png" />
-          <UTextarea
-            v-model="newCrypto.description"
-            label="Description"
-            placeholder="Bitcoin is a cryptocurrency invented in 2008 by an unknown person or group of people using the name Satoshi Nakamoto."
-            autoresize
-          />
+          <UFormGroup label="Name">
+            <UInput v-model="newCrypto.name" placeholder="Bitcoin" />
+          </UFormGroup>
+          <UFormGroup label="Symbol">
+            <UInput v-model="newCrypto.symbol" placeholder="BTC" />
+          </UFormGroup>
+          <UFormGroup label="Logo">
+            <UInput v-model="newCrypto.logo" placeholder="https://example.com/logo.png" />
+          </UFormGroup>
+          <UFormGroup label="Description">
+            <UTextarea
+              v-model="newCrypto.description"
+              label="Description"
+              placeholder="Bitcoin is a cryptocurrency invented in 2008 by an unknown person or group of people using the name Satoshi Nakamoto."
+              autoresize
+            />
+          </UFormGroup>
           <UButton label="Save" icon="heroicons:plus-circle" :loading type="submit" />
         </form>
       </UCard>

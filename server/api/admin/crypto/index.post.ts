@@ -11,5 +11,5 @@ export default eventHandler(async (event: H3Event) => {
     logo: body.logo,
     visible: body.visible,
   }
-  return await upsertCrypto(upsertCryptoDto)
+  return upsertCrypto(upsertCryptoDto)
 })

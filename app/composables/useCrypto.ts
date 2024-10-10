@@ -11,6 +11,7 @@ export function useCrypto() {
   const getLoading = ref(false)
   const loading = ref(false)
   const deleteLoading = ref(false)
+  const modal = ref(false)
 
   const cryptos = ref<Crypto[]>([])
 
@@ -22,8 +23,8 @@ export function useCrypto() {
   async function fetchCryptos() {
     getLoading.value = true
     try {
-      const response = await $fetch('/api/admin/crypto/crypto')
-      if (response.value) cryptos.value = response.value
+      const response = await $fetch('/api/admin/crypto')
+      if (response) cryptos.value = response
     } catch (error) {
       toast.error('Whoops! Something went wrong.')
     }
@@ -33,18 +34,18 @@ export function useCrypto() {
   async function upsertCrypto(upsertCryptoDto: UpsertCryptoDto) {
     loading.value = true
     try {
-      const response = await $fetch('/api/admin/crypto/crypto', {
+      await $fetch('/api/admin/crypto', {
         method: 'POST',
         body: upsertCryptoDto,
       })
-      toast.success('Crypto created successfully.')
-      if (response.value) cryptos.value = response.value
+      toast.success('Operation successful !')
     } catch (error) {
       toast.error('Whoops! Something went wrong.')
     }
     loading.value = false
     await fetchCryptos()
     await fetchPublicCryptos()
+    modal.value = false
   }
 
   async function deleteCrypto(id: number) {
@@ -68,6 +69,7 @@ export function useCrypto() {
     loading,
     deleteLoading,
     cryptos,
+    modal,
     fetchCryptos,
     upsertCrypto,
     deleteCrypto,
