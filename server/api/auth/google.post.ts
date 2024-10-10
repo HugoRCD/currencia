@@ -1,6 +1,6 @@
 import { H3Event } from "h3";
-import { formatUser } from "~/server/database/client";
-import { getUserProfile } from "~/server/app/googleService";
+import { formatUser } from "~~/server/database/client";
+import { getUserProfile } from "~~/server/app/googleService";
 
 export default eventHandler(async (event: H3Event) => {
   const body = await readBody(event);

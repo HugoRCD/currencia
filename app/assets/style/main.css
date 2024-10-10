@@ -1,8 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@import "animation";
+@import "animation.css";
 
 #__nuxt, #__layout, html, body {
   height: 100% !important;

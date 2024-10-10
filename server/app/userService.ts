@@ -1,9 +1,5 @@
 import type { CreateUserDto, UpdateUserDto } from "~/types/User";
-import prisma, { formatUser } from "~/server/database/client";
-import { isString } from "@vueuse/core";
 import { Role } from "~/types/User";
-import jwt from "jsonwebtoken";
-import { H3Event } from "h3";
 import bcrypt from "bcryptjs";
 
 export async function createUser(userData: CreateUserDto) {
@@ -35,26 +31,6 @@ export async function createUser(userData: CreateUserDto) {
   return formatUser(user);
 }
 
-export async function createOrLoginWithGoogle(data: { email: string; name: string; picture: string }) {
-  const foundUser = await prisma.user.findFirst({
-    where: {
-      email: data.email,
-    },
-  });
-  if (foundUser) {
-    return setAuthToken(foundUser.id);
-  }
-  const user = await prisma.user.create({
-    data: {
-      username: data.name + Math.floor(Math.random() * 1000),
-      email: data.email,
-      avatar: data.picture,
-      password: "1234567",
-    },
-  });
-  return setAuthToken(user.id);
-}
-
 export async function getUserById(userId: number) {
   const user = await prisma.user.findUnique({
     where: {
@@ -84,50 +60,6 @@ export async function getAllUsers() {
   return users.map((user) => {
     return formatUser(user);
   });
-}
-
-export async function getUserByAuthToken(authToken: string) {
-  const user = await prisma.user.findFirst({
-    where: {
-      authToken,
-    },
-    include: {
-      watchlist: true,
-    },
-  });
-  if (!user) return null;
-  return formatUser(user);
-}
-
-export async function setAuthToken(userId: number) {
-  const user = await getUserById(userId);
-  const authToken = jwt.sign(
-    {
-      id: user.id,
-      role: user.role,
-      username: user.username,
-      email: user.email,
-    },
-    useRuntimeConfig().private.authSecret,
-    { expiresIn: "30d" },
-  );
-  return prisma.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      authToken,
-    },
-  });
-}
-
-export async function adminCheck(event: H3Event): Promise<boolean> {
-  const authToken = getCookie(event, "authToken");
-  const hasAuthToken = isString(authToken);
-  if (!hasAuthToken) return false;
-  const user = await getUserByAuthToken(authToken);
-  if (!user) return false;
-  return user.role === Role.Admin;
 }
 
 export async function deleteUser(userId: number) {

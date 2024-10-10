@@ -1,4 +1,4 @@
-import { toggleCryptoWatchlist } from "~/server/app/userService";
+import { toggleCryptoWatchlist } from "~~/server/app/userService";
 
 export default defineEventHandler(async (event) => {
   const params = event.context.params;

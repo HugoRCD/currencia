@@ -1,5 +1,5 @@
 import { H3Event } from "h3";
-import { getUserByAuthToken } from "~/server/app/userService";
+import { getUserByAuthToken } from "~~/server/app/userService";
 import { isString } from "@vueuse/core";
 
 export default eventHandler(async (event: H3Event) => {

@@ -1,7 +1,7 @@
 import rtj from "rss-to-json";
 import type { CreateArticleDto } from "~/types/Article";
 import type { rssFeed, rssFeedItem } from "~/types/rssFeedType";
-import prisma from "~/server/database/client";
+import prisma from "~~/server/database/client";
 
 export async function getRssFeed(url: string) {
   const parsedFeed = (await rtj.parse(url)) as rssFeed;

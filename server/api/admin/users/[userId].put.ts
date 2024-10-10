@@ -1,4 +1,4 @@
-import { updateRoleUser } from "~/server/app/userService";
+import { updateRoleUser } from "~~/server/app/userService";
 import { H3Event } from "h3";
 
 export default eventHandler(async (event: H3Event) => {

@@ -1,4 +1,4 @@
-import { createUser } from "~/server/app/userService";
+import { createUser } from "~~/server/app/userService";
 import { CreateUserDto } from "~/types/User";
 import { H3Event } from "h3";
 

@@ -1,4 +1,4 @@
-import { getUserByLogin, setAuthToken } from "~/server/app/userService";
+import { getUserByLogin, setAuthToken } from "~~/server/app/userService";
 import bcrypt from "bcryptjs";
 
 export async function login(login: string, password: string) {

@@ -1,5 +1,5 @@
 import { H3Event } from "h3";
-import { getAllFeeds, getRssFeed, insertItemArticle } from "~/server/app/feedService";
+import { getAllFeeds, getRssFeed, insertItemArticle } from "~~/server/app/feedService";
 
 export default eventHandler(async (event: H3Event) => {
   const feeds = await getAllFeeds();

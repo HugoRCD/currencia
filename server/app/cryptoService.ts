@@ -1,5 +1,5 @@
 import type { UpsertCryptoDto } from "~/types/Crypto";
-import prisma from "~/server/database/client";
+import prisma from "~~/server/database/client";
 import dayjs from "dayjs";
 
 function smoothCryptoData(cryptoData: [timestamp: number, value: number][], windowSize: number) {
