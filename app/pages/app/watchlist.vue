@@ -2,8 +2,10 @@
 const { user } = useUserSession()
 const publicCryptos = usePublicCrypto()
 
+const { data } = useFetch('/api/user/watchlist')
+
 const userWatchlist = computed(() => {
-  return user.value?.watchlist.map((crypto) => crypto.cryptoId)
+  return data.value?.map((crypto) => crypto.cryptoId)
 })
 
 const cryptos = computed(() => {

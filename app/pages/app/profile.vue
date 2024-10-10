@@ -6,7 +6,10 @@ definePageMeta({
 const loading = ref(false)
 
 const { user } = useUserSession()
-const userWatchlist = ref(user.value!.watchlist)
+const { data } = await useFetch('/api/user/watchlist')
+
+const userWatchlist = ref(data.value?.map((crypto) => crypto.cryptoId))
+
 const cryptos = usePublicCrypto()
 
 async function toggleFavorite(crypto: Crypto) {
@@ -17,8 +20,8 @@ async function toggleFavorite(crypto: Crypto) {
         userId: user.value!.id,
       },
     })
-    userWatchlist.value = response!.watchlist
-    toast.success(`${userWatchlist.value.some((c) => c.cryptoId === crypto.id) ? 'Added to watchlist' : 'Removed from watchlist'}`)
+    userWatchlist.value = response!.watchlist.map((crypto) => crypto.cryptoId)
+    toast.success(`${userWatchlist.value.some((c) => c === crypto.id) ? 'Added to watchlist' : 'Removed from watchlist'}`)
   } catch (error) {
     toast.error('Whoops! Something went wrong.')
   }
@@ -26,7 +29,7 @@ async function toggleFavorite(crypto: Crypto) {
 
 function isFavorite(crypto: Crypto) {
   if (!userWatchlist.value) return false
-  return userWatchlist.value.some((c) => c.cryptoId === crypto.id)
+  return userWatchlist.value.some((c) => c === crypto.id)
 }
 
 async function updateCurrentUser() {
@@ -103,8 +106,8 @@ async function updateCurrentUser() {
           </div>
         </div>
         <div class="flex gap-2">
-          <UIcon v-if="!isFavorite(crypto)" name="lucide:star" class="size-5 text-gray-400" />
-          <UIcon v-else name="lucide:star" class="size-5 text-yellow-400" />
+          <UIcon v-if="isFavorite(crypto)" name="lucide:star" class="size-5 text-yellow-400" />
+          <UIcon v-else name="lucide:star" class="size-5 text-gray-400" />
         </div>
       </div>
     </div>

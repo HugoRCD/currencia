@@ -50,3 +50,14 @@ export function deleteCrypto(cryptoId: number) {
     },
   })
 }
+
+export function getUserWatchlist(userId: number): Promise<Crypto[]> {
+  return prisma.watchlist.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      crypto: true,
+    },
+  })
+}
