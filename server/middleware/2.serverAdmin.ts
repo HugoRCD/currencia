@@ -6,7 +6,7 @@ export default defineEventHandler((event: H3Event) => {
 
   const { user } = event.context
 
-  if (protectedRoutes.some((route) => event.path?.startsWith(route)) && (!user || user.role !== Role.ADMIN)) {
+  if (protectedRoutes.some((route) => event.path?.startsWith(route)) && (!user || user.role !== Role.Admin)) {
     return sendError(
       event,
       createError({

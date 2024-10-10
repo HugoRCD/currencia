@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { Navigation } from '~/composables/useNavigation'
 
 defineProps({
   navigation: {
@@ -15,7 +14,7 @@ defineProps({
     <div class="flex justify-between gap-1 border-b border-inherit px-5 py-2">
       <div class="flex items-center gap-2">
         <Transition name="slide-to-bottom" mode="out-in">
-          <component :is="navigation.icon" :key="navigation.icon" class="size-5 font-bold" />
+          <UIcon :name="navigation.icon" class="size-5 font-bold" />
         </Transition>
         <Transition name="slide-to-top" mode="out-in">
           <h1 :key="navigation.title" class="text-xl font-bold">

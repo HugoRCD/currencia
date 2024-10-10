@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { ViewColumnsIcon, ChartBarIcon } from '@heroicons/vue/24/outline'
-import type { Navigation } from '~/composables/useNavigation'
 
 const navigations = getNavigation('app')
-const user_navigations = getNavigation('user')
-const admin_navigations = getNavigation('admin')
+const userNavigations = getNavigation('user')
+const adminNavigations = getNavigation('admin')
+
+const { user, clear, loggedIn } = useUserSession()
 
 const open = ref(true)
 
@@ -59,17 +60,17 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true })
       </div>
 
       <Transition name="slide" mode="out-in">
-        <div v-if="isLoggedIn" class="flex flex-col gap-2">
+        <div v-if="loggedIn" class="flex flex-col gap-2">
           <!-- User -->
           <div class="flex flex-col gap-2">
             <UDivider class="my-3" />
-            <LayoutNavItem v-for="nav in user_navigations" :key="nav.name" :active="nav.to === $route.path" :nav-item="nav" :open />
+            <LayoutNavItem v-for="nav in userNavigations" :key="nav.name" :active="nav.to === $route.path" :nav-item="nav" :open />
           </div>
 
           <!-- Admin -->
-          <div v-if="isAdmin" class="flex flex-col gap-2">
+          <div v-if="user.role === 'admin'" class="flex flex-col gap-2">
             <UDivider class="my-3" />
-            <LayoutNavItem v-for="nav in admin_navigations" :key="nav.name" :active="nav.to === $route.path" :nav-item="nav" :open />
+            <LayoutNavItem v-for="nav in adminNavigations" :key="nav.name" :active="nav.to === $route.path" :nav-item="nav" :open />
           </div>
         </div>
       </Transition>
@@ -81,7 +82,7 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true })
         <ThemeToggle />
       </UTooltip>
       <UTooltip text="Back to home">
-        <UButton icon="i-heroicons-arrow-left-on-rectangle-20-solid" color="gray" variant="ghost" @click="$router.push('/')" />
+        <UButton icon="heroicons:arrow-left-on-rectangle-20-solid" color="gray" variant="ghost" @click="$router.push('/')" />
       </UTooltip>
     </div>
   </div>

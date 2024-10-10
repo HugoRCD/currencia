@@ -1,37 +1,31 @@
 <script setup lang="ts">
-import type { FunctionalComponent, PropType } from 'vue'
-import { useLogout } from '~/composables/useUser'
+import type { PropType } from 'vue'
+
+const { clear } = useUserSession()
 
 type NavItem = {
   name: string;
   to: string;
-  icon: FunctionalComponent;
+  icon: string;
 };
 
-defineProps({
-  navItem: {
-    type: Object as PropType<NavItem>,
-    required: true,
-  },
-  active: {
-    type: Boolean,
-    default: false,
-  },
-  open: {
-    type: Boolean,
-    default: false,
-  },
-})
+type NavItemProps = {
+  navItem: NavItem;
+  active: boolean;
+  open: boolean;
+};
+
+defineProps<NavItemProps>()
 </script>
 
 <template>
   <div
     class="nav-item select-none"
     :class="{ active: active, logout: navItem.name === 'Logout' }"
-    @click="navItem.name === 'Logout' ? useLogout() : $router.push(navItem.to)"
+    @click="navItem.name === 'Logout' ? clear() : $router.push(navItem.to)"
   >
     <span>
-      <component :is="navItem.icon" as="span" class="size-5 text-gray-500 dark:text-gray-400" />
+      <UIcon :name="navItem.icon" class="size-5 text-gray-500 dark:text-gray-400" />
     </span>
     <span v-if="open" class="hidden text-sm font-medium text-gray-500 sm:block dark:text-gray-400">
       {{ navItem.name }}
@@ -40,11 +34,9 @@ defineProps({
 </template>
 
 <style scoped>
-html {
-  --logout-color: #c12121;
-}
-
 .nav-item {
+  --logout-color: #c12121;
+
   @apply cursor-pointer rounded-lg px-3 py-2 flex flex-row items-center gap-2 transition-transform duration-200 ease-in-out;
   border: 1px solid transparent;
   transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s, transform 0.2s;
@@ -61,9 +53,9 @@ html {
     box-shadow: 0 1px 0 #cccccc, 0 -3px 0 #ececec inset;
 
     &.logout {
-      color: $logout-color;
-      border: 1px solid $logout-color;
-      box-shadow: 0 1px 0 $logout-color, 0 -3px 0 $logout-color inset;
+      color: var(--logout-color);
+      border: 1px solid var(--logout-color);
+      box-shadow: 0 1px 0 var(--logout-color), 0 -3px 0 var(--logout-color) inset;
     }
   }
 
@@ -71,7 +63,7 @@ html {
     box-shadow: 0 1px 0 #cccccc, 0 -0.5px 0 #ececec inset;
 
     &.logout {
-      box-shadow: 0 1px 0 $logout-color, 0 -0.5px 0 $logout-color inset;
+      box-shadow: 0 1px 0 var(--logout-color), 0 -0.5px 0 var(--logout-color) inset;
     }
   }
 
@@ -90,9 +82,9 @@ html {
     box-shadow: 0 1px 0 #2f2f2f, 0 -3px 0 #414141 inset;
 
     &.logout {
-      color: $logout-color;
-      border: 1px solid $logout-color;
-      box-shadow: 0 1px 0 $logout-color, 0 -3px 0 $logout-color inset;
+      color: var(--logout-color);
+      border: 1px solid var(--logout-color);
+      box-shadow: 0 1px 0 var(--logout-color), 0 -3px 0 var(--logout-color) inset;
     }
   }
 
@@ -104,7 +96,7 @@ html {
     }
 
     &.logout {
-      box-shadow: 0 1px 0 $logout-color, 0 -0.5px 0 $logout-color inset;
+      box-shadow: 0 1px 0 var(--logout-color), 0 -0.5px 0 var(--logout-color) inset;
     }
   }
 

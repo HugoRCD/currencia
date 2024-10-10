@@ -62,7 +62,7 @@ type Schema = z.infer<typeof schema>;
 
 const form = ref()
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with event.data
   console.log(event.data)
 }
@@ -70,7 +70,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <div>
-    <UButton :ui="{ rounded: 'rounded-full' }" icon="i-heroicons-chat-bubble-oval-left-ellipsis" size="xl" @click="isOpen = !isOpen" />
+    <UButton :ui="{ rounded: 'rounded-full' }" icon="heroicons:chat-bubble-oval-left-ellipsis" size="xl" @click="isOpen = !isOpen" />
     <UModal v-model="isOpen">
       <UCard :ui="{ divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
         <template #header>
@@ -78,7 +78,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
               Help Center
             </h3>
-            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="isOpen = false" />
+            <UButton color="gray" variant="ghost" icon="heroicons:x-mark-20-solid" class="-my-1" @click="isOpen = false" />
           </div>
           <p class="text-sm text-gray-500 dark:text-gray-400">
             Your feedback is very important to us.

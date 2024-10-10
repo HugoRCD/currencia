@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ExclamationTriangleIcon, ChartBarIcon } from '@heroicons/vue/24/outline'
-
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
@@ -12,8 +10,8 @@ const route = useRoute()
 const currentPage = computed(() => {
   const page = pages.find((page) => page.to === route.path)
   const fallback = route.path.includes('/app/crypto')
-    ? { title: 'Crypto details', description: 'Crypto', icon: ChartBarIcon, to: '/app/crypto', name: 'crypto', iconString: 'i-heroicons-chart-bar' }
-    : { title: '404', description: 'Page not found', icon: ExclamationTriangleIcon, to: '/404', name: '404', iconString: 'i-heroicons-exclamation-triangle' }
+    ? { title: 'Crypto details', description: 'Crypto', icon: 'heroicons:chart-bar', to: '/app/crypto', name: 'crypto', iconString: 'heroicons:chart-bar' }
+    : { title: '404', description: 'Page not found', icon: 'heroicons:exclamation-triangle', to: '/404', name: '404', iconString: 'heroicons:exclamation-triangle' }
   return page ?? fallback
 })
 </script>

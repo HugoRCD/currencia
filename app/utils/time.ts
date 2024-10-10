@@ -1,4 +1,4 @@
-import type { ApexChartSeries } from '~/types/ApexChart'
+import type { ApexChartSeries } from '~~/types/ApexChart'
 
 export const getLastWeek = () => {
   const dayjs = useDayjs()

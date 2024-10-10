@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { MoonIcon, SunIcon, ComputerDesktopIcon } from '@heroicons/vue/24/outline'
-import { capitalize } from '~/composables/useString'
 
 defineProps({
   isText: {

@@ -1,4 +1,4 @@
-import type { UpsertCryptoDto, Crypto } from '~/types/Crypto'
+import type { UpsertCryptoDto, Crypto } from '~~/types/Crypto'
 
 export const usePublicCrypto = () => {
   return useState<Crypto[]>('cryptos', () => [])
@@ -7,7 +7,7 @@ export const usePublicCrypto = () => {
 export function useCrypto() {
   const toast = useToast()
   const publicCryptos = usePublicCrypto()
-  const user = useCurrentUser()
+  const { user } = useUserSession()
 
   const getLoading = ref(false)
   const loading = ref(false)
@@ -26,7 +26,7 @@ export function useCrypto() {
     if (error.value || !data.value)
       toast.add({
         title: 'Whoops! Something went wrong.',
-        icon: 'i-heroicons-x-circle',
+        icon: 'heroicons:x-circle',
         color: 'red',
         timeout: 2000,
       })
@@ -43,13 +43,13 @@ export function useCrypto() {
     if (error.value || !data.value)
       toast.add({
         title: 'Whoops! Something went wrong.',
-        icon: 'i-heroicons-x-circle',
+        icon: 'heroicons:x-circle',
         color: 'red',
         timeout: 2000,
       })
     toast.add({
       title: 'Crypto created successfully.',
-      icon: 'i-heroicons-check-circle',
+      icon: 'heroicons:check-circle',
       timeout: 2000,
     })
     loading.value = false
@@ -65,13 +65,13 @@ export function useCrypto() {
     if (error.value || !data.value)
       toast.add({
         title: 'Whoops! Something went wrong.',
-        icon: 'i-heroicons-x-circle',
+        icon: 'heroicons:x-circle',
         color: 'red',
         timeout: 2000,
       })
     toast.add({
       title: 'Crypto deleted successfully.',
-      icon: 'i-heroicons-check-circle',
+      icon: 'heroicons:check-circle',
       timeout: 2000,
     })
     deleteLoading.value = false

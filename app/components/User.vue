@@ -13,7 +13,11 @@ const route = useRoute()
 if (route.query.error === 'github') {
   toast.error('An error occurred while logging in with GitHub.', {
     duration: Infinity,
-    closeButton: true,
+    closeButton: false,
+    action: {
+      label: 'Dismiss',
+      onClick: () => useRouter().push('/app/market')
+    }
   })
 }
 
@@ -23,8 +27,10 @@ const authModal = ref(false)
 const { user, fetch, clear } = useUserSession()
 
 const open = ref(false)
+const router = useRouter()
 
 async function logout() {
+  await router.push('/app/market')
   await clear()
   authModal.value = false
 }
@@ -105,14 +111,14 @@ async function updateCurrentUser() {
         :ui="{ padding: { sm: 'px-0' } }"
         @click="authModal = true"
       >
-        <UAvatar icon="i-heroicons-user-circle" size="sm" :ui="{ icon: { size: { sm: 'w-5 h-5' } } }" />
+        <UAvatar icon="heroicons:user-circle" size="sm" :ui="{ icon: { size: { sm: 'w-5 h-5' } } }" />
         <span class="whitespace-nowrap" :class="sideBarOpen ? 'hidden sm:flex' : 'hidden'">Sign / Signup</span>
       </UButton>
       <UModal v-model="authModal">
         <UCard>
           <div class="flex flex-col gap-3">
             <div class="flex flex-col items-center justify-center gap-1">
-              <UAvatar size="3xl" icon="i-heroicons-user-circle" />
+              <UAvatar size="3xl" icon="heroicons:user-circle" />
               <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
                 Welcome
               </h3>

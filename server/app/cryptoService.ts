@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import type { UpsertCryptoDto } from '~/types/Crypto'
+import type { UpsertCryptoDto } from '~~/types/Crypto'
 
 function smoothCryptoData(cryptoData: [timestamp: number, value: number][], windowSize: number) {
   const smoothedData = []

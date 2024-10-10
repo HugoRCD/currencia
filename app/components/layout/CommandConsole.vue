@@ -17,7 +17,7 @@ const actions = [
   {
     id: 'back_to_home',
     label: 'Back to home',
-    icon: 'i-heroicons-home',
+    icon: 'heroicons:home',
     click: () => {
       useRouter().push('/')
       open.value = false
@@ -81,14 +81,14 @@ defineShortcuts({
 <template>
   <div class="sm:w-full">
     <UButton v-if="!mobileMode" block size="lg" class="console-button justify-start whitespace-nowrap" @click="open = !open">
-      <UIcon name="i-heroicons-magnifying-glass" class="size-5" />
+      <UIcon name="heroicons:magnifying-glass" class="size-5" />
       <span v-if="sidebarOpen" class="hidden text-sm font-medium sm:block">Find a crypto</span>
     </UButton>
     <UButton
       v-else
       :ui="{ rounded: 'rounded-xl' }"
       size="xl"
-      icon="i-heroicons-magnifying-glass"
+      icon="heroicons:magnifying-glass"
       class="justify-center whitespace-nowrap"
       color="black"
       @click="open = !open"
@@ -97,7 +97,7 @@ defineShortcuts({
       <UCommandPalette
         ref="commandPaletteRef"
         placeholder="Search for a crypto..."
-        icon="i-heroicons-magnifying-glass"
+        icon="heroicons:magnifying-glass"
         :groups
         :autoselect="false"
         @update:model-value="onSelect"

@@ -49,8 +49,8 @@ useHead({
 
 const route = useRoute()
 
-const user = useCurrentUser()
-if (route.path === '/' && user.value) {
+const { loggedIn } = useUserSession()
+if (route.path === '/' && loggedIn) {
   navigateTo('/app/market')
 }
 
@@ -74,7 +74,6 @@ if (import.meta.client) {
 <template>
   <Html lang="en">
     <Body class="relative selection:bg-neutral-200 dark:selection:bg-neutral-700">
-      <LayoutScrollToTop />
       <LayoutHelpCenter class="absolute bottom-3 right-3 z-20 hidden sm:block" />
       <NuxtLayout>
         <NuxtPage />

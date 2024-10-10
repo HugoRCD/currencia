@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { Crypto } from '~/types/Crypto'
+import type { Crypto } from '~~/types/Crypto'
 
 const props = defineProps({
   cryptoItem: {

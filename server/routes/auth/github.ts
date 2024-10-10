@@ -28,7 +28,7 @@ export default defineOAuthGitHubEventHandler({
       return sendRedirect(event, '/app/market')
     } catch (error) {
       console.error('GitHub OAuth error:', error)
-      return sendRedirect(event, '/login?error=github')
+      return sendRedirect(event, '/app/market?error=github')
     }
   },
   onError(event, error) {

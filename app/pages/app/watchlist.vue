@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const user = useCurrentUser()
+const { user } = useUserSession()
 const publicCryptos = usePublicCrypto()
 
 const userWatchlist = computed(() => {

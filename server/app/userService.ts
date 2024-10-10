@@ -1,6 +1,4 @@
-import bcrypt from 'bcryptjs'
-import type { CreateUserDto, UpdateUserDto } from '~/types/User'
-import { Role } from '~/types/User'
+import type { UpdateUserDto, Role } from '~~/types/User'
 
 export async function upsertUser(createUserInput: CreateUserInput): Promise<publicUser> {
   const foundUser = await prisma.user.findUnique({

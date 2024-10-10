@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import type { User } from '~/types/User'
-import { Role } from '~/types/User'
-
-const toast = useToast()
+import { Role, type User } from '~~/types/User'
 
 const loading = ref(false)
 const updateLoading = ref(false)
@@ -19,12 +16,7 @@ async function fetchUsers() {
   loading.value = true
   const { data } = await useFetch('/api/admin/users/all')
   if (!data.value)
-    toast.add({
-      title: 'Whoops! Something went wrong.',
-      icon: 'i-heroicons-x-circle',
-      color: 'red',
-      timeout: 2000,
-    })
+    toast.error('Whoops! Something went wrong.')
   if (data.value) users.value = data.value
   loading.value = false
 }
@@ -35,12 +27,7 @@ async function deleteUser(id: number) {
     method: 'DELETE',
   })
   if (!data.value) return
-  toast.add({
-    title: 'User deleted successfully.',
-    icon: 'i-heroicons-check-circle',
-    color: 'green',
-    timeout: 2000,
-  })
+  toast.success('User deleted successfully.')
   updateLoading.value = false
   await fetchUsers()
 }
@@ -54,12 +41,7 @@ async function changeUserRole(id: number, role: string) {
     },
   })
   if (!data.value) return
-  toast.add({
-    title: 'User role updated successfully.',
-    icon: 'i-heroicons-check-circle',
-    color: 'green',
-    timeout: 2000,
-  })
+  toast.success('User role updated successfully.')
   updateLoading.value = false
   await fetchUsers()
 }
@@ -103,15 +85,10 @@ const items = (row: User) => [
   [
     {
       label: 'Set as Admin',
-      icon: 'i-heroicons-shield-check-20-solid',
+      icon: 'heroicons:shield-check-20-solid',
       click: () => {
         if (row.role === Role.Admin) {
-          toast.add({
-            title: 'User is already an admin.',
-            icon: 'i-heroicons-information-circle',
-            color: 'blue',
-            timeout: 2000,
-          })
+          toast.info('User is already an admin.')
           return
         }
         changeUserRole(row.id, Role.Admin)
@@ -119,7 +96,7 @@ const items = (row: User) => [
     },
     {
       label: 'Set as User',
-      icon: 'i-heroicons-user-circle-20-solid',
+      icon: 'heroicons:user-circle-20-solid',
       click: () => {
         changeUserRole(row.id, Role.User)
       },
@@ -128,16 +105,11 @@ const items = (row: User) => [
   [
     {
       label: 'Delete',
-      icon: 'i-heroicons-trash-20-solid',
+      icon: 'heroicons:trash-20-solid',
       iconClass: 'text-red-500 dark:text-red-500',
       click: () => {
         if (row.role === Role.Admin) {
-          toast.add({
-            title: 'You can\'t delete an admin.',
-            icon: 'i-heroicons-information-circle',
-            color: 'blue',
-            timeout: 2000,
-          })
+          toast.error('You can\'t delete an admin.')
           return
         }
         deleteUser(row.id)
@@ -158,9 +130,9 @@ onMounted(async () => {
 <template>
   <div class="mt-1 flex flex-col gap-4">
     <div class="flex flex-col justify-end gap-4 sm:flex-row sm:items-center">
-      <UInput v-model="search" label="Search" placeholder="Search a user" icon="i-heroicons-magnifying-glass-20-solid" />
+      <UInput v-model="search" label="Search" placeholder="Search a user" icon="heroicons:magnifying-glass-20-solid" />
       <USelectMenu v-model="selectedColumns" :options="columns" multiple>
-        <UButton icon="i-heroicons-view-columns" color="gray" class="w-full sm:w-40">
+        <UButton icon="heroicons:view-columns" color="gray" class="w-full sm:w-40">
           Columns
         </UButton>
       </USelectMenu>
@@ -180,7 +152,7 @@ onMounted(async () => {
       </template>
       <template #actions-data="{ row }">
         <UDropdown :items="items(row)">
-          <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+          <UButton color="gray" variant="ghost" icon="heroicons:ellipsis-horizontal-20-solid" />
         </UDropdown>
       </template>
     </UTable>

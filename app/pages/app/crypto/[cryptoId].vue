@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { displayNumberValue } from '~/types/ApexChart'
-import type { Variations } from '~/types/ApexChart'
-import type { Crypto } from '~/types/Crypto'
+import type { Variations } from '~~/types/ApexChart'
+import type { Crypto } from '~~/types/Crypto'
 
 const cryptos = usePublicCrypto()
 
@@ -35,7 +34,7 @@ const series = crypto.data
         </div>
         <div class="flex flex-row items-center gap-2 font-sans text-sm font-medium" :class="variations.value > 0 ? 'positive' : 'negative'">
           <div class="flex flex-row items-center gap-1">
-            <UIcon name="i-heroicons-arrow-down-circle-solid" class="size-5 transition-transform" :class="[variations.value > 0 && 'rotate-180 transform']" />
+            <UIcon name="heroicons:arrow-down-circle-solid" class="size-5 transition-transform" :class="[variations.value > 0 && 'rotate-180 transform']" />
             <span> {{ displayNumberValue(variations.value) }}$ </span>
           </div>
           <span class="text-xs"> ({{ displayNumberValue(variations.percent) }}%) </span>

@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { StarIcon } from '@heroicons/vue/24/outline'
 import { StarIcon as filledStar } from '@heroicons/vue/24/solid'
-import type { Crypto } from '~/types/Crypto'
-import type { publicUser } from '~/types/User'
+
+definePageMeta({
+  middleware: ['protected'],
+})
 
 const toast = useToast()
 
 const loading = ref(false)
 
-const user = useCurrentUser()
+const { user } = useUserSession()
 const userWatchlist = ref(user.value!.watchlist)
 const cryptos = usePublicCrypto()
 
-async function togglefavorite(crypto: Crypto) {
-  const { data, error } = await useFetch<publicUser>(`/api/user/crypto/${crypto.id}`, {
+async function toggleFavorite(crypto: Crypto) {
+  const { data, error } = await useFetch(`/api/user/crypto/${crypto.id}`, {
     method: 'POST',
     body: {
       userId: user.value!.id,
@@ -22,7 +24,7 @@ async function togglefavorite(crypto: Crypto) {
   if (error.value) {
     toast.add({
       title: 'Whoops! Something went wrong.',
-      icon: 'i-heroicons-x-circle',
+      icon: 'heroicons:x-circle',
       color: 'red',
       timeout: 2000,
     })
@@ -31,7 +33,7 @@ async function togglefavorite(crypto: Crypto) {
   userWatchlist.value = data.value!.watchlist
   toast.add({
     title: userWatchlist.value.some((c) => c.cryptoId === crypto.id) ? 'Added to watchlist' : 'Removed from watchlist',
-    icon: 'i-heroicons-check-circle',
+    icon: 'heroicons:check-circle',
     timeout: 2000,
   })
 }
@@ -101,7 +103,7 @@ async function updateCurrentUser() {
         v-for="crypto in cryptos"
         :key="crypto.id"
         class="flex cursor-pointer items-center justify-between rounded-lg bg-white px-3 py-2 shadow-sm transition duration-200 ease-in-out hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
-        @click="togglefavorite(crypto)"
+        @click="toggleFavorite(crypto)"
       >
         <div class="flex items-center gap-2">
           <UAvatar :src="crypto.logo" :alt="crypto.name" class="size-7" :ui="{ rounded: 'rounded-none' }" />

@@ -15,7 +15,6 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     'nuxt-build-cache',
     'nuxt-auth-utils',
-    'nuxt-svgo',
     'dayjs-nuxt'
   ],
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { Navigation } from '~/composables/useNavigation'
-import { useLogout } from '~/composables/useUser'
+
+const { clear } = useUserSession()
 
 defineProps({
-  nav_item: {
+  navItem: {
     type: Object as PropType<Navigation>,
     required: true,
   },
@@ -16,8 +16,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="flex items-center" @click="nav_item.name === 'Logout' ? useLogout() : $router.push(nav_item.to)">
-    <UIcon :name="nav_item.iconString" class="size-7 text-neutral-400" :class="{ 'text-primary-500': active }" />
+  <div class="flex items-center" @click="navItem.name === 'Logout' ? clear() : $router.push(navItem.to)">
+    <UIcon :name="navItem.icon" class="size-7 text-neutral-400" :class="{ 'text-primary-500': active }" />
   </div>
 </template>
 

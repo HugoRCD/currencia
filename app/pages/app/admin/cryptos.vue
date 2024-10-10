@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Crypto, UpsertCryptoDto } from '~/types/Crypto'
+import type { Crypto, UpsertCryptoDto } from '~~/types/Crypto'
 
 const { cryptos, loading, getLoading, fetchCryptos, upsertCrypto, deleteCrypto } = useCrypto()
 
@@ -45,7 +45,7 @@ const items = (row: Crypto) => [
   [
     {
       label: 'Edit',
-      icon: 'i-heroicons-pencil-square-20-solid',
+      icon: 'heroicons:pencil-square-20-solid',
       click: () => {
         modal.value = true
         newCrypto.value = {
@@ -59,7 +59,7 @@ const items = (row: Crypto) => [
     },
     {
       label: row.visible ? 'Hide' : 'Show',
-      icon: row.visible ? 'i-heroicons-eye-slash-20-solid' : 'i-heroicons-eye-20-solid',
+      icon: row.visible ? 'heroicons:eye-slash-20-solid' : 'heroicons:eye-20-solid',
       click: () => {
         upsertCrypto({ ...row, visible: !row.visible })
       },
@@ -68,7 +68,7 @@ const items = (row: Crypto) => [
   [
     {
       label: 'Delete',
-      icon: 'i-heroicons-trash-20-solid',
+      icon: 'heroicons:trash-20-solid',
       iconClass: 'text-red-500 dark:text-red-500',
       click: () => {
         deleteCrypto(row.id)
@@ -122,14 +122,14 @@ onMounted(async () => {
 <template>
   <div class="mt-1 flex flex-col gap-4">
     <div class="flex flex-col justify-end gap-4 sm:flex-row sm:items-center">
-      <UInput v-model="search" label="Search" placeholder="Search a crypto" icon="i-heroicons-magnifying-glass-20-solid" />
+      <UInput v-model="search" label="Search" placeholder="Search a crypto" icon="heroicons:magnifying-glass-20-solid" />
       <!--      <USelect v-model="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="w-20" />-->
       <USelectMenu v-model="selectedColumns" :options="columns" multiple>
-        <UButton icon="i-heroicons-view-columns" color="gray" class="w-full sm:w-40">
+        <UButton icon="heroicons:view-columns" color="gray" class="w-full sm:w-40">
           Columns
         </UButton>
       </USelectMenu>
-      <UButton label="Add a crypto" icon="i-heroicons-plus-circle" @click="modal = true" />
+      <UButton label="Add a crypto" icon="heroicons:plus-circle" @click="modal = true" />
     </div>
     <UTable :rows="filteredCryptos" :columns="columnsTable" :loading="getLoading">
       <template #logo-data="{ row }">
@@ -153,14 +153,14 @@ onMounted(async () => {
       </template>
       <template #visible-data="{ row }">
         <UIcon
-          :name="row.visible ? 'i-heroicons-eye-20-solid' : 'i-heroicons-eye-slash-20-solid'"
+          :name="row.visible ? 'heroicons:eye-20-solid' : 'heroicons:eye-slash-20-solid'"
           class="size-5"
           :class="row.visible ? 'text-green-500 dark:text-green-500' : 'text-red-500 dark:text-red-500'"
         />
       </template>
       <template #actions-data="{ row }">
         <UDropdown :items="items(row)">
-          <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+          <UButton color="gray" variant="ghost" icon="heroicons:ellipsis-horizontal-20-solid" />
         </UDropdown>
       </template>
     </UTable>
@@ -180,7 +180,7 @@ onMounted(async () => {
             placeholder="Bitcoin is a cryptocurrency invented in 2008 by an unknown person or group of people using the name Satoshi Nakamoto."
             autoresize
           />
-          <UButton label="Save" icon="i-heroicons-plus-circle" :loading type="submit" />
+          <UButton label="Save" icon="heroicons:plus-circle" :loading type="submit" />
         </form>
       </UCard>
     </UModal>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TimeFrame } from '~/types/ApexChart'
+import type { TimeFrame } from '~~/types/ApexChart'
 
 const timeframes = [
   {

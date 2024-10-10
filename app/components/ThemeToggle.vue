@@ -23,7 +23,7 @@ function startViewTransition(theme) {
 <template>
   <ClientOnly>
     <UButton
-      :icon="$colorMode.value === 'light' ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
+      :icon="$colorMode.value === 'light' ? 'heroicons:moon-20-solid' : 'heroicons:sun-20-solid'"
       color="gray"
       variant="ghost"
       aria-label="Theme"

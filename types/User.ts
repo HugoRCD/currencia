@@ -23,3 +23,10 @@ export type User = {
   updatedAt: Date;
   watchlist: UserWatchlist[];
 };
+
+export type UpdateUserDto = {
+  username?: string;
+  email?: string;
+  password?: string;
+  avatar?: string;
+};

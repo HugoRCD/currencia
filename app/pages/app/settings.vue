@@ -3,6 +3,10 @@ const reduceMotion = useCookie<boolean>('reduceMotion', {
   watch: true,
 })
 
+definePageMeta({
+  middleware: ['protected'],
+})
+
 function setPrefersReducedMotion() {
   if (reduceMotion.value) {
     document.documentElement.setAttribute('data-reduce-motion', 'reduce')

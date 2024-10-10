@@ -39,7 +39,7 @@ onMounted(() => {
   <div>
     <div v-if="!loggedIn" class="mb-4">
       <UAlert
-        icon="i-heroicons-information-circle"
+        icon="heroicons:information-circle"
         color="rose"
         variant="soft"
         title="You are not logged in."
