@@ -57,7 +57,8 @@ useHead({
 const route = useRoute()
 
 const { loggedIn } = useUserSession()
-if (route.path === '/' && loggedIn) {
+
+if (route.path === '/' && loggedIn.value) {
   navigateTo('/app/market')
 }
 
