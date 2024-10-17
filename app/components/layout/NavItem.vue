@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
-
 const { clear } = useUserSession()
 
 type NavItem = {

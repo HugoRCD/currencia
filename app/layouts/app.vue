@@ -23,7 +23,7 @@ const navigation = computed(() => {
       name: 'crypto'
     }
   }
-  return pages.find((page) => page.to === route.path)
+  return pages.find((page) => page.to === route.path) || null
 })
 </script>
 

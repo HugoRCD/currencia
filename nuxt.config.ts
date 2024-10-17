@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     'nuxt-build-cache',
     'nuxt-auth-utils',
-    'dayjs-nuxt'
+    'dayjs-nuxt',
   ],
 
   css: ['~/assets/style/main.css'],
@@ -56,9 +56,9 @@ export default defineNuxtConfig({
     presets: [
       {
         from: 'vue-sonner',
-        imports: ['toast']
-      }
-    ]
+        imports: ['toast'],
+      },
+    ],
   },
 
   icon: {
@@ -66,7 +66,7 @@ export default defineNuxtConfig({
     customCollections: [
       {
         prefix: 'custom',
-        dir: './app/assets/icons'
+        dir: './app/assets/icons',
       },
     ],
   },

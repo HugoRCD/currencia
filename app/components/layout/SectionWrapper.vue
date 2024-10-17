@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type SectionWrapperProps = {
-  navigation: Navigation;
+  navigation: Navigation | null;
 };
 
 defineProps<SectionWrapperProps>()
@@ -10,14 +10,16 @@ defineProps<SectionWrapperProps>()
   <div class="main-container flex flex-1 flex-col overflow-hidden rounded-t-2xl border-x border-t border-neutral-300 shadow-md dark:border-neutral-600">
     <div class="flex justify-between gap-1 border-b border-inherit px-5 py-2">
       <div class="flex items-center gap-2">
-        <Transition name="slide-to-bottom" mode="out-in">
-          <UIcon :name="navigation.icon" class="size-5 font-bold" />
-        </Transition>
-        <Transition name="slide-to-top" mode="out-in">
-          <h1 :key="navigation.title" class="text-xl font-bold">
-            {{ navigation.title }}
-          </h1>
-        </Transition>
+        <template v-if="navigation">
+          <Transition name="slide-to-bottom" mode="out-in">
+            <UIcon :key="navigation.icon" :name="navigation.icon" class="size-5 font-bold" />
+          </Transition>
+          <Transition name="slide-to-top" mode="out-in">
+            <h1 :key="navigation.title" class="text-xl font-bold">
+              {{ navigation.title }}
+            </h1>
+          </Transition>
+        </template>
       </div>
       <div class="flex items-center gap-2 sm:hidden">
         <User />
