@@ -23,7 +23,7 @@ const crypto = reactive({
 
 <template>
   <div
-    class="relative flex cursor-pointer flex-col gap-2 overflow-hidden rounded-xl border border-inherit bg-white p-4 shadow-sm hover:border-gray-200 hover:bg-gray-100 hover:transition-all hover:duration-300 dark:border-gray-800 dark:bg-gray-800 dark:hover:border-gray-700 dark:hover:bg-gray-900"
+    class="relative flex cursor-pointer flex-col gap-3 overflow-hidden rounded-xl border border-inherit bg-white p-4 shadow-sm hover:border-gray-200 hover:bg-gray-100 hover:transition-all hover:duration-300 dark:border-gray-800 dark:bg-gray-800 dark:hover:border-gray-700 dark:hover:bg-gray-900"
     @click="$router.push(`/app/crypto/${crypto.symbol}`)"
   >
     <div class="absolute -bottom-3 -right-2">
@@ -31,8 +31,8 @@ const crypto = reactive({
         {{ index + 1 }}
       </span>
     </div>
-    <img :src="crypto.logo" class="size-7" :alt="crypto.name">
-    <div class="flex flex-row items-center">
+    <div class="flex flex-row items-center gap-2">
+      <img :src="crypto.logo" class="size-7" :alt="crypto.name">
       <span class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ crypto.name }}</span>
       <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">{{ crypto.symbol }}</span>
     </div>
