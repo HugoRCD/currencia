@@ -6,4 +6,5 @@ export default defineEventHandler(async (event: H3Event) => {
   if (!params) throw createError({ statusCode: 400, statusMessage: 'Missing params' })
   const symbol = parseInt(params.symbol)
   // Do something with the symbol
+
 })

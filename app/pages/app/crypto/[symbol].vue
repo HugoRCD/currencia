@@ -17,6 +17,58 @@ const variations = ref<Variations>({
 
 const price = ref(crypto.data[crypto.data.length - 1][1])
 const series = crypto.data
+const dynamicData = ref(0)
+const isHighlighted = ref(false)
+
+let socket: WebSocket
+// Fonction pour établir la connexion WebSocket
+const connectWebSocket = () => {
+  socket = new WebSocket('ws://localhost:8080')
+
+  socket.onopen = () => {
+    console.log('Connected to WebSocket server')
+  }
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data)
+    dynamicData.value = data.number // Mettre à jour la valeur dynamique avec le nombre reçu
+    dynamicData.value = start + (end - start) * progress
+  }
+
+  socket.onclose = () => {
+    console.log('Disconnected from WebSocket server')
+  }
+}
+
+onMounted(() => {
+  connectWebSocket()
+})
+
+onUnmounted(() => {
+  if (socket) {
+    socket.close()
+  }
+})
+
+const animateValue = (start: number, end: number, duration: number) => {
+  const startTime = performance.now()
+
+  const step = (currentTime: number) => {
+    const elapsedTime = currentTime - startTime
+    const progress = Math.min(elapsedTime / duration, 1)
+    dynamicData.value = start + (end - start) * progress
+
+    if (progress < 1) {
+      requestAnimationFrame(step)
+    }
+  }
+
+  requestAnimationFrame(step)
+}
+
+const formattedDynamicData = computed(() => {
+  return dynamicData.value.toFixed(2)
+})
 </script>
 
 <template>
@@ -29,9 +81,10 @@ const series = crypto.data
         </h1>
       </div>
       <div style="--stagger: 2; --delay: 100ms" data-animate class="flex flex-col gap-2">
-        <div class="flex flex-row items-center">
-          <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">{{ displayNumberValue(price) }} $</span>
-        </div>
+        <span :class="['text-4xl font-semibold transition-transform duration-500', isHighlighted ? 'scale-110 text-yellow-500' : 'text-gray-700 dark:text-gray-200']">
+          {{ dynamicData }} $
+        </span>
+
         <div class="flex flex-row items-center gap-2 font-sans text-sm font-medium" :class="variations.value > 0 ? 'positive' : 'negative'">
           <div class="flex flex-row items-center gap-1">
             <UIcon name="lucide:circle-arrow-down" class="size-5 transition-transform" :class="[variations.value > 0 && 'rotate-180 transform']" />
