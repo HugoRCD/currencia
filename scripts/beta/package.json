@@ -1,5 +1,5 @@
 {
-  "name": "scripts",
+  "name": "@currencia/beta-scrapper",
   "module": "index.ts",
   "version": "1.0.0",
   "type": "module",
@@ -13,6 +13,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@currencia/cryptos": "workspace:*",
     "commander": "^12.1.0",
     "puppeteer": "^23.6.0"
   }

@@ -1,22 +1,7 @@
+import { cryptos } from '@currencia/cryptos'
 import { program } from 'commander'
 
 const baseUrl = 'https://coinmarketcap.com/fr/currencies'
-
-const cryptos = [
-  'bitcoin',
-  'ethereum',
-  'solana',
-  'dogecoin',
-  'litecoin',
-  'ripple',
-  'bitcoin-cash',
-  'stellar',
-  'cardano',
-  'tether',
-  'usd-coin',
-  'binance-usd',
-  'polkadot',
-]
 
 function isCrypto(crypto: string) {
   if (cryptos.includes(crypto)) return true
@@ -60,7 +45,8 @@ program
         console.error(error)
       }
     } else {
-      const cryptoChunks = chunkArray(cryptos, Math.ceil(cryptos.length / threads))
+      const cryptoArray = cryptos.map((crypto) => crypto.id)
+      const cryptoChunks = chunkArray(cryptoArray, Math.ceil(cryptoArray.length / threads))
       const workers: Worker[] = []
       const workerPromises: Promise<void>[] = []
 
