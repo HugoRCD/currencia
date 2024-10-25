@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import type { UpsertCryptoDto } from '~~/types/Crypto'
+import { generateRandomValue } from '~~/server/utils/number'
 
 function smoothCryptoData(cryptoData: [timestamp: number, value: number][], windowSize: number) {
   const smoothedData = []
@@ -24,7 +25,10 @@ export async function getAllCryptos(all: boolean = false) {
   const cryptoList = cryptos.map((crypto) => {
     const data = []
     for (let i = 0; i < 365; i++) {
-      data.push([dayjs().subtract(i, 'day').valueOf(), Math.floor(Math.random() * (10000 - 300 + 1)) + 300])
+      data.push([
+        dayjs().subtract(i, 'day').valueOf(),
+        generateRandomValue()
+      ])
     }
     crypto.data = smoothCryptoData(data, 7)
     return crypto

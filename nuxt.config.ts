@@ -50,6 +50,9 @@ export default defineNuxtConfig({
       crawlLinks: true,
       routes: ['/', '/app/market'],
     },
+    experimental: {
+      websocket: true
+    }
   },
 
   imports: {

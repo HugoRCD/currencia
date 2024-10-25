@@ -45,6 +45,7 @@ const isPositive = computed(() => {
   if (!firstValue.value || !lastValue.value) return false
   return lastValue.value > firstValue.value
 })
+
 const series = [
   {
     data: cryptoData ? cryptoData : getRandomDailyData(),
@@ -91,21 +92,13 @@ watch(colorMode, () => {
   })
 })
 
-watch(
-  price,
-  () => {
-    emit('update:currentValue', price.value ? price.value : lastValue.value)
-  },
-  { immediate: true },
-)
+watch(price, () => {
+  emit('update:currentValue', price.value ? price.value : lastValue.value)
+}, { immediate: true })
 
-watch(
-  variation,
-  () => {
-    emit('update:variation', variation.value)
-  },
-  { immediate: true },
-)
+watch(variation, () => {
+  emit('update:variation', variation.value)
+}, { immediate: true })
 
 function mouseOut() {
   emit('update:currentValue', lastValue.value)
@@ -126,6 +119,13 @@ const chartOptions = {
     type: 'area',
     zoom: {
       enabled: false,
+    },
+    animations: {
+      enabled: true,
+      easing: 'linear',
+      dynamicAnimation: {
+        speed: 1000
+      }
     },
     toolbar: {
       show: false,
@@ -191,7 +191,6 @@ const chartOptions = {
     },
   },
   tooltip: {
-
     custom: function({ series, seriesIndex, dataPointIndex }) {
       const value = series[seriesIndex][dataPointIndex] as number
       price.value = value
@@ -216,6 +215,16 @@ const chartOptions = {
     },
   },
 } satisfies ApexOptions
+
+watch(() => cryptoData, () => {
+  const cryptoDataCopy = cryptoData
+  // sort by timestamp
+  chart.value.chart.updateSeries([
+    {
+      data: cryptoDataCopy.sort((a, b) => a.timestamp - b.timestamp)
+    }
+  ])
+})
 </script>
 
 <template>
