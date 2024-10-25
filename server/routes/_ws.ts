@@ -1,29 +1,29 @@
-import { createServer } from 'http'
-import { WebSocketServer } from 'ws'
+export default defineWebSocketHandler({
+  open(peer) {
+    console.log(`[ws] open ${peer}`)
 
-const server = createServer()
-const wss = new WebSocketServer({ server })
+    peer.subscribe('value')
 
-wss.on('connection', (ws) => {
-  console.log('Client connected')
+    const sendRandomNumber = () => {
+      const randomNumber = (Math.floor(Math.random() * 10000)).toFixed(2)
+      peer.send({ number: randomNumber })
+    }
 
-  const sendRandomNumber = () => {
-    if (ws.readyState === ws.OPEN) {
-      const randomNumber = Math.floor(Math.random() * 10000)
-      const formattedNumber = (randomNumber).toFixed(2) // Diviser par 100 et formater avec deux décimales
-      ws.send(JSON.stringify({ number: formattedNumber }))
+    peer.intervalId = setInterval(sendRandomNumber, 1500)
+  },
+  message(peer, message) {
+    console.log(`[ws] message ${peer} ${message.text()}`)
+
+    if (message.text() === 'ping') {
+      peer.send('pong')
+    }
+  },
+  close(peer) {
+    console.log(`[ws] close ${peer}`)
+
+    if (peer.intervalId) {
+      console.log('clearing interval')
+      clearInterval(peer.intervalId)
     }
   }
-
-
-  const intervalId = setInterval(sendRandomNumber, 2000)
-
-  ws.on('close', () => {
-    clearInterval(intervalId)
-    console.log('Client disconnected')
-  })
-})
-
-server.listen(8080, () => {
-  console.log('WebSocket server is running on ws://localhost:8080')
 })

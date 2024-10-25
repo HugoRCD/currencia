@@ -20,34 +20,34 @@ const series = crypto.data
 const dynamicData = ref(0)
 const isHighlighted = ref(false)
 
-let socket: WebSocket
-// Fonction pour établir la connexion WebSocket
-const connectWebSocket = () => {
-  socket = new WebSocket('ws://localhost:8080')
 
-  socket.onopen = () => {
-    console.log('Connected to WebSocket server')
+let ws: WebSocket | undefined
+
+function connect() {
+  const isSecure = location.protocol === 'https:'
+  const url = (isSecure ? 'wss://' : 'ws://') + location.host + '/_ws'
+  if (ws) {
+    console.log('ws', 'Closing previous connection before reconnecting...')
+    ws.close()
   }
 
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data)
-    dynamicData.value = data.number // Mettre à jour la valeur dynamique avec le nombre reçu
-    dynamicData.value = start + (end - start) * progress
-  }
+  console.log('ws', 'Connecting to', url, '...')
+  ws = new WebSocket(url)
 
-  socket.onclose = () => {
-    console.log('Disconnected from WebSocket server')
-  }
+  ws.addEventListener('message', (event) => {
+    if (event.data.includes('number')) {
+      dynamicData.value = JSON.parse(event.data).number
+    }
+  })
+}
+
+const ping = () => {
+  console.log('ws', 'Sending ping')
+  ws!.send('ping')
 }
 
 onMounted(() => {
-  connectWebSocket()
-})
-
-onUnmounted(() => {
-  if (socket) {
-    socket.close()
-  }
+  connect()
 })
 </script>
 
@@ -56,14 +56,14 @@ onUnmounted(() => {
     <div class="flex flex-col gap-4">
       <div style="--stagger: 1; --delay: 100ms" data-animate class="flex flex-row items-center gap-3">
         <img :src="crypto.logo" class="size-7" :alt="crypto.name">
-        <h1 :key="crypto" class="text-2xl font-bold text-gray-700 dark:text-gray-200">
+        <h1 class="text-2xl font-bold text-gray-700 dark:text-gray-200">
           {{ crypto.name }}
         </h1>
       </div>
       <div style="--stagger: 2; --delay: 100ms" data-animate class="flex flex-col gap-2">
-        <span :class="['text-4xl font-semibold transition-transform duration-500', isHighlighted ? 'scale-110 text-yellow-500' : 'text-gray-700 dark:text-gray-200']">
-          {{ dynamicData }} $
-        </span>
+        <div class="flex flex-row items-center">
+          <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">{{ displayNumberValue(dynamicData) }} $</span>
+        </div>
 
         <div class="flex flex-row items-center gap-2 font-sans text-sm font-medium" :class="variations.value > 0 ? 'positive' : 'negative'">
           <div class="flex flex-row items-center gap-1">
@@ -88,6 +88,9 @@ onUnmounted(() => {
       <p class="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
         {{ crypto.description }}
       </p>
+      <div>
+        <UButton label="Ping" @click="ping" />
+      </div>
     </div>
   </div>
 </template>
