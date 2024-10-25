@@ -12,7 +12,7 @@ export default defineWebSocketHandler({
     peer.subscribe('value')
 
     const sendRandomNumber = () => {
-      const randomNumber = (Math.floor(Math.random() * 10000)).toFixed(2)
+      const randomNumber = generateRandomValue()
       peer.send({ number: randomNumber })
     }
 

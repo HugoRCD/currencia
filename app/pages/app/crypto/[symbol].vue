@@ -2,6 +2,8 @@
 import type { Variations } from '~~/types/ApexChart'
 import type { Crypto } from '~~/types/Crypto'
 
+const dayjs = useDayjs()
+
 const cryptos = usePublicCrypto()
 
 const { symbol } = useRoute().params
@@ -10,15 +12,15 @@ if (!crypto) {
   useRouter().push('/app/market')
 }
 
+const cryptoData = ref(crypto.data)
+
 const variations = ref<Variations>({
   percent: -1,
   value: -1,
 })
 
 const price = ref(crypto.data[crypto.data.length - 1][1])
-const series = crypto.data
 const dynamicData = ref(0)
-
 
 let ws: WebSocket | undefined
 
@@ -36,6 +38,11 @@ function connect() {
   ws.addEventListener('message', (event) => {
     if (event.data.includes('number')) {
       dynamicData.value = JSON.parse(event.data).number
+      // add another day to the data
+      /*cryptoData.value.push([
+        dayjs().add(1, 'day').valueOf(),
+        dynamicData.value
+      ])*/
     }
     if (event.data.includes('pong')) {
       console.log('ws', 'Received pong')
@@ -84,7 +91,7 @@ onUnmounted(() => {
     <ChartLine
       style="--stagger: 3; --delay: 100ms"
       data-animate
-      :crypto-data="series"
+      :crypto-data
       @update:current-value="price = $event"
       @update:variation="variations = $event"
     />
