@@ -1,42 +1,84 @@
-const puppeteer = require('puppeteer');
+import { program } from 'commander'
 
-(async () => {
-  const browser = await puppeteer.launch()
-  const page = await browser.newPage()
+/*const puppeteer = require('puppeteer')*/
 
-  const cryptoList = [
-    'btc',
-    'eth',
-  ]
+const startUrl = 'https://www.cryptocompare.com/coins/'
+const endUrl = '/overview/USD'
 
-  const selector = '#profile-info-header > div.coin-name > div.price-main.ng-scope > div.price-value > div'
+const cryptos = [
+  'btc',
+  'eth',
+]
 
-  const prices = []
-  for (const crypto of cryptoList) {
-    // Navigate the page to a URL.
-    await page.goto('https://www.cryptocompare.com/coins/'+ crypto +'/overview/USD', {
-      waitUntil: 'networkidle2', // Wait until there are no more than 2 network connections for at least 500 ms.
-    })
+function isCrypto(crypto: string) {
+  if (cryptos.includes(crypto)) return true
+  throw new Error(`Invalid crypto: ${crypto}`)
+}
 
-    // Wait for the price element to appear
-    await page.waitForSelector(selector, { timeout: 2000 }).catch(() => {
-      console.log(`L'élément de prix n'a pas été trouvé pour ${crypto}`)
-    })
-
-    // Get the price
-    const price = await page.evaluate(() => {
-      const priceElement = document.querySelector(selector)
-      return priceElement ? priceElement.textContent.trim() : null
-    })
-
-    // format the price get just the number
-    // Utiliser une expression régulière pour extraire le nombre
-    const priceMatch = price.match(/[\d,.]+/)
-    const priceFormat = priceMatch ? priceMatch[0].replace(/,/g, '') : null
-
-    // push the price to the array
-    prices.push('price for ' + crypto + ' is ' + priceFormat)
+function chunkArray<T>(array: T[], chunkSize: number): T[][] {
+  const chunks: T[][] = []
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(array.slice(i, i + chunkSize))
   }
-  console.log(prices)
-  await browser.close()
-})()
+  return chunks
+}
+
+program
+  .name('Beta scrapper: CryptoCompare')
+  .version('1.0.0')
+  .option('-v, --verbose', 'enable verbose mode')
+  .option('-t, --threads <threads>', 'number of threads to use', '4')
+  .option('-c, --crypto <crypto>', 'specific crypto to scrap')
+  .action(async (options) => {
+    const threads = parseInt(options.threads)
+    const results: Record<string, number> = {}
+    if (options.crypto) {
+      try {
+        isCrypto(options.crypto)
+        const worker = new Worker('./worker.ts')
+
+        worker.postMessage({ crypto: options.crypto, startUrl, endUrl })
+
+        worker.onmessage = (event) => {
+          const { crypto, price } = event.data
+          results[crypto] = price
+          console.log(`${crypto}: ${price}`)
+          worker.terminate()
+        }
+
+        await new Promise(resolve => worker.addEventListener('close', resolve))
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      const cryptoChunks = chunkArray(cryptos, Math.ceil(cryptos.length / threads))
+      const workers: Worker[] = []
+      const workerPromises: Promise<void>[] = []
+      cryptoChunks.forEach(chunk => {
+        const worker = new Worker('./worker.ts')
+        workers.push(worker)
+        const workerPromise = new Promise<void>((resolve) => {
+          let processedCount = 0
+          worker.onmessage = ({ data: { crypto, price } }) => {
+            results[crypto] = price
+            console.log(`${crypto}: ${price}`)
+            processedCount++
+            if (processedCount === chunk.length) {
+              worker.terminate()
+              resolve()
+            }
+          }
+        })
+        workerPromises.push(workerPromise)
+        worker.postMessage({ cryptos: chunk, startUrl, endUrl })
+      })
+      await Promise.all(workerPromises)
+    }
+
+    console.log('Final results:')
+    console.table(results)
+    process.exit(0)
+  }
+  )
+program.parse()
+
