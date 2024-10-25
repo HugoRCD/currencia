@@ -7,7 +7,7 @@ defineProps<SectionWrapperProps>()
 </script>
 
 <template>
-  <div class="main-container flex flex-1 flex-col overflow-hidden rounded-t-2xl border-x border-t border-neutral-300 shadow-md dark:border-neutral-600">
+  <div class="main-container flex flex-1 flex-col overflow-hidden rounded-t-2xl border-x border-t border-neutral-300 shadow-md dark:border-neutral-800">
     <div class="flex justify-between gap-1 border-b border-inherit px-5 py-2">
       <div class="flex items-center gap-2">
         <template v-if="navigation">
