@@ -1,14 +1,10 @@
+import { cryptos } from '@currencia/cryptos'
 import { program } from 'commander'
 
 /*const puppeteer = require('puppeteer')*/
 
 const startUrl = 'https://www.cryptocompare.com/coins/'
 const endUrl = '/overview/USD'
-
-const cryptos = [
-  'btc',
-  'eth',
-]
 
 function isCrypto(crypto: string) {
   if (cryptos.includes(crypto)) return true
@@ -51,7 +47,8 @@ program
         console.error(error)
       }
     } else {
-      const cryptoChunks = chunkArray(cryptos, Math.ceil(cryptos.length / threads))
+      const cryptoArray = cryptos.map((crypto) => crypto.symbol)
+      const cryptoChunks = chunkArray(cryptoArray, Math.ceil(cryptoArray.length / threads))
       const workers: Worker[] = []
       const workerPromises: Promise<void>[] = []
       cryptoChunks.forEach(chunk => {
