@@ -18,7 +18,6 @@ const variations = ref<Variations>({
 const price = ref(crypto.data[crypto.data.length - 1][1])
 const series = crypto.data
 const dynamicData = ref(0)
-const isHighlighted = ref(false)
 
 
 let ws: WebSocket | undefined
@@ -48,6 +47,11 @@ const ping = () => {
 
 onMounted(() => {
   connect()
+})
+
+onUnmounted(() => {
+  console.log('ws', 'Closing connection...')
+  ws?.close()
 })
 </script>
 

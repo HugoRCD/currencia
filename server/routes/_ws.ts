@@ -1,3 +1,5 @@
+let intervalId: NodeJS.Timeout
+
 export default defineWebSocketHandler({
   open(peer) {
     console.log(`[ws] open ${peer}`)
@@ -9,7 +11,7 @@ export default defineWebSocketHandler({
       peer.send({ number: randomNumber })
     }
 
-    peer.intervalId = setInterval(sendRandomNumber, 1500)
+    intervalId = setInterval(sendRandomNumber, 1500)
   },
   message(peer, message) {
     console.log(`[ws] message ${peer} ${message.text()}`)
@@ -20,10 +22,6 @@ export default defineWebSocketHandler({
   },
   close(peer) {
     console.log(`[ws] close ${peer}`)
-
-    if (peer.intervalId) {
-      console.log('clearing interval')
-      clearInterval(peer.intervalId)
-    }
+    clearInterval(intervalId)
   }
 })
