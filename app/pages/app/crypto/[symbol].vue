@@ -37,6 +37,9 @@ function connect() {
     if (event.data.includes('number')) {
       dynamicData.value = JSON.parse(event.data).number
     }
+    if (event.data.includes('pong')) {
+      console.log('ws', 'Received pong')
+    }
   })
 }
 
