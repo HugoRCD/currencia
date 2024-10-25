@@ -63,23 +63,20 @@ program
       const cryptoChunks = chunkArray(cryptos, Math.ceil(cryptos.length / threads))
       const workers: Worker[] = []
 
-      for (let i = 0; i < cryptoChunks.length; i++) {
+      cryptoChunks.forEach(chunk => {
         const worker = new Worker('./worker.ts')
         workers.push(worker)
 
-        worker.postMessage({ cryptos: cryptoChunks[i], baseUrl })
+        worker.postMessage({ cryptos: chunk, baseUrl })
 
-        worker.onmessage = (event) => {
-          const { crypto, price } = event.data
+        worker.onmessage = ({ data: { crypto, price } }) => {
           results[crypto] = price
           console.log(`${crypto}: ${price}`)
         }
-      }
+      })
 
       await Promise.all(
-        workers.map(
-          worker => new Promise(resolve => worker.addEventListener('close', resolve))
-        )
+        workers.map(worker => new Promise(resolve => worker.addEventListener('close', resolve)))
       )
 
       workers.forEach(worker => worker.terminate())
