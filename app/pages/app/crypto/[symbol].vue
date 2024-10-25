@@ -49,26 +49,6 @@ onUnmounted(() => {
     socket.close()
   }
 })
-
-const animateValue = (start: number, end: number, duration: number) => {
-  const startTime = performance.now()
-
-  const step = (currentTime: number) => {
-    const elapsedTime = currentTime - startTime
-    const progress = Math.min(elapsedTime / duration, 1)
-    dynamicData.value = start + (end - start) * progress
-
-    if (progress < 1) {
-      requestAnimationFrame(step)
-    }
-  }
-
-  requestAnimationFrame(step)
-}
-
-const formattedDynamicData = computed(() => {
-  return dynamicData.value.toFixed(2)
-})
 </script>
 
 <template>
@@ -122,4 +102,5 @@ const formattedDynamicData = computed(() => {
   @apply text-red-500;
   text-shadow: 0 0 0.5rem rgba(245, 101, 101, 0.2);
 }
+
 </style>
