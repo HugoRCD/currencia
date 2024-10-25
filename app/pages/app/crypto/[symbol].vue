@@ -24,7 +24,7 @@ let ws: WebSocket | undefined
 
 function connect() {
   const isSecure = location.protocol === 'https:'
-  const url = (isSecure ? 'wss://' : 'ws://') + location.host + '/_ws'
+  const url = `${isSecure ? 'wss' : 'ws'}://${location.host}/api/crypto/ws?symbol=${symbol}`
   if (ws) {
     console.log('ws', 'Closing previous connection before reconnecting...')
     ws.close()
