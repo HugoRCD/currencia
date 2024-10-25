@@ -6,7 +6,7 @@ type Crypto = {
   description: string;
 };
 
-export const cryptos = [
+export const cryptos: Crypto[] = [
   {
     id: 'bitcoin',
     name: 'Bitcoin',
@@ -28,8 +28,4 @@ export const cryptos = [
     logo: 'https://cryptologos.cc/logos/solana-sol-logo.svg',
     description: 'Solana is a decentralized blockchain project that aims to provide a sustainable, scalable, and secure platform for the next generation of blockchain applications.',
   }
-] as Crypto[]
-
-export const cryptoMap = Object.fromEntries(
-  cryptos.map(crypto => [crypto.id, crypto])
-) as Record<string, Crypto>
+]

@@ -3,6 +3,10 @@
   "module": "index.ts",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "build": "bun build index.ts --outdir dist",
+    "typecheck": "tsc --noEmit"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
