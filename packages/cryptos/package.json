@@ -1,0 +1,22 @@
+{
+  "name": "@currencia/cryptos",
+  "module": "index.ts",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "bun build index.ts --outdir dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "exports": [
+    "./index.ts"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
