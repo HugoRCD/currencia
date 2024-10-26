@@ -51,7 +51,8 @@ export default defineNuxtConfig({
       routes: ['/', '/app/market'],
     },
     experimental: {
-      websocket: true
+      websocket: true,
+      tasks: true,
     }
   },
 

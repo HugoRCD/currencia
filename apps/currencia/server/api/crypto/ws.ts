@@ -28,5 +28,12 @@ export default defineWebSocketHandler({
   close(peer) {
     console.log(`[ws] close ${peer}`)
     clearInterval(intervalId)
-  }
+  },
+  upgrade(req) {
+    return {
+      headers: {
+        'x-powered-by': 'cross-ws',
+      },
+    }
+  },
 })
