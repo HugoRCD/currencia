@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@hrcd/eslint-config": "^2.1.1",
-    "@iconify-json/lucide": "^1.2.10",
+    "@iconify-json/lucide": "^1.2.11",
     "@nuxt/fonts": "^0.10.2",
     "@nuxt/image": "^1.8.1",
     "@nuxt/scripts": "^0.9.5",
@@ -33,13 +33,13 @@
     "apexcharts": "^3.54.1",
     "dayjs": "^1.11.13",
     "dayjs-nuxt": "^2.1.11",
-    "eslint": "^9.13.0",
+    "eslint": "^9.14.0",
     "nuxt": "^3.13.2",
-    "nuxt-auth-utils": "^0.5.0",
+    "nuxt-auth-utils": "^0.5.1",
     "nuxt-build-cache": "^0.1.1",
     "prisma": "^5.21.1",
     "resend": "^2.1.0",
-    "vue-sonner": "^1.2.3",
+    "vue-sonner": "^1.2.5",
     "vue3-apexcharts": "^1.7.0",
     "zod": "^3.23.8"
   }
