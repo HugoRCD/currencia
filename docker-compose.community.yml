@@ -1,16 +1,16 @@
+# port: 3000
+
 services:
   currencia:
     image: ghcr.io/hugorcd/currencia:latest
     container_name: currencia
     restart: always
     environment:
-      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:postgres@currencia_db:5432/postgres}
+      - DATABASE_URL=${DATABASE_URL}
       - NUXT_OAUTH_GITHUB_CLIENT_ID=${NUXT_OAUTH_GITHUB_CLIENT_ID}
       - NUXT_OAUTH_GITHUB_CLIENT_SECRET=${NUXT_OAUTH_GITHUB_CLIENT_SECRET}
       - NUXT_SESSION_PASSWORD=${NUXT_SESSION_PASSWORD}
       - NUXT_PRIVATE_RESEND_API_KEY=${NUXT_PRIVATE_RESEND_API_KEY}
-    depends_on:
-      - currencia_db
     ports:
       - "3000:3000"
     healthcheck:
@@ -31,25 +31,6 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-  currencia_db:
-    container_name: currencia_db
-    image: postgres:17-alpine
-    restart: always
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
-    ports:
-      - "5431:5432"
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "postgres" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - currencia-network
   prisma_migrate:
     image: ghcr.io/hugorcd/currencia:latest
     container_name: prisma_migrate
@@ -66,6 +47,3 @@ services:
 networks:
   currencia-network:
     driver: bridge
-
-volumes:
-  postgres:
