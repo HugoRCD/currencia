@@ -9,7 +9,7 @@ const startUrl = 'https://www.cryptocompare.com/coins/'
 const endUrl = '/overview/USD'
 
 program
-  .name('Beta scrapper: CryptoCompare')
+  .name('CryptoCompare scrapper: CryptoCompare')
   .version('1.0.0')
   .option('-v, --verbose', 'enable verbose mode')
   .option('-t, --threads <threads>', 'number of threads to use', '4')
