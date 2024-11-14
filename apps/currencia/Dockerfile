@@ -21,6 +21,8 @@ COPY . .
 
 RUN bun install
 
+RUN bun prisma:generate
+
 RUN bun run build:app
 
 # Stage 2: Final Stage

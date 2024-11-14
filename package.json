@@ -10,6 +10,7 @@
     "run:scripts": "turbo dev --filter='./scripts/*'",
     "build": "turbo build",
     "build:app": "turbo build --filter=@currencia/app",
+    "prisma:generate": "turbo prisma:generate",
     "test": "turbo test",
     "dev:prepare": "turbo dev:prepare",
     "lint": "turbo lint",

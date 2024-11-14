@@ -10,7 +10,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "start": "node .output/server/index.mjs",
+    "start": "bun .output/server/index.mjs",
     "postinstall": "nuxt prepare && bun run prisma:generate",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
