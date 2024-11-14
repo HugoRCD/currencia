@@ -1,0 +1,69 @@
+services:
+  currencia:
+    image: ghcr.io/hugorcd/currencia:latest
+    container_name: currencia
+    restart: always
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:postgres@currencia_db:5432/postgres}
+      - NUXT_OAUTH_GITHUB_CLIENT_ID=${NUXT_OAUTH_GITHUB_CLIENT_ID}
+      - NUXT_OAUTH_GITHUB_CLIENT_SECRET=${NUXT_OAUTH_GITHUB_CLIENT_SECRET}
+      - NUXT_SESSION_PASSWORD=${NUXT_SESSION_PASSWORD}
+      - NUXT_PRIVATE_RESEND_API_KEY=${NUXT_PRIVATE_RESEND_API_KEY}
+    depends_on:
+      - currencia_db
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/api/hello" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+  currencia_db:
+    container_name: currencia_db
+    image: postgres:17-alpine
+    restart: always
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - currencia-network
+  prisma_migrate:
+    image: ghcr.io/hugorcd/currencia:latest
+    container_name: prisma_migrate
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:postgres@currencia_db:5432/postgres}
+    depends_on:
+      shelve_db:
+        condition: service_healthy
+    command: bunx prisma migrate deploy --schema ./prisma/schema.prisma
+    restart: no
+    networks:
+      - currencia-network
+
+networks:
+  currencia-network:
+    driver: bridge
+
+volumes:
+  postgres:
