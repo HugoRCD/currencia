@@ -30,6 +30,11 @@ export const cryptos: Crypto[] = [
   }
 ]
 
+/**
+ * Checks if a given string is a valid crypto symbol.
+ * @param crypto The crypto symbol to check.
+ * @returns True if the crypto symbol is valid, false otherwise.
+ */
 export function isCrypto(crypto: string) {
   if (cryptos.find(c => c.id === crypto)) return true
   throw new Error(`Invalid crypto: ${crypto}`)
