@@ -6,13 +6,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun --filter './apps/*' dev",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "dev": "turbo dev --filter=@currencia/app",
+    "run:scripts": "turbo dev --filter='./scripts/*'",
+    "build": "turbo build",
+    "test": "turbo test",
+    "dev:prepare": "turbo dev:prepare",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hrcd/eslint-config": "^2.1.1",
-    "eslint": "^9.14.0"
+    "eslint": "^9.14.0",
+    "turborepo": "^0.0.1"
   },
   "workspaces": [
     "apps/*",
