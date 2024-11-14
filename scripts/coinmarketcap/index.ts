@@ -6,7 +6,7 @@ import { program } from 'commander'
 const baseUrl = 'https://coinmarketcap.com/currencies'
 
 program
-  .name('Alpha scrapper: CoinMarketCap')
+  .name('CoinMarketCap scrapper: CoinMarketCap')
   .version('1.0.0')
   .option('-v, --verbose', 'enable verbose mode')
   .option('-t, --threads <threads>', 'number of threads to use', '4')
