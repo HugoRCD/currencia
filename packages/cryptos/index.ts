@@ -29,3 +29,8 @@ export const cryptos: Crypto[] = [
     description: 'Solana is a decentralized blockchain project that aims to provide a sustainable, scalable, and secure platform for the next generation of blockchain applications.',
   }
 ]
+
+export function isCrypto(crypto: string) {
+  if (cryptos.find(c => c.id === crypto)) return true
+  throw new Error(`Invalid crypto: ${crypto}`)
+}
