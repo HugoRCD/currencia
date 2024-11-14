@@ -1,0 +1,45 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    "**/.env"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".output/**",
+        ".nuxt/**"
+      ]
+    },
+    "generate": {
+      "dependsOn": [
+        "^generate"
+      ],
+      "outputs": [
+        "dist/**",
+        ".output/**",
+        ".nuxt/**"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "dev:prepare": {
+      "cache": false,
+      "outputs": [
+        "dist/**",
+        ".output/**",
+        ".nuxt/**"
+      ]
+    },
+    "prisma:generate": {},
+    "lint": {},
+    "lint:fix": {},
+    "test": {},
+    "typecheck": {}
+  }
+}
