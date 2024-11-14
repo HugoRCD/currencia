@@ -13,6 +13,10 @@ type PriceDocument = {
   prices: Record<string, number>
 }
 
+/**
+ * A class for interacting with a MongoDB database.
+ * It provides methods for inserting and retrieving prices.
+ */
 export class MongoDBClient {
 
   private client: MongoClient

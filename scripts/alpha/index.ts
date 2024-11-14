@@ -1,16 +1,9 @@
 import { cryptos, isCrypto } from '@currencia/cryptos'
 import { MongoDBClient } from '@currencia/mongo'
+import { chunkArray } from '@currencia/utils'
 import { program } from 'commander'
 
 const baseUrl = 'https://coinmarketcap.com/currencies'
-
-function chunkArray<T>(array: T[], chunkSize: number): T[][] {
-  const chunks: T[][] = []
-  for (let i = 0; i < array.length; i += chunkSize) {
-    chunks.push(array.slice(i, i + chunkSize))
-  }
-  return chunks
-}
 
 program
   .name('Alpha scrapper: CoinMarketCap')

@@ -1,18 +1,12 @@
 import { cryptos, isCrypto } from '@currencia/cryptos'
+import { MongoDBClient } from '@currencia/mongo'
+import { chunkArray } from '@currencia/utils'
 import { program } from 'commander'
 
 /*const puppeteer = require('puppeteer')*/
 
 const startUrl = 'https://www.cryptocompare.com/coins/'
 const endUrl = '/overview/USD'
-
-function chunkArray<T>(array: T[], chunkSize: number): T[][] {
-  const chunks: T[][] = []
-  for (let i = 0; i < array.length; i += chunkSize) {
-    chunks.push(array.slice(i, i + chunkSize))
-  }
-  return chunks
-}
 
 program
   .name('Beta scrapper: CryptoCompare')
@@ -67,6 +61,9 @@ program
 
     console.log('Final results:')
     console.table(results)
+    const client = await MongoDBClient.create()
+    await client.savePrices(results)
+    await client.disconnect()
     process.exit(0)
   }
   )
