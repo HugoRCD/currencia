@@ -1,7 +1,7 @@
 import { cryptos, isCrypto } from '@currencia/cryptos'
 import { program } from 'commander'
 
-const baseUrl = 'https://coinmarketcap.com/fr/currencies'
+const baseUrl = 'https://coinmarketcap.com/currencies'
 
 function chunkArray<T>(array: T[], chunkSize: number): T[][] {
   const chunks: T[][] = []
