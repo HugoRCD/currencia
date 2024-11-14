@@ -1,4 +1,5 @@
 import { cryptos, isCrypto } from '@currencia/cryptos'
+import { MongoDBClient } from '@currencia/mongo'
 import { program } from 'commander'
 
 const baseUrl = 'https://coinmarketcap.com/currencies'
@@ -70,6 +71,9 @@ program
 
     console.log('Final results:')
     console.table(results)
+    const client = await MongoDBClient.create()
+    await client.savePrices(results)
+    await client.disconnect()
     process.exit(0)
   })
 
