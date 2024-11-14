@@ -41,6 +41,7 @@
     "resend": "^2.1.0",
     "vue-sonner": "^1.2.5",
     "vue3-apexcharts": "^1.7.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@shelve/cli": "^2.5.3"
   }
 }
