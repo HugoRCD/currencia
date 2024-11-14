@@ -36,6 +36,9 @@
         ".nuxt/**"
       ]
     },
+    "run:scripts": {
+      "cache": false
+    },
     "prisma:generate": {},
     "lint": {},
     "lint:fix": {},
