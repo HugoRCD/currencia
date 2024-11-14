@@ -38,7 +38,7 @@
     "nuxt-auth-utils": "^0.5.1",
     "nuxt-build-cache": "^0.1.1",
     "prisma": "^5.21.1",
-    "resend": "^2.1.0",
+    "resend": "^4.0.0",
     "vue-sonner": "^1.2.5",
     "vue3-apexcharts": "^1.7.0",
     "zod": "^3.23.8",
