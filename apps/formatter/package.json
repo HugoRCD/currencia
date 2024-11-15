@@ -8,6 +8,9 @@
     "preview": "node .output/server/index.mjs"
   },
   "devDependencies": {
-    "nitropack": "latest"
+    "nitropack": "latest",
+    "@currencia/cryptos": "workspace:*",
+    "@currencia/mongo": "workspace:*",
+    "@currencia/utils": "workspace:*"
   }
 }
