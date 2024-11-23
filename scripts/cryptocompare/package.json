@@ -10,13 +10,13 @@
     "@types/bun": "latest"
   },
   "peerDependencies": {
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
     "@currencia/cryptos": "workspace:*",
     "@currencia/utils": "workspace:*",
     "@currencia/mongo": "workspace:*",
     "commander": "^12.1.0",
-    "puppeteer": "^23.8.0"
+    "puppeteer": "^23.9.0"
   }
 }
