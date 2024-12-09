@@ -9,7 +9,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
     "mongodb": "^6.11.0"
   }
 }
