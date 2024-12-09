@@ -19,9 +19,9 @@
   },
   "dependencies": {
     "@hrcd/eslint-config": "^2.1.1",
-    "@shelve/cli": "^2.6.1",
-    "eslint": "^9.15.0",
-    "turbo": "^2.3.1"
+    "@shelve/cli": "^2.9.0",
+    "eslint": "^9.16.0",
+    "turbo": "^2.3.3"
   },
   "packageManager": "bun@1.1.34",
   "trustedDependencies": ["@currencia/app"],
