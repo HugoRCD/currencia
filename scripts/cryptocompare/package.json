@@ -17,6 +17,6 @@
     "@currencia/utils": "workspace:*",
     "@currencia/mongo": "workspace:*",
     "commander": "^12.1.0",
-    "puppeteer": "^23.10.1"
+    "puppeteer": "^23.10.3"
   }
 }
