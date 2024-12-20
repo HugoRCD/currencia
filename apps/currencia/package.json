@@ -28,7 +28,7 @@
     "@nuxt/scripts": "^0.9.5",
     "@nuxt/ui": "^2.20.0",
     "@prisma/client": "^5.22.0",
-    "apexcharts": "^4.2.0",
+    "apexcharts": "^4.3.0",
     "@vueuse/core": "^11.3.0",
     "@vueuse/nuxt": "^11.3.0",
     "dayjs": "^1.11.13",
