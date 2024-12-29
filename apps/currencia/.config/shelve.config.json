@@ -1,4 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/HugoRCD/shelve/main/packages/types/shelveConfigSchema.json",
-  "project": "currencia"
+  "$schema": "https://raw.githubusercontent.com/HugoRCD/shelve/main/packages/types/schema.json",
+  "project": "currencia",
+  "slug": "hrcd"
 }
