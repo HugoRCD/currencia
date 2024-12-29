@@ -9,6 +9,7 @@ type MongoConfig = {
 }
 
 type PriceDocument = {
+  _id?: string
   timestamp: Date
   prices: Record<string, number>
 }
