@@ -9,9 +9,13 @@
     "sync:mongo": "nitro task run sync:mongo"
   },
   "devDependencies": {
-    "nitropack": "latest",
     "@currencia/cryptos": "workspace:*",
     "@currencia/mongo": "workspace:*",
-    "@currencia/utils": "workspace:*"
+    "@currencia/utils": "workspace:*",
+    "@types/amqplib": "^0.10.6",
+    "nitropack": "latest"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.5"
   }
 }

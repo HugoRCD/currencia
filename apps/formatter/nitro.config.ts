@@ -10,5 +10,12 @@ export default defineNitroConfig({
     '* * * * *': ['sync:mongo']
   },
 
+  runtimeConfig: {
+    rabbit: {
+      url: '',
+      queue: ''
+    }
+  },
+
   compatibilityDate: '2024-12-29'
 })
