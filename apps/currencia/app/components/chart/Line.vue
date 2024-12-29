@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <script setup lang="ts">
 import type { ApexOptions, TimeFrame, Variations, ApexChartSeries } from '~~/types/ApexChart'
 

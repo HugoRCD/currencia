@@ -1,16 +1,16 @@
 <script setup lang="ts">
+import NumberFlow from '@number-flow/vue'
 import type { Variations } from '~~/types/ApexChart'
 import type { Crypto } from '~~/types/Crypto'
 
 const dayjs = useDayjs()
 
 const cryptos = usePublicCrypto()
-
 const { symbol } = useRoute().params
+
 const crypto = cryptos.value.find((crypto: Crypto) => crypto.symbol === symbol) as Crypto
-if (!crypto) {
-  useRouter().push('/app/market')
-}
+
+if (!crypto) useRouter().push('/app/market')
 
 const cryptoData = ref(crypto.data)
 
@@ -20,48 +20,20 @@ const variations = ref<Variations>({
 })
 
 const price = ref(crypto.data[crypto.data.length - 1][1])
-const dynamicData = ref(0)
 
-let ws: WebSocket | undefined
-
-function connect() {
-  const isSecure = location.protocol === 'https:'
-  const url = `${isSecure ? 'wss' : 'ws'}://${location.host}/api/crypto/ws?symbol=${symbol}`
-  if (ws) {
-    console.log('ws', 'Closing previous connection before reconnecting...')
-    ws.close()
-  }
-
-  console.log('ws', 'Connecting to', url, '...')
-  ws = new WebSocket(url)
-
-  ws.addEventListener('message', (event) => {
-    if (event.data.includes('number')) {
-      dynamicData.value = JSON.parse(event.data).number
-      // add another day to the data
-      /*cryptoData.value.push([
-        dayjs().add(1, 'day').valueOf(),
-        dynamicData.value
-      ])*/
-    }
-    if (event.data.includes('pong')) {
-      console.log('ws', 'Received pong')
-    }
-  })
-}
-
-const ping = () => {
-  console.log('ws', 'Sending ping')
-  ws!.send('ping')
-}
-
-onMounted(() => {
-  connect()
+const dynamicData = ref({
+  number: -1,
+  suffix: '$'
 })
 
+const eventSource = new EventSource(`${location.origin}/api/crypto/${symbol}`)
+
+eventSource.onmessage = (event) => {
+  dynamicData.value.number = +event.data
+}
+
 onUnmounted(() => {
-  console.log('ws', 'Closing connection...')
-  ws?.close()
+  eventSource.close()
 })
 </script>
 
@@ -76,7 +48,16 @@ onUnmounted(() => {
       </div>
       <div style="--stagger: 2; --delay: 100ms" data-animate class="flex flex-col gap-2">
         <div class="flex flex-row items-center">
-          <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">{{ displayNumberValue(dynamicData) }} $</span>
+          <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">
+            <NumberFlow
+              v-if="dynamicData.number !== -1"
+              :value="dynamicData.number"
+              :suffix="dynamicData.suffix"
+              continuous
+              class="font-semibold tabular-nums"
+            />
+            <USkeleton v-else class="h-8 w-24" />
+          </span>
         </div>
 
         <div class="flex flex-row items-center gap-2 font-sans text-sm font-medium" :class="variations.value > 0 ? 'positive' : 'negative'">
@@ -102,9 +83,6 @@ onUnmounted(() => {
       <p class="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
         {{ crypto.description }}
       </p>
-      <div>
-        <UButton label="Ping" @click="ping" />
-      </div>
     </div>
   </div>
 </template>

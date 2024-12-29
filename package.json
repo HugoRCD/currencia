@@ -6,7 +6,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "turbo dev --filter=@currencia/app",
+    "dev": "turbo dev --filter='./apps/*'",
+    "dev:app": "turbo dev --filter=@currencia/app",
+    "dev:formatter": "turbo dev --filter=@currencia/formatter",
     "run:scripts": "turbo dev --filter='./scripts/*'",
     "build": "turbo build",
     "build:app": "turbo build --filter=@currencia/app",
