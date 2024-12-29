@@ -43,5 +43,8 @@
     "vue3-apexcharts": "^1.8.0",
     "zod": "^3.24.1",
     "@shelve/cli": "^2.10.0"
+  },
+  "dependencies": {
+    "@number-flow/vue": "^0.3.3"
   }
 }
