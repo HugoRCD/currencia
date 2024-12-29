@@ -106,6 +106,17 @@ export class MongoDBClient {
     }
   }
 
+  async getPricesById(id: object): Promise<PriceDocument | null> {
+    this.ensureConnection()
+    try {
+      return await this.collection!
+        .findOne({ _id: id })
+    } catch (error) {
+      console.error('Failed to fetch prices by ID from MongoDB:', error)
+      throw error
+    }
+  }
+
   async getPricesByDateRange(startDate: Date, endDate: Date): Promise<PriceDocument[]> {
     this.ensureConnection()
 

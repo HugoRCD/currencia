@@ -7,7 +7,7 @@ export default defineNitroConfig({
   },
 
   scheduledTasks: {
-    '* * * * *': ['sync:mongo']
+    '* * * * *': ['sync:mongo', 'format:data']
   },
 
   compatibilityDate: '2024-12-29'
