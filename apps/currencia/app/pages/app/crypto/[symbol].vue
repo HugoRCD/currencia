@@ -56,7 +56,7 @@ onUnmounted(() => {
               continuous
               class="font-semibold tabular-nums"
             />
-            <USkeleton v-else class="h-8 w-24" />
+            <USkeleton v-else class="h-6 w-28" />
           </span>
         </div>
 

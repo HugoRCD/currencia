@@ -4,7 +4,6 @@ export type Crypto = {
   symbol: string;
   logo: string;
   description: string;
-  data: [timestamp: number, value: number][];
   visible: boolean;
   createdAt?: string;
   updatedAt?: string;

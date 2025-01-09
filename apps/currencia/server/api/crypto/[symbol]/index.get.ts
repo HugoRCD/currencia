@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
   const interval = setInterval(async () => {
     await eventStream.push(String(sendRandomNumber()))
-  }, 1500)
+  }, 2000)
 
   eventStream.onClosed(async () => {
     clearInterval(interval)

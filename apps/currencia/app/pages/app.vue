@@ -3,7 +3,7 @@ definePageMeta({
   layout: 'app',
 })
 
-await useCrypto().fetchPublicCryptos()
+await useCryptoService().fetchPublicCryptos()
 </script>
 
 <template>

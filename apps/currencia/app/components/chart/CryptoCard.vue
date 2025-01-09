@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import NumberFlow, { NumberFlowGroup } from '@number-flow/vue'
 import type { Crypto } from '~~/types/Crypto'
 
 type CryptoCardProps = {
@@ -12,12 +13,26 @@ function getRandomInt(min: number, max: number = 100) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+const price = useCryptoPrice(cryptoItem.symbol)
+
+const eventSource = new EventSource(`${location.origin}/api/crypto/${cryptoItem.symbol}`)
+
+eventSource.onmessage = (event) => {
+  price.value = +event.data
+}
+
+onUnmounted(() => {
+  eventSource.close()
+})
+
 const crypto = reactive({
   name: cryptoItem.name,
   symbol: cryptoItem.symbol,
   logo: cryptoItem.logo,
-  price: cryptoItem.data[cryptoItem.data.length - 1][1],
-  change: getRandomInt(-30, 30),
+})
+
+const diff = computed(() => {
+  return getRandomInt(price.value / 100, -price.value / 100)
 })
 </script>
 
@@ -36,14 +51,42 @@ const crypto = reactive({
       <span class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ crypto.name }}</span>
       <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">{{ crypto.symbol }}</span>
     </div>
-    <div class="flex flex-col gap-1">
+    <div v-if="price" class="flex flex-col gap-1">
       <div class="flex flex-row items-center">
-        <span class="text-2xl font-semibold text-gray-700 dark:text-gray-200">{{ crypto.price.toLocaleString() }}</span>
-        <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">$</span>
+        <NumberFlowGroup>
+          <div style="--number-flow-char-height: 0.85em" class="flex flex-col gap-1 font-semibold">
+            <NumberFlow
+              :value="price"
+              suffix="$"
+              :locales="['fr-FR']"
+              continuous
+              class="text-2xl font-semibold tabular-nums"
+            />
+            <NumberFlow
+              :value="diff"
+              suffix="%"
+              :class="[
+                'text-sm transition-colors duration-300',
+                diff < 0 ? 'text-red-500' : 'text-emerald-500'
+              ]"
+            />
+          </div>
+        </NumberFlowGroup>
       </div>
-      <div class="flex flex-row items-center">
-        <span :class="crypto.change > 0 ? 'positive' : 'negative'" class="text-sm font-semibold"> {{ crypto.change }}% </span>
-      </div>
+    </div>
+    <div v-else class="flex flex-col gap-1">
+      <USkeleton
+        class="h-5 w-28"
+        :ui="{
+          background: 'bg-gray-50 dark:bg-gray-900'
+        }"
+      />
+      <USkeleton
+        class="h-4 w-20"
+        :ui="{
+          background: 'bg-gray-50 dark:bg-gray-900'
+        }"
+      />
     </div>
   </div>
 </template>

@@ -30,6 +30,17 @@ model Crypto {
   visible       Boolean         @default(true)
   portfolioData PortfolioData[]
   watchlist     Watchlist[]
+  prices        Prices[]
+}
+
+model Prices {
+  id        Int      @id @default(autoincrement())
+  cryptoId  Int
+  price     Float
+  timestamp BigInt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  crypto    Crypto   @relation(fields: [cryptoId], references: [id])
 }
 
 model Watchlist {

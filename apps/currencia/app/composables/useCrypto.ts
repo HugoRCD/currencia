@@ -4,7 +4,15 @@ export const usePublicCrypto = () => {
   return useState<Crypto[]>('cryptos', () => [])
 }
 
-export function useCrypto() {
+export function useCryptoPrice(symbol: string) {
+  return useState<number>(`crypto-${symbol}-price`)
+}
+
+export function useCryptoPrices(symbol: string) {
+  return useState<number[]>(`crypto-${symbol}-prices`)
+}
+
+export function useCryptoService() {
   const publicCryptos = usePublicCrypto()
   const { user } = useUserSession()
 
@@ -51,11 +59,12 @@ export function useCrypto() {
   async function deleteCrypto(id: number) {
     deleteLoading.value = true
     try {
-      const response = await $fetch(`/api/admin/crypto/${id}`, {
+      await $fetch(`/api/admin/crypto/${id}`, {
         method: 'DELETE',
       })
+      const index = cryptos.value.findIndex((crypto) => crypto.id === id)
+      cryptos.value.splice(index, 1)
       toast.success('Crypto deleted successfully.')
-      if (response.value) cryptos.value = response.value
     } catch (error) {
       toast.error('Whoops! Something went wrong.')
     }
