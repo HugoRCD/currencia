@@ -18,7 +18,8 @@
     "prisma:generate": "prisma generate",
     "prisma:pull": "prisma db pull",
     "prisma:push": "prisma db push",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "bun ./prisma/seed.ts"
   },
   "devDependencies": {
     "@hrcd/eslint-config": "^2.1.1",
