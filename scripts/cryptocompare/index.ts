@@ -65,7 +65,6 @@ program
     await client.savePrices(results)
     await client.disconnect()
     process.exit(0)
-  }
-  )
+  })
 program.parse()
 

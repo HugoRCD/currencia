@@ -6,9 +6,10 @@ const symbolParams = z.object({
 
 export default defineEventHandler(async (event) => {
   const { symbol } = await getValidatedRouterParams(event, symbolParams.parse)
+  const body = await readBody(event)
   const { price, timestamp } = await readValidatedBody(event, z.object({
     price: z.number(),
-    timestamp: z.bigint(),
+    timestamp: z.number(),
   }).parse)
 
   const crypto = await prisma.crypto.findUnique({

@@ -117,6 +117,16 @@ export class MongoDBClient {
     }
   }
 
+  async deletePricesById(id: object): Promise<void> {
+    this.ensureConnection()
+    try {
+      await this.collection!.deleteOne({ _id: id })
+    } catch (error) {
+      console.error('Failed to delete prices by ID from MongoDB:', error)
+      throw error
+    }
+  }
+
   async getPricesByDateRange(startDate: Date, endDate: Date): Promise<PriceDocument[]> {
     this.ensureConnection()
 

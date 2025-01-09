@@ -11,6 +11,8 @@ export default defineTask({
     const rabbitClient = new RabbitMQClient({
       url: runtimeConfig.rabbit.url,
       queue: runtimeConfig.rabbit.queue,
+      maxRetries: 3,
+      retryDelay: 5000
     })
     const mongoClient = await MongoDBClient.create()
 
@@ -21,7 +23,7 @@ export default defineTask({
 
       await rabbitClient.connect()
 
-      await rabbitClient.publishMessages({ _id: prices._id })
+      rabbitClient.publishMessage(prices._id.toString())
 
       console.log('IDs sent to RabbitMQ successfully')
 

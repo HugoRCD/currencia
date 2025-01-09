@@ -1,8 +1,8 @@
 import { MongoDBClient } from '@currencia/mongo'
 import { cryptos } from '@currencia/cryptos'
 import { ObjectId } from 'mongodb'
+import { RabbitMQClient } from '~/utils/rabbit'
 
-// create type
 type Crypto = {
   symbol: string;
   timestamp: number;
@@ -12,49 +12,93 @@ type Crypto = {
 export default defineTask({
   meta: {
     name: 'format:data',
-    description: 'format data from MongoDB',
+    description: 'Consume and format data from MongoDB via RabbitMQ',
   },
   async run() {
-    console.log('start formatting data from MongoDB')
-    const id = '6736189f7374eada511d9bfd'
+    const runtimeConfig = useRuntimeConfig()
+    const rabbitClient = new RabbitMQClient({
+      url: runtimeConfig.rabbit.url,
+      queue: runtimeConfig.rabbit.queue,
+      maxRetries: 3,
+      retryDelay: 5000
+    })
+    const mongoClient = await MongoDBClient.create()
+
     try {
-      console.log('Formatting data from MongoDB')
-      const client = await MongoDBClient.create()
-      const objectId = new ObjectId(id)
-      const crypto = await client.getPricesById(objectId)
-      const { timestamp } = crypto
+      console.log('Starting message consumer')
+      await rabbitClient.connect()
 
-      if (!crypto) {
-        throw new Error(`Data Prices not found with id: ${id}`)
-      }
+      await rabbitClient.consumeMessages(async (messageContent) => {
+        console.log('Processing message:', messageContent)
 
-      const cryptoArray: Crypto[] = []
+        const objectId = new ObjectId(messageContent)
 
-      try {
-        for (const [name, price] of Object.entries(crypto.prices)) {
-          const crypto = formatCrypto(name, price, timestamp)
-          cryptoArray.push(crypto)
+        const crypto = await mongoClient.getPricesById(objectId)
+
+        if (!crypto) {
+          throw new Error(`No data found for ID: ${messageContent}`)
         }
-      } catch (error) {
-        console.error('Failed to format crypto:', error)
-      }
-      // TODO : Added the data to the postgreSQL
 
-      // TODO : Deleted the data from the MongoDB with the id
+        const { timestamp } = crypto
+        const cryptoArray: Crypto[] = []
 
-      console.log('Formatted crypto:', cryptoArray)
+        for (const [name, price] of Object.entries(crypto.prices)) {
+          try {
+            const formattedCrypto = formatCrypto(name, price, timestamp)
+            cryptoArray.push(formattedCrypto)
+          } catch (error) {
+            console.error(`Failed to format crypto ${name}:`, error)
+          }
+        }
+
+        if (cryptoArray.length === 0)
+          throw new Error('No cryptocurrencies were successfully formatted')
+
+        // TODO
+        await saveToPostgreSQL(cryptoArray)
+
+        // TODO
+        await mongoClient.deletePricesById(objectId)
+
+        console.log(`Successfully processed ${cryptoArray.length} cryptocurrencies`)
+      })
+
+      await rabbitClient.processDLQ(async (messageContent) => {
+        console.log('Processing failed message from DLQ:', messageContent)
+      })
+      return { result: 'Success' }
     } catch (error) {
-      console.error('Failed to fetch crypto from MongoDB:', error)
+      console.error('Error in consumer:', error)
       throw error
     }
   },
 })
 
 function formatCrypto(name: string, price: number, timestamp: Date): Crypto {
+  const symbol = cryptos.find(c => c.name.toLowerCase() === name.toLowerCase())?.symbol ||
+    cryptos.find(c => c.symbol.toLowerCase() === name.toLowerCase())?.symbol
+
+  if (!symbol) {
+    throw new Error(`Could not find symbol for crypto: ${name}`)
+  }
+
   return {
-    symbol: cryptos.find(c => c.name.toLowerCase() === name.toLowerCase())?.symbol || cryptos.find(c => c.symbol.toLowerCase() === name.toLowerCase())?.symbol,
+    symbol,
     timestamp: timestamp.getTime(),
     value: price
   }
 }
 
+async function saveToPostgreSQL(cryptos: Crypto[]): Promise<void> {
+  const runtimeConfig = useRuntimeConfig()
+  const baseUrl = runtimeConfig.apiUrl
+  for (const crypto of cryptos) {
+    await $fetch(`${baseUrl}/api/crypto/${crypto.symbol}`, {
+      method: 'POST',
+      body: {
+        timestamp: crypto.timestamp,
+        price: crypto.value
+      }
+    })
+  }
+}

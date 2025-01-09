@@ -11,6 +11,7 @@ export default defineNitroConfig({
   },
 
   runtimeConfig: {
+    apiUrl: '',
     rabbit: {
       url: '',
       queue: ''
