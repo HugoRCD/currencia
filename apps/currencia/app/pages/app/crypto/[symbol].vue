@@ -6,30 +6,27 @@ import type { Crypto } from '~~/types/Crypto'
 const dayjs = useDayjs()
 
 const cryptos = usePublicCrypto()
-const { symbol } = useRoute().params
+const { symbol } = useRoute().params as { symbol: string }
 
 const crypto = cryptos.value.find((crypto: Crypto) => crypto.symbol === symbol) as Crypto
 
 if (!crypto) useRouter().push('/app/market')
-
-const cryptoData = ref(crypto.data)
 
 const variations = ref<Variations>({
   percent: -1,
   value: -1,
 })
 
-const price = ref(crypto.data[crypto.data.length - 1][1])
+const price = useCryptoPrice(symbol)
+const isHovered = ref(false)
 
-const dynamicData = ref({
-  number: -1,
-  suffix: '$'
-})
+const data = ref<[number, number][]>()
 
 const eventSource = new EventSource(`${location.origin}/api/crypto/${symbol}`)
 
 eventSource.onmessage = (event) => {
-  dynamicData.value.number = +event.data
+  if (!isHovered.value)
+    price.value = +event.data
 }
 
 onUnmounted(() => {
@@ -50,9 +47,11 @@ onUnmounted(() => {
         <div class="flex flex-row items-center">
           <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">
             <NumberFlow
-              v-if="dynamicData.number !== -1"
-              :value="dynamicData.number"
-              :suffix="dynamicData.suffix"
+              v-if="price"
+              :value="price"
+              suffix="$"
+              :locales="['fr-FR']"
+              :format="{ maximumFractionDigits: 2 }"
               continuous
               class="font-semibold tabular-nums"
             />
@@ -72,9 +71,11 @@ onUnmounted(() => {
     <ChartLine
       style="--stagger: 3; --delay: 100ms"
       data-animate
-      :crypto-data
+      :data
       @update:current-value="price = $event"
       @update:variation="variations = $event"
+      @mouseenter="isHovered = true"
+      @mouseleave="isHovered = false"
     />
     <div v-if="crypto.description" style="--stagger: 4; --delay: 100ms" data-animate class="flex flex-col gap-2">
       <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">

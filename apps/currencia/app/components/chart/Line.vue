@@ -1,16 +1,16 @@
 <!-- eslint-disable -->
 <script setup lang="ts">
-import type { ApexOptions, TimeFrame, Variations, ApexChartSeries } from '~~/types/ApexChart'
+import type { ApexOptions, TimeFrame, Variations } from '~~/types/ApexChart'
 
 type ChartLineProps = {
   showTooltip?: boolean
-  cryptoData?: ApexChartSeries['data']
+  data?: [number, number][]
 }
 
 const colorMode = useColorMode()
 const dayjs = useDayjs()
 
-const { showTooltip = false, cryptoData } = defineProps<ChartLineProps>()
+const { showTooltip = false, data } = defineProps<ChartLineProps>()
 const emit = defineEmits(['update:currentValue', 'update:variation'])
 
 const timeframe = ref<TimeFrame>({
@@ -49,7 +49,7 @@ const isPositive = computed(() => {
 
 const series = [
   {
-    data: cryptoData ? cryptoData : getRandomDailyData(),
+    data: data ? data : getRandomDailyData(),
   },
 ]
 
@@ -217,12 +217,11 @@ const chartOptions = {
   },
 } satisfies ApexOptions
 
-watch(() => cryptoData, () => {
-  const cryptoDataCopy = cryptoData
+watch(() => data, () => {
   // sort by timestamp
   chart.value.chart.updateSeries([
     {
-      data: cryptoDataCopy.sort((a, b) => a.timestamp - b.timestamp)
+      data: data.sort((a, b) => a.timestamp - b.timestamp)
     }
   ])
 })

@@ -7,6 +7,10 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
+  experimental: {
+    viewTransition: true,
+  },
+
   modules: [
     '@nuxt/image',
     '@nuxt/ui',
@@ -39,10 +43,6 @@ export default defineNuxtConfig({
     preference: 'system',
     fallback: 'dark',
     storageKey: 'currencia-color-mode',
-  },
-
-  image: {
-    format: ['webp'],
   },
 
   nitro: {
