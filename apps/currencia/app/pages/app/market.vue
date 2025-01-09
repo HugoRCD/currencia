@@ -1,37 +1,19 @@
 <script setup lang="ts">
+import type { PriceDataRecord } from '~~/types/Crypto'
+
 const cryptos = usePublicCrypto()
 const { loggedIn } = useUserSession()
 
-const series = {
-  data: [],
-}
+const { data } = await useAsyncData<PriceDataRecord[]>(async () => {
+  const dates = ['2024-01-01', '2024-02-02', '2024-03-03', '2024-03-04', '2024-04-05']
 
-function smoothData(data: string | never[], windowSize: number) {
-  const smoothedData = []
+  const min = 1000
+  const max = 10000
 
-  for (let i = 0; i < data.length; i++) {
-    let sum = 0
-    let count = 0
-
-    for (let j = Math.max(0, i - windowSize); j <= Math.min(data.length - 1, i + windowSize); j++) {
-      sum += data[j]
-      count++
-    }
-
-    smoothedData.push(sum / count)
-  }
-
-  return smoothedData
-}
-
-onMounted(() => {
-  for (let i = 0; i < 50; i++) {
-    const randomValue = Math.random() * 2000 - 1000
-    series.data.push(randomValue)
-  }
-
-  const windowSize = 5
-  series.data = smoothData(series.data, windowSize)
+  return dates.map(date => ({ date, price: Math.floor(Math.random() * (max - min + 1)) + min }))
+}, {
+  watch: [],
+  default: () => []
 })
 </script>
 
@@ -57,7 +39,7 @@ onMounted(() => {
       <h2 class="text-xl font-bold">
         Overall Market
       </h2>
-      <ChartLine :series show-tooltip />
+      <ChartLine v-if="data" :data show-tooltip />
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import NumberFlow from '@number-flow/vue'
 import type { Variations } from '~~/types/ApexChart'
-import type { Crypto } from '~~/types/Crypto'
+import type { Crypto, PriceDataRecord } from '~~/types/Crypto'
 
 const dayjs = useDayjs()
 
@@ -20,7 +20,17 @@ const variations = ref<Variations>({
 const price = useCryptoPrice(symbol)
 const isHovered = ref(false)
 
-const data = ref<[number, number][]>()
+const { data } = await useAsyncData<PriceDataRecord[]>(async () => {
+  const dates = ['2024-01-01', '2024-02-02', '2024-03-03', '2024-03-04', '2024-04-05']
+
+  const min = 1000
+  const max = 10000
+
+  return dates.map(date => ({ date, price: Math.floor(Math.random() * (max - min + 1)) + min }))
+}, {
+  watch: [],
+  default: () => []
+})
 
 const eventSource = new EventSource(`${location.origin}/api/crypto/${symbol}`)
 
@@ -69,11 +79,11 @@ onUnmounted(() => {
       </div>
     </div>
     <ChartLine
+      v-model:variations="variations"
       style="--stagger: 3; --delay: 100ms"
       data-animate
       :data
       @update:current-value="price = $event"
-      @update:variation="variations = $event"
       @mouseenter="isHovered = true"
       @mouseleave="isHovered = false"
     />

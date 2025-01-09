@@ -16,3 +16,5 @@ export type UpsertCryptoDto = {
   description: string;
   visible: boolean;
 };
+
+export type PriceDataRecord = { date: Date, price: number }
