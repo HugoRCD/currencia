@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Crypto, UpsertCryptoDto } from '~~/types/Crypto'
 
-const { modal, cryptos, loading, getLoading, fetchCryptos, upsertCrypto, deleteCrypto } = useCrypto()
+const { modal, cryptos, loading, getLoading, fetchCryptos, upsertCrypto, deleteCrypto } = useCryptoService()
 
 const columns = [
   {
