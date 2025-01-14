@@ -22,7 +22,7 @@
   "dependencies": {
     "@hrcd/eslint-config": "^2.1.1",
     "@shelve/cli": "^3.1.1",
-    "eslint": "^9.17.0",
+    "eslint": "^9.18.0",
     "turbo": "^2.3.3"
   },
   "packageManager": "bun@1.1.34",
