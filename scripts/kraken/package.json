@@ -1,0 +1,22 @@
+{
+  "name": "kraken-fetcher",
+  "module": "index.ts",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --bun run index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@currencia/cryptos": "workspace:*",
+    "@currencia/utils": "workspace:*",
+    "@currencia/mongo": "workspace:*",
+    "commander": "^12.1.0",
+    "puppeteer": "^23.11.1"
+  }
+}
