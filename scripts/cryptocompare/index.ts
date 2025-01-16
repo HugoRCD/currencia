@@ -3,8 +3,6 @@ import { MongoDBClient } from '@currencia/mongo'
 import { chunkArray } from '@currencia/utils'
 import { program } from 'commander'
 
-/*const puppeteer = require('puppeteer')*/
-
 const startUrl = 'https://www.cryptocompare.com/coins/'
 const endUrl = '/overview/USD'
 
