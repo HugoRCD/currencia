@@ -57,7 +57,7 @@ onMounted(() => {
       <h2 class="text-xl font-bold">
         Overall Market
       </h2>
-      <ChartLine :series show-tooltip />
+      <!--      <ChartLine :series show-tooltip />-->
     </div>
   </div>
 </template>

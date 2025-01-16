@@ -20,6 +20,10 @@ export default defineTask({
       console.log('Syncing MongoID to RabbitMQ')
 
       const prices = await mongoClient.getLatestPrices()
+      if (!prices) {
+        console.log('No prices found in MongoDB')
+        return { result: 'No prices found' }
+      }
 
       await rabbitClient.connect()
 

@@ -82,7 +82,6 @@ if (import.meta.client) {
 <template>
   <Html lang="en">
     <Body class="relative selection:bg-neutral-200 dark:selection:bg-neutral-700">
-      <LayoutHelpCenter class="absolute bottom-3 right-3 z-20 hidden sm:block" />
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>

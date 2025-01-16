@@ -128,7 +128,7 @@ async function updateCurrentUser() {
             </div>
             <div class="mt-2 flex justify-center">
               <a href="/auth/github" class="flex items-center gap-2 rounded-md bg-gray-200 px-5 py-1.5 text-sm text-black transition-colors duration-300 hover:bg-gray-300 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
-                <UIcon name="custom:github" class="size-5 fill-current" />
+                <UIcon name="simple-icons:github" class="size-5" />
                 <span>
                   Sign in with GitHub
                 </span>
