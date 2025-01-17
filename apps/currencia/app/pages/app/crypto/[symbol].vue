@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import NumberFlow from '@number-flow/vue'
+import type { CryptoPrice } from '@prisma/client'
 import type { Variations } from '~~/types/ApexChart'
 import type { Crypto } from '~~/types/Crypto'
-
-const dayjs = useDayjs()
 
 const cryptos = usePublicCrypto()
 const { symbol } = useRoute().params as { symbol: string }
 
-const crypto = cryptos.value.find((crypto: Crypto) => crypto.symbol === symbol) as Crypto
+const crypto = cryptos.value.find((crypto: Crypto) => crypto.symbol === symbol) as Crypto & { prices: CryptoPrice[] }
 
 if (!crypto) useRouter().push('/app/market')
 
@@ -17,10 +16,19 @@ const variations = ref<Variations>({
   value: -1,
 })
 
-const { crypto: _crypto } = usePrice(symbol)
+const { crypto: _crypto, isLoading } = usePrice(symbol)
+
 const isHovered = ref(false)
 
-const data = ref<[number, number][]>()
+const data = computed(() => {
+  if (!crypto.prices || !crypto.prices.length) return []
+  return crypto.prices.map((price) => {
+    return [
+      Number(price.timestamp),
+      price.price
+    ]
+  })
+})
 </script>
 
 <template>
@@ -36,7 +44,7 @@ const data = ref<[number, number][]>()
         <div class="flex flex-row items-center">
           <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">
             <NumberFlow
-              v-if="_crypto.price"
+              v-if="!isLoading"
               :value="_crypto.price"
               suffix="$"
               :locales="['fr-FR']"

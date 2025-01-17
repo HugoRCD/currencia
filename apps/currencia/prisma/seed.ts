@@ -1,5 +1,5 @@
 import { cryptos } from '@currencia/cryptos'
-import { PrismaClient } from '@prisma/client'
+import { Classification, PrismaClient } from '@prisma/client'
 
 export const prisma = new PrismaClient()
 
@@ -21,6 +21,24 @@ async function main() {
       },
     })
   }
+/*
+  const sentiments = await prisma.sentiment.createMany({
+    data: [
+      {
+        classification: Classification.BULLISH,
+        message: 'Upward trend',
+        date: new Date(),
+        value: 80
+      },
+      {
+        classification: Classification.BEARISH,
+        message: 'Downward trend',
+        date: new Date(),
+        value: 30
+      }
+    ]
+  })
+*/
 }
 
 main()

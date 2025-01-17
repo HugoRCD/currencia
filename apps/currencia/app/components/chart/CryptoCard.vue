@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import NumberFlow, { NumberFlowGroup } from '@number-flow/vue'
+import type { CryptoPrice } from '@prisma/client'
 import type { Crypto } from '~~/types/Crypto'
 
 type CryptoCardProps = {
-  cryptoItem: Crypto
+  cryptoItem: Crypto & { prices: CryptoPrice[] }
   index: number
 }
 
 const { cryptoItem, index } = defineProps<CryptoCardProps>()
-
-function getRandomInt(min: number, max: number = 100) {
-  return Math.floor(Math.random() * (max - min + 1)) + min
-}
 
 const { crypto: _crypto } = usePrice(cryptoItem.symbol)
 
@@ -21,8 +18,39 @@ const crypto = reactive({
   logo: cryptoItem.logo,
 })
 
+const firstValue = computed(() => {
+  const seriesData = cryptoItem.prices
+
+  // eslint-disable-next-line @typescript-eslint/prefer-for-of
+  for (let i = 0; i < seriesData.length; i++) {
+    const dataPoint = seriesData[i]
+    if (dataPoint && dataPoint.price) {
+      return dataPoint.price
+    }
+  }
+  return 0
+})
+
+const lastValue = computed(() => {
+  const seriesData = cryptoItem.prices
+
+
+  for (let i = seriesData.length - 1; i >= 0; i--) {
+    const dataPoint = seriesData[i]
+    if (dataPoint && dataPoint.price) {
+      return dataPoint.price
+    }
+  }
+  return 0
+})
+
+const isPositive = computed(() => {
+  if (!firstValue.value || !lastValue.value) return false
+  return lastValue.value > firstValue.value
+})
+
 const diff = computed(() => {
-  return getRandomInt(_crypto.value.price / 100, -_crypto.value.price / 100)
+  return ((lastValue.value - firstValue.value) / firstValue.value) * 100
 })
 </script>
 
@@ -57,7 +85,7 @@ const diff = computed(() => {
               suffix="%"
               :class="[
                 'text-sm transition-colors duration-300',
-                diff < 0 ? 'text-red-500' : 'text-emerald-500'
+                !isPositive ? 'text-red-500' : 'text-emerald-500'
               ]"
             />
           </div>

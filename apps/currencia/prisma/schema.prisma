@@ -7,6 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum StatType {
+  COMPARE_TO_LAST_WEEK
+  COMPARE_TO_LAST_MONTH
+  OVERALL_CHANGE
+}
+
+enum Classification {
+  EXTREMELY_BEARISH
+  BEARISH
+  NEUTRAL
+  BULLISH
+  EXTREMELY_BULLISH
+}
+
 model User {
   id        Int         @id @default(autoincrement())
   username  String      @unique
@@ -43,14 +57,23 @@ model CryptoPrice {
   crypto    Crypto   @relation(fields: [cryptoId], references: [id])
 }
 
+model Stat {
+  id        Int      @id @default(autoincrement())
+  cryptoId  Int
+  type      StatType
+  value     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Sentiment {
-  id             Int      @id @default(autoincrement())
-  classification String
+  id             Int            @id @default(autoincrement())
+  classification Classification
   message        String
   date           DateTime
   value          Float
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
 model Watchlist {

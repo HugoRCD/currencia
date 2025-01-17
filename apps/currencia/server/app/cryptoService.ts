@@ -21,20 +21,20 @@ function smoothCryptoData(cryptoData: [timestamp: number, value: number][], wind
 }
 
 export async function getAllCryptos(all: boolean = false) {
-  const cryptos = await prisma.crypto.findMany()
-  const cryptoList = cryptos.map((crypto) => {
-    const data = []
-    for (let i = 0; i < 365; i++) {
-      data.push([
-        dayjs().subtract(i, 'day').valueOf(),
-        generateRandomValue()
-      ])
+  const cryptos = await prisma.crypto.findMany({
+    orderBy: {
+      id: 'asc',
+    },
+    include: {
+      prices: {
+        orderBy: {
+          timestamp: 'asc',
+        },
+      },
     }
-    crypto.data = smoothCryptoData(data, 7)
-    return crypto
   })
-  if (!all) return cryptoList.filter((crypto) => crypto.visible)
-  return cryptoList
+  if (!all) return cryptos.filter((crypto) => crypto.visible)
+  return cryptos
 }
 
 export function upsertCrypto(upsertCryptoDto: UpsertCryptoDto) {
@@ -55,7 +55,7 @@ export function deleteCrypto(cryptoId: number) {
   })
 }
 
-export function getUserWatchlist(userId: number): Promise<Crypto[]> {
+export function getUserWatchlist(userId: number) {
   return prisma.watchlist.findMany({
     where: {
       userId,

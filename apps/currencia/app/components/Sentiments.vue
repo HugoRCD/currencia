@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import type { Classification } from '@prisma/client'
 
 const { data, status } = useFetch('/api/sentiments')
 
@@ -19,8 +20,8 @@ const lastMessage = computed(() => {
   return data.value[0].message
 })
 
-const lastClassification = computed(() => {
-  if (!data.value || !data.value[0]) return []
+const lastClassification = computed<Classification>(() => {
+  if (!data.value || !data.value[0]) return 'NEUTRAL'
   return data.value[0].classification
 })
 
@@ -29,6 +30,14 @@ function color(value: number) {
   if (value > 75) return 'bg-green-600'
   if (value > 50) return 'bg-orange-600'
   return 'bg-red-600'
+}
+
+function getClassification(value: Classification) {
+  if (value === 'EXTREMELY_BULLISH') return 'Extremely Bullish'
+  if (value === 'BULLISH') return 'Bullish'
+  if (value === 'NEUTRAL') return 'Neutral'
+  if (value === 'BEARISH') return 'Bearish'
+  if (value === 'EXTREMELY_BEARISH') return 'Extremely Bearish'
 }
 </script>
 
@@ -48,7 +57,7 @@ function color(value: number) {
           <div :class="color(item.value)" class="h-6 w-1 rounded-sm" />
         </div>
         <span class="text-gray-500 dark:text-gray-400">
-          {{ lastClassification }}
+          {{ getClassification(lastClassification) }}
         </span>
       </div>
     </div>

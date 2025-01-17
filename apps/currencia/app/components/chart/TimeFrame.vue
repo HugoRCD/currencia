@@ -1,42 +1,78 @@
 <script setup lang="ts">
 import type { TimeFrame } from '~~/types/ApexChart'
 
-const timeframes = [
-  {
-    value: '1W',
-    series: getLastWeek(),
-  },
-  {
-    value: '1M',
-    series: getLastMonth(),
-  },
-  {
-    value: '3M',
-    series: getLast3Months(),
-  },
-  {
-    value: '6M',
-    series: getLast6Months(),
-  },
-  {
-    value: '1Y',
-    series: getLastYear(),
-  },
-] as TimeFrame[]
+type Props = {
+  data: [number, number][]
+  selectedTimeframe: TimeFrame
+}
 
-const selectedTimeframe = ref<TimeFrame>(timeframes[3])
-
+const props = defineProps<Props>()
 const emit = defineEmits(['update:timeframe'])
 
+// Fonction utilitaire pour calculer les timeframes dynamiques
+function calculateTimeframes(data: [number, number][]): TimeFrame[] {
+  if (!data.length) return []
+
+  const timestamps = data.map(([timestamp]) => timestamp)
+  const minTimestamp = Math.min(...timestamps)
+  const maxTimestamp = Math.max(...timestamps)
+  const totalDuration = maxTimestamp - minTimestamp
+
+  const timeframes: TimeFrame[] = [
+    {
+      value: 'Auto',
+      start: minTimestamp,
+      end: maxTimestamp
+    }
+  ]
+
+  // Calculer les timeframes en fonction de la plage totale
+  const now = Date.now()
+  if (totalDuration >= 86400000) { // Plus d'un jour
+    timeframes.push({
+      value: '1D',
+      start: now - 86400000,
+      end: now
+    })
+  }
+
+  if (totalDuration >= 604800000) { // Plus d'une semaine
+    timeframes.push({
+      value: '1W',
+      start: now - 604800000,
+      end: now
+    })
+  }
+
+  if (totalDuration >= 2592000000) { // Plus d'un mois
+    timeframes.push({
+      value: '1M',
+      start: now - 2592000000,
+      end: now
+    })
+  }
+
+  if (totalDuration >= 7776000000) { // Plus de 3 mois
+    timeframes.push({
+      value: '3M',
+      start: now - 7776000000,
+      end: now
+    })
+  }
+
+  return timeframes
+}
+
+const availableTimeframes = computed(() => calculateTimeframes(props.data))
+
 function selectNewTimeframe(timeframe: TimeFrame) {
-  selectedTimeframe.value = timeframe
   emit('update:timeframe', timeframe)
 }
 </script>
 
 <template>
   <div class="flex flex-row items-center gap-1 sm:gap-5">
-    <div v-for="timeframe in timeframes" :key="timeframe.value">
+    <div v-for="timeframe in availableTimeframes" :key="timeframe.value">
       <button
         :class="{
           'bg-gray-200 dark:bg-gray-700': selectedTimeframe.value === timeframe.value,

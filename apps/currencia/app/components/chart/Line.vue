@@ -4,7 +4,7 @@ import type { ApexOptions, TimeFrame, Variations } from '~~/types/ApexChart'
 
 type ChartLineProps = {
   showTooltip?: boolean
-  data?: [number, number][]
+  data: [number, number][]
 }
 
 const colorMode = useColorMode()
@@ -13,33 +13,28 @@ const dayjs = useDayjs()
 const { showTooltip = false, data } = defineProps<ChartLineProps>()
 const emit = defineEmits(['update:currentValue', 'update:variation'])
 
-const timeframe = ref<TimeFrame>({
-  value: '6M',
-  series: getLast6Months(),
-})
-
 const firstValue = computed(() => {
-  const { start } = timeframe.value.series
-  const seriesData = series[0].data
+  const seriesData = data
 
   for (let i = 0; i < seriesData.length; i++) {
     const dataPoint = seriesData[i]
-    if (dataPoint[0] >= start) {
+    if (dataPoint && dataPoint[1]) {
       return dataPoint[1]
     }
   }
+  return 0
 })
 
 const lastValue = computed(() => {
-  const { end } = timeframe.value.series
-  const seriesData = series[0].data
+  const seriesData = data
 
   for (let i = seriesData.length - 1; i >= 0; i--) {
     const dataPoint = seriesData[i]
-    if (dataPoint[0] <= end) {
+    if (dataPoint && dataPoint[1]) {
       return dataPoint[1]
     }
   }
+  return 0
 })
 
 const isPositive = computed(() => {
@@ -47,11 +42,41 @@ const isPositive = computed(() => {
   return lastValue.value > firstValue.value
 })
 
-const series = [
-  {
-    data: data ? data : getRandomDailyData(),
-  },
-]
+const selectedTimeframe = ref<TimeFrame>({
+  value: 'Auto',
+  start: 0,
+  end: 0
+})
+
+function getTimeframeFromData(data: [number, number][]): {
+  format: string;
+  tickAmount: number;
+} {
+  if (!data.length) {
+    return { format: 'DD.MM HH:mm', tickAmount: 5 }
+  }
+
+  const timestamps = data.map(([timestamp]) => timestamp)
+  const minDate = dayjs(Math.min(...timestamps))
+  const maxDate = dayjs(Math.max(...timestamps))
+  const diffDays = maxDate.diff(minDate, 'day')
+
+  if (diffDays < 1) {
+    return { format: 'HH:mm', tickAmount: 6 }
+  } else if (diffDays < 7) {
+    return { format: 'DD.MM HH:mm', tickAmount: 5 }
+  } else if (diffDays < 31) {
+    return { format: 'DD.MM', tickAmount: 7 }
+  } else if (diffDays < 365) {
+    return { format: 'MMM YYYY', tickAmount: 6 }
+  } else {
+    return { format: 'YYYY', tickAmount: 5 }
+  }
+}
+
+const timeframeFormat = computed(() => getTimeframeFromData(data))
+
+const series = [{ data }]
 
 const price = ref(0)
 
@@ -84,35 +109,48 @@ watch(colorMode, () => {
       borderColor: colorMode.value === 'dark' ? '#2A2A2B' : '#E5E7EB',
     },
     xaxis: {
+      type: 'datetime',
+      min: selectedTimeframe.value.start || undefined,
+      max: selectedTimeframe.value.end || undefined,
+      tickAmount: timeframeFormat.value.tickAmount,
       labels: {
         style: {
           colors: colorMode.value === 'dark' ? '#9CA3AF' : '#4B5563',
         },
+        formatter: function(value) {
+          return dayjs(value).format(timeframeFormat.value.format)
+        },
       },
+      axisBorder: { show: false },
+      axisTicks: { show: false },
     },
   })
 })
 
+function updateTimeframe(newTimeframe: TimeFrame) {
+  selectedTimeframe.value = newTimeframe
+  if (chart.value) {
+    chart.value.chart.updateOptions({
+      xaxis: {
+        min: newTimeframe.start || undefined,
+        max: newTimeframe.end || undefined,
+      }
+    })
+  }
+}
+
 watch(price, () => {
   emit('update:currentValue', price.value ? price.value : lastValue.value)
-}, { immediate: true })
+})
 
 watch(variation, () => {
   emit('update:variation', variation.value)
 }, { immediate: true })
 
 function mouseOut() {
-  emit('update:currentValue', lastValue.value)
   emit('update:variation', getVariation(firstValue.value, lastValue.value))
 }
 mouseOut()
-
-watch(timeframe, () => {
-  const { start } = timeframe.value.series
-  const { end } = timeframe.value.series
-  chart.value.chart.zoomX(start, end)
-  mouseOut()
-})
 
 const chartOptions = {
   chart: {
@@ -174,14 +212,14 @@ const chartOptions = {
   },
   xaxis: {
     type: 'datetime',
-    min: timeframe.value.series.start,
+    // min: timeframe.value.series.start,
     tickAmount: 5,
     labels: {
       style: {
         colors: colorMode.value === 'dark' ? '#9CA3AF' : '#4B5563',
       },
       formatter: function(value) {
-        return dayjs(value).format('DD.MM')
+        return dayjs(value).format('DD.MM HH:mm')
       },
     },
     axisBorder: {
@@ -216,20 +254,16 @@ const chartOptions = {
     },
   },
 } satisfies ApexOptions
-
-watch(() => data, () => {
-  // sort by timestamp
-  chart.value.chart.updateSeries([
-    {
-      data: data.sort((a, b) => a.timestamp - b.timestamp)
-    }
-  ])
-})
 </script>
 
 <template>
   <div class="relative select-none">
-    <ChartTimeFrame @update:timeframe="timeframe = $event" />
+    <!--    <ChartTimeFrame @update:timeframe="timeframe = $event" />-->
+    <ChartTimeFrame
+      :data
+      :selected-timeframe
+      @update:timeframe="updateTimeframe"
+    />
     <div class="relative">
       <DotPattern />
       <apexchart

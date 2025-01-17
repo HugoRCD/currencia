@@ -12,6 +12,19 @@ export type ApexOptions = {
     toolbar?: {
       show: boolean;
     };
+    animations?: {
+      enabled?: boolean;
+      speed?: number;
+      easing?: string;
+      animateGradually?: {
+        enabled?: boolean;
+        delay?: number;
+      };
+      dynamicAnimation?: {
+        enabled?: boolean;
+        speed?: number;
+      };
+    }
     background?: string;
   };
   dataLabels?: {
@@ -186,11 +199,9 @@ export type ApexChartSeries = {
 
 export type TimeFrame = {
   value: string;
-  series: {
-    start: number;
-    end: number;
-  };
-};
+  start: number;
+  end: number;
+}
 
 export type Variations = {
   percent: number;
