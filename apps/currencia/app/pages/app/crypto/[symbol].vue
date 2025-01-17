@@ -17,21 +17,10 @@ const variations = ref<Variations>({
   value: -1,
 })
 
-const price = useCryptoPrice(symbol)
+const { crypto: _crypto } = usePrice(symbol)
 const isHovered = ref(false)
 
 const data = ref<[number, number][]>()
-
-const eventSource = new EventSource(`${location.origin}/api/crypto/${symbol}`)
-
-eventSource.onmessage = (event) => {
-  if (!isHovered.value)
-    price.value = +event.data
-}
-
-onUnmounted(() => {
-  eventSource.close()
-})
 </script>
 
 <template>
@@ -47,8 +36,8 @@ onUnmounted(() => {
         <div class="flex flex-row items-center">
           <span class="text-4xl font-semibold text-gray-700 dark:text-gray-200">
             <NumberFlow
-              v-if="price"
-              :value="price"
+              v-if="_crypto.price"
+              :value="_crypto.price"
               suffix="$"
               :locales="['fr-FR']"
               :format="{ maximumFractionDigits: 2 }"
@@ -72,7 +61,7 @@ onUnmounted(() => {
       style="--stagger: 3; --delay: 100ms"
       data-animate
       :data
-      @update:current-value="price = $event"
+      @update:current-value="_crypto.price = $event"
       @update:variation="variations = $event"
       @mouseenter="isHovered = true"
       @mouseleave="isHovered = false"

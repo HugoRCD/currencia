@@ -13,17 +13,7 @@ function getRandomInt(min: number, max: number = 100) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-const price = useCryptoPrice(cryptoItem.symbol)
-
-const eventSource = new EventSource(`${location.origin}/api/crypto/${cryptoItem.symbol}`)
-
-eventSource.onmessage = (event) => {
-  price.value = +event.data
-}
-
-onUnmounted(() => {
-  eventSource.close()
-})
+const { crypto: _crypto } = usePrice(cryptoItem.symbol)
 
 const crypto = reactive({
   name: cryptoItem.name,
@@ -32,7 +22,7 @@ const crypto = reactive({
 })
 
 const diff = computed(() => {
-  return getRandomInt(price.value / 100, -price.value / 100)
+  return getRandomInt(_crypto.value.price / 100, -_crypto.value.price / 100)
 })
 </script>
 
@@ -51,12 +41,12 @@ const diff = computed(() => {
       <span class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ crypto.name }}</span>
       <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">{{ crypto.symbol }}</span>
     </div>
-    <div v-if="price" class="flex flex-col gap-1">
+    <div v-if="_crypto" class="flex flex-col gap-1">
       <div class="flex flex-row items-center">
         <NumberFlowGroup>
           <div style="--number-flow-char-height: 0.85em" class="flex flex-col gap-1 font-semibold">
             <NumberFlow
-              :value="price"
+              :value="_crypto.price"
               suffix="$"
               :locales="['fr-FR']"
               continuous

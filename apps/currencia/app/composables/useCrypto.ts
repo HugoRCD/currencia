@@ -1,3 +1,4 @@
+import type { Prices } from '@prisma/client'
 import type { UpsertCryptoDto, Crypto } from '~~/types/Crypto'
 
 export const usePublicCrypto = () => {
@@ -5,11 +6,11 @@ export const usePublicCrypto = () => {
 }
 
 export function useCryptoPrice(symbol: string) {
-  return useState<number>(`crypto-${symbol}-price`)
+  return useState<Prices>(`crypto-${symbol}-price`)
 }
 
 export function useCryptoPrices(symbol: string) {
-  return useState<number[]>(`crypto-${symbol}-prices`)
+  return useState<Prices[]>(`crypto-${symbol}-prices`)
 }
 
 export function useCryptoService() {
