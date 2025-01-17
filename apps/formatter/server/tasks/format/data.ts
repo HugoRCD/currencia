@@ -54,10 +54,8 @@ export default defineTask({
         if (cryptoArray.length === 0)
           throw new Error('No cryptocurrencies were successfully formatted')
 
-        // TODO
         await saveToPostgreSQL(cryptoArray)
 
-        // TODO
         await mongoClient.deletePricesById(objectId)
 
         console.log(`Successfully processed ${cryptoArray.length} cryptocurrencies`)

@@ -18,10 +18,10 @@ export default defineEventHandler(async (event) => {
     }
   })
   if (!crypto) return createError({ statusCode: 404, message: 'Crypto not found' })
-  await prisma.prices.create({
+  await prisma.cryptoPrice.create({
     data: {
       cryptoId: crypto.id,
-      timestamp,
+      timestamp: timestamp.toString(),
       price
     }
   })

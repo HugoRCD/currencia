@@ -1,7 +1,7 @@
-import type { Prices } from '@prisma/client'
+import type { CryptoPrice } from '@prisma/client'
 
 export function usePrice(symbol: string): {
-  crypto: Ref<Prices>
+  crypto: Ref<CryptoPrice>
   isLoading: Ref<boolean>
   error: Ref<string | null>
   reconnect: () => void

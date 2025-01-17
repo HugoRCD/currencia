@@ -1,12 +1,13 @@
 import { z } from 'zod'
-import { Prices } from '@prisma/client'
+import { CryptoPrice } from '@prisma/client'
 
 const symbolParams = z.object({
   symbol: z.string(),
 })
 
-async function getCryptoPrice(symbol: string): Promise<Prices> {
-  return await prisma.prices.findFirst({
+// eslint-disable-next-line
+async function getCryptoPrice(symbol: string): Promise<CryptoPrice> {
+  return prisma.cryptoPrice.findFirstOrThrow({
     where: {
       crypto: {
         symbol,
@@ -23,19 +24,11 @@ export default defineEventHandler(async (event) => {
   const { symbol } = await getValidatedRouterParams(event, symbolParams.parse)
 
   const crypto = await getCryptoPrice(symbol)
-  eventStream.push(JSON.stringify(crypto, (key, value) =>
-    typeof value === 'bigint'
-      ? value.toString()
-      : value
-  ))
+  eventStream.push(JSON.stringify(crypto))
 
   const interval = setInterval(async () => {
     const crypto = await getCryptoPrice(symbol)
-    eventStream.push(JSON.stringify(crypto, (key, value) =>
-      typeof value === 'bigint'
-        ? value.toString()
-        : value
-    ))
+    eventStream.push(JSON.stringify(crypto))
   }, 5000)
 
   eventStream.onClosed(() => {
