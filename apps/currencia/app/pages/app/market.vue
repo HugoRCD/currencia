@@ -5,34 +5,6 @@ const { loggedIn } = useUserSession()
 const series = {
   data: [],
 }
-
-function smoothData(data: string | never[], windowSize: number) {
-  const smoothedData = []
-
-  for (let i = 0; i < data.length; i++) {
-    let sum = 0
-    let count = 0
-
-    for (let j = Math.max(0, i - windowSize); j <= Math.min(data.length - 1, i + windowSize); j++) {
-      sum += data[j]
-      count++
-    }
-
-    smoothedData.push(sum / count)
-  }
-
-  return smoothedData
-}
-
-onMounted(() => {
-  for (let i = 0; i < 50; i++) {
-    const randomValue = Math.random() * 2000 - 1000
-    series.data.push(randomValue)
-  }
-
-  const windowSize = 5
-  series.data = smoothData(series.data, windowSize)
-})
 </script>
 
 <template>
@@ -40,7 +12,7 @@ onMounted(() => {
     <div v-if="!loggedIn">
       <UAlert
         icon="heroicons:information-circle"
-        color="rose"
+        color="red"
         variant="soft"
         title="You are not logged in."
         description="Create an account to access the full features of the app."

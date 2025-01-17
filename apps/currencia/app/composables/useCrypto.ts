@@ -1,16 +1,18 @@
-import type { Prices } from '@prisma/client'
+import type { CryptoPrice } from '@prisma/client'
 import type { UpsertCryptoDto, Crypto } from '~~/types/Crypto'
 
+type CryptoAndPrices = Crypto & { prices: CryptoPrice[] }
+
 export const usePublicCrypto = () => {
-  return useState<Crypto[]>('cryptos', () => [])
+  return useState<CryptoAndPrices[]>('cryptos', () => [])
 }
 
 export function useCryptoPrice(symbol: string) {
-  return useState<Prices>(`crypto-${symbol}-price`)
+  return useState<CryptoPrice>(`crypto-${symbol}-price`)
 }
 
 export function useCryptoPrices(symbol: string) {
-  return useState<Prices[]>(`crypto-${symbol}-prices`)
+  return useState<CryptoPrice[]>(`crypto-${symbol}-prices`)
 }
 
 export function useCryptoService() {
@@ -25,7 +27,7 @@ export function useCryptoService() {
   const cryptos = ref<Crypto[]>([])
 
   async function fetchPublicCryptos() {
-    const data = await $fetch('/api/crypto')
+    const data = await $fetch<CryptoAndPrices[]>('/api/crypto')
     if (data) publicCryptos.value = user.value ? data : data.slice(0, 6)
   }
 

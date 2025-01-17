@@ -112,13 +112,9 @@ watch(colorMode, () => {
       type: 'datetime',
       min: selectedTimeframe.value.start || undefined,
       max: selectedTimeframe.value.end || undefined,
-      tickAmount: timeframeFormat.value.tickAmount,
       labels: {
         style: {
           colors: colorMode.value === 'dark' ? '#9CA3AF' : '#4B5563',
-        },
-        formatter: function(value) {
-          return dayjs(value).format(timeframeFormat.value.format)
         },
       },
       axisBorder: { show: false },
@@ -136,6 +132,29 @@ function updateTimeframe(newTimeframe: TimeFrame) {
         max: newTimeframe.end || undefined,
       }
     })
+    if (newTimeframe.value === '1D') {
+      chart.value.chart.updateOptions({
+        xaxis: {
+          tickAmount: 6,
+          labels: {
+            formatter: function(value: number) {
+              return dayjs(value).format('HH:mm:ss')
+            },
+          }
+        }
+      })
+    } else {
+      chart.value.chart.updateOptions({
+        xaxis: {
+          tickAmount: 8,
+          labels: {
+            formatter: function(value: number) {
+              return dayjs(value).format(newTimeframe.value === '1Y' ? 'DD.MM.YYYY' : 'DD.MM')
+            },
+          }
+        }
+      })
+    }
   }
 }
 
@@ -212,14 +231,12 @@ const chartOptions = {
   },
   xaxis: {
     type: 'datetime',
-    // min: timeframe.value.series.start,
-    tickAmount: 5,
     labels: {
       style: {
         colors: colorMode.value === 'dark' ? '#9CA3AF' : '#4B5563',
       },
-      formatter: function(value) {
-        return dayjs(value).format('DD.MM HH:mm')
+      formatter: function(value: number) {
+        return dayjs(value).format(timeframeFormat.value.format)
       },
     },
     axisBorder: {

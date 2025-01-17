@@ -5,9 +5,8 @@ const symbolParams = z.object({
   symbol: z.string(),
 })
 
-// eslint-disable-next-line
 async function getCryptoPrice(symbol: string): Promise<CryptoPrice> {
-  return prisma.cryptoPrice.findFirstOrThrow({
+  const crypto = await prisma.cryptoPrice.findFirst({
     where: {
       crypto: {
         symbol,
@@ -17,6 +16,8 @@ async function getCryptoPrice(symbol: string): Promise<CryptoPrice> {
       createdAt: 'desc',
     },
   })
+  if (!crypto) throw createError({ statusCode: 404, statusMessage: 'Crypto not found' })
+  return crypto
 }
 
 export default defineEventHandler(async (event) => {
