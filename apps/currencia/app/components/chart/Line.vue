@@ -4,17 +4,21 @@ import type { ApexOptions, TimeFrame, Variations } from '~~/types/ApexChart'
 
 type ChartLineProps = {
   showTooltip?: boolean
-  data: [number, number][]
 }
 
 const colorMode = useColorMode()
 const dayjs = useDayjs()
 
-const { showTooltip = false, data } = defineProps<ChartLineProps>()
+const { showTooltip = false } = defineProps<ChartLineProps>()
+
 const emit = defineEmits(['update:currentValue', 'update:variation'])
 
+const data = defineModel<[number, number][]>({ required: true })
+
+const series = ref([{ data: data.value }])
+
 const firstValue = computed(() => {
-  const seriesData = data
+  const seriesData = data.value
 
   for (let i = 0; i < seriesData.length; i++) {
     const dataPoint = seriesData[i]
@@ -26,7 +30,7 @@ const firstValue = computed(() => {
 })
 
 const lastValue = computed(() => {
-  const seriesData = data
+  const seriesData = data.value
 
   for (let i = seriesData.length - 1; i >= 0; i--) {
     const dataPoint = seriesData[i]
@@ -62,7 +66,7 @@ function getTimeframeFromData(data: [number, number][]): {
   const diffDays = maxDate.diff(minDate, 'day')
 
   if (diffDays < 1) {
-    return { format: 'HH:mm', tickAmount: 6 }
+    return { format: 'HH:mm:ss', tickAmount: 6 }
   } else if (diffDays < 7) {
     return { format: 'DD.MM HH:mm', tickAmount: 5 }
   } else if (diffDays < 31) {
@@ -74,9 +78,7 @@ function getTimeframeFromData(data: [number, number][]): {
   }
 }
 
-const timeframeFormat = computed(() => getTimeframeFromData(data))
-
-const series = [{ data }]
+const timeframeFormat = computed(() => getTimeframeFromData(data.value))
 
 const price = ref(0)
 
@@ -93,6 +95,16 @@ const variation = computed(() => {
 })
 
 const chart = ref()
+
+/*watch(() => data.value, (data) => {
+  console.log(data)
+  if (chart.value) {
+    // sort using timestamp
+    console.log(data)
+    const sortedData = data.sort((a, b) => a[0] - b[0])
+    chart.value.chart.updateSeries([{ data: sortedData }])
+  }
+})*/
 
 watch(colorMode, () => {
   chart.value.chart.updateOptions({
@@ -132,29 +144,6 @@ function updateTimeframe(newTimeframe: TimeFrame) {
         max: newTimeframe.end || undefined,
       }
     })
-    if (newTimeframe.value === '1D') {
-      chart.value.chart.updateOptions({
-        xaxis: {
-          tickAmount: 6,
-          labels: {
-            formatter: function(value: number) {
-              return dayjs(value).format('HH:mm:ss')
-            },
-          }
-        }
-      })
-    } else {
-      chart.value.chart.updateOptions({
-        xaxis: {
-          tickAmount: 8,
-          labels: {
-            formatter: function(value: number) {
-              return dayjs(value).format(newTimeframe.value === '1Y' ? 'DD.MM.YYYY' : 'DD.MM')
-            },
-          }
-        }
-      })
-    }
   }
 }
 
@@ -176,7 +165,7 @@ const chartOptions = {
     id: 'area-datetime',
     type: 'area',
     zoom: {
-      enabled: false,
+      enabled: true,
     },
     animations: {
       enabled: true,

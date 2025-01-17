@@ -20,15 +20,23 @@ const { crypto: _crypto, isLoading } = usePrice(symbol)
 
 const isHovered = ref(false)
 
-const data = computed(() => {
-  if (!crypto.prices || !crypto.prices.length) return []
-  return crypto.prices.map((price) => {
+function formatData(data: CryptoPrice[]) {
+  return data.map((price) => {
     return [
       Number(price.timestamp),
       price.price
-    ]
+    ] as [number, number]
   })
-})
+}
+
+const data = ref(formatData(crypto.prices))
+
+/*watch(_crypto, (value) => {
+  if (value) {
+    data.value.push([+_crypto.value.timestamp, _crypto.value.price])
+    data.value.sort((a, b) => a[0] - b[0])
+  }
+})*/
 </script>
 
 <template>
@@ -66,9 +74,9 @@ const data = computed(() => {
       </div>
     </div>
     <ChartLine
+      v-model="data"
       style="--stagger: 3; --delay: 100ms"
       data-animate
-      :data
       @update:current-value="_crypto.price = $event"
       @update:variation="variations = $event"
       @mouseenter="isHovered = true"

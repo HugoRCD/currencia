@@ -25,18 +25,20 @@ export default defineTask({
     const mongoClient = await MongoDBClient.create()
 
     try {
-      console.log('Starting message consumer')
+      console.log('[TASK:DATA] - Starting message consumer')
       await rabbitClient.connect()
 
       await rabbitClient.consumeMessages(async (messageContent) => {
-        console.log('Processing message:', messageContent)
+        console.log('[TASK:DATA] - Processing message:', messageContent)
 
         const objectId = new ObjectId(messageContent)
 
         const crypto = await mongoClient.getPricesById(objectId)
 
         if (!crypto) {
-          throw new Error(`No data found for ID: ${messageContent}`)
+          console.error(`[TASK:DATA] - No data found for ID: ${messageContent}`)
+          await mongoClient.deletePricesById(objectId)
+          return
         }
 
         const { timestamp } = crypto
@@ -44,7 +46,15 @@ export default defineTask({
 
         for (const [name, price] of Object.entries(crypto.prices)) {
           try {
+            if (!price) {
+              console.error(`Price not found for crypto: ${name}`)
+              continue
+            }
             const formattedCrypto = formatCrypto(name, price, timestamp)
+            if (!formattedCrypto) {
+              console.error(`Failed to format crypto: ${name}`)
+              continue
+            }
             cryptoArray.push(formattedCrypto)
           } catch (error) {
             console.error(`Failed to format crypto ${name}:`, error)
@@ -58,26 +68,27 @@ export default defineTask({
 
         await mongoClient.deletePricesById(objectId)
 
-        console.log(`Successfully processed ${cryptoArray.length} cryptocurrencies`)
+        console.log(`[TASK:DATA] - Successfully processed ${cryptoArray.length} cryptocurrencies`)
       })
 
+      // eslint-disable-next-line
       await rabbitClient.processDLQ(async (messageContent) => {
-        console.log('Processing failed message from DLQ:', messageContent)
+        console.log('[TASK:DATA] - Processing failed message from DLQ:', messageContent)
       })
       return { result: 'Success' }
     } catch (error) {
-      console.error('Error in consumer:', error)
+      console.error('[TASK:DATA] - Error in consumer:', error)
       throw error
     }
   },
 })
 
-function formatCrypto(name: string, price: number, timestamp: Date): Crypto {
+function formatCrypto(name: string, price: number, timestamp: Date): Crypto | null {
   const symbol = cryptos.find(c => c.name.toLowerCase() === name.toLowerCase())?.symbol ||
     cryptos.find(c => c.symbol.toLowerCase() === name.toLowerCase())?.symbol
 
   if (!symbol) {
-    throw new Error(`Could not find symbol for crypto: ${name}`)
+    return null
   }
 
   return {

@@ -17,11 +17,11 @@ export default defineTask({
     const mongoClient = await MongoDBClient.create()
 
     try {
-      console.log('Syncing MongoID to RabbitMQ')
+      console.log('[TASK:SYNC] - Syncing MongoID to RabbitMQ')
 
       const prices = await mongoClient.getLatestPrices()
       if (!prices) {
-        console.log('No prices found in MongoDB')
+        console.log('[TASK:SYNC] - No prices found in MongoDB')
         return { result: 'No prices found' }
       }
 
@@ -29,13 +29,15 @@ export default defineTask({
 
       rabbitClient.publishMessage(prices._id.toString())
 
-      console.log('IDs sent to RabbitMQ successfully')
+      console.log('[TASK:SYNC] - IDs sent to RabbitMQ successfully')
 
       return { result: 'Success' }
     } catch (error) {
-      console.error('Error in sync task:', error)
+      console.error('[TASK:SYNC] - Error in sync task:', error)
       throw error
     } finally {
+      console.log('[TASK:SYNC] - Disconnecting from MongoDB and RabbitMQ')
+      await mongoClient.disconnect()
       await rabbitClient.disconnect()
     }
   },

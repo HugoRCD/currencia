@@ -41,9 +41,14 @@ watch(() => route.path, handleCryptoNavigation, { immediate: true })
     <div class="my-1 flex items-center justify-center gap-2 sm:my-2" :class="!open ? 'sm:flex-col-reverse' : ''">
       <User :side-bar-open="open" />
       <UTooltip text="Toggle sidebar" class="hidden select-none sm:block">
-        <UButton size="sm" color="white" variant="soft" class="hidden select-none sm:block" @click="open = !open">
-          <UIcon name="lucide:view-columns" class="size-5" />
-        </UButton>
+        <UButton
+          size="sm"
+          color="white"
+          icon="lucide:panel-right"
+          variant="soft"
+          class="hidden select-none sm:block"
+          @click="open = !open"
+        />
       </UTooltip>
     </div>
     <div class="mt-3 flex flex-col gap-3">

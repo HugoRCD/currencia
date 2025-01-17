@@ -1,3 +1,4 @@
+import { CryptoPrice } from '@prisma/client'
 import type { UpsertCryptoDto } from '~~/types/Crypto'
 
 export async function getAllCryptos(all: boolean = false) {
@@ -13,8 +14,45 @@ export async function getAllCryptos(all: boolean = false) {
       },
     }
   })
-  if (!all) return cryptos.filter((crypto) => crypto.visible)
-  return cryptos
+
+  const smoothPrices = (prices: CryptoPrice[], windowSize: number = 20) => {
+    if (prices.length === 0) return []
+
+    const calculateEMA = (data: number[], period: number): number[] => {
+      const k = 2 / (period + 1)
+      const emaData = [data[0]]
+
+      for (let i = 1; i < data.length; i++) {
+        const ema = data[i] * k + emaData[i - 1] * (1 - k)
+        emaData.push(ema)
+      }
+
+      return emaData
+    }
+
+    const firstPass = prices.map((_, index) => {
+      const start = Math.max(0, index - windowSize + 1)
+      const windowPrices = prices.slice(start, index + 1)
+      return windowPrices.reduce((sum, p) => sum + p.price, 0) / windowPrices.length
+    })
+
+    const secondPass = calculateEMA(firstPass, Math.floor(windowSize / 2))
+
+    const skipPoints = Math.max(1, Math.floor(prices.length / 200)) // Garder environ 200 points maximum
+
+    return prices.map((price, index) => ({
+      ...price,
+      price: Number(secondPass[index].toFixed(2))
+    })).filter((_, index) => index % skipPoints === 0)
+  }
+
+  const processedCryptos = cryptos.map(crypto => ({
+    ...crypto,
+    prices: smoothPrices(crypto.prices)
+  }))
+
+  if (!all) return processedCryptos.filter((crypto) => crypto.visible)
+  return processedCryptos
 }
 
 export function upsertCrypto(upsertCryptoDto: UpsertCryptoDto) {

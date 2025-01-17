@@ -69,10 +69,10 @@ export class RabbitMQClient {
           console.error(`Error processing message (attempt ${retryCount + 1}):`, error)
 
           if (retryCount < this.config.maxRetries) {
-            await this.republishWithDelay(messageContent, retryCount + 1)
+            this.republishWithDelay(messageContent, retryCount + 1)
             this.channel?.ack(msg)
           } else {
-            await this.sendToDLQ(messageContent, retryCount, error as Error)
+            this.sendToDLQ(messageContent, retryCount, error as Error)
             this.channel?.ack(msg)
           }
         }
