@@ -15,35 +15,71 @@ export async function getAllCryptos(all: boolean = false) {
     }
   })
 
-  const smoothPrices = (prices: CryptoPrice[], windowSize: number = 20) => {
+  const smoothPrices = (prices: CryptoPrice[]) => {
     if (prices.length === 0) return []
 
-    const calculateEMA = (data: number[], period: number): number[] => {
-      const k = 2 / (period + 1)
-      const emaData = [data[0]]
-
-      for (let i = 1; i < data.length; i++) {
-        const ema = data[i] * k + emaData[i - 1] * (1 - k)
-        emaData.push(ema)
+    const savitzkyGolay = (data: number[], windowSize: number = 51) => {
+      if (data.length < windowSize) {
+        windowSize = data.length
+        if (windowSize % 2 === 0) windowSize--
       }
 
-      return emaData
+      const halfWindow = Math.floor(windowSize / 2)
+      const smoothed = []
+
+      for (let i = 0; i < data.length; i++) {
+        let sum = 0
+        let count = 0
+
+        for (let j = -halfWindow; j <= halfWindow; j++) {
+          const idx = i + j
+          if (idx >= 0 && idx < data.length) {
+            const weight = Math.exp(-(j * j) / (2 * (halfWindow * 0.5) ** 2))
+            sum += data[idx] * weight
+            count += weight
+          }
+        }
+
+        smoothed.push(sum / count)
+      }
+
+      return smoothed
     }
 
-    const firstPass = prices.map((_, index) => {
-      const start = Math.max(0, index - windowSize + 1)
-      const windowPrices = prices.slice(start, index + 1)
-      return windowPrices.reduce((sum, p) => sum + p.price, 0) / windowPrices.length
+    const preProcesed = prices.map((_, index) => {
+      const start = Math.max(0, index - 5)
+      const window = prices.slice(start, index + 1)
+      return window.reduce((sum, p) => sum + p.price, 0) / window.length
     })
 
-    const secondPass = calculateEMA(firstPass, Math.floor(windowSize / 2))
+    const smoothed = savitzkyGolay(preProcesed)
 
-    const skipPoints = Math.max(1, Math.floor(prices.length / 200)) // Garder environ 200 points maximum
+    const significantPoints = []
+    let lastValue = smoothed[0]
+    const threshold = 0.1
 
-    return prices.map((price, index) => ({
-      ...price,
-      price: Number(secondPass[index].toFixed(2))
-    })).filter((_, index) => index % skipPoints === 0)
+    for (let i = 0; i < prices.length; i++) {
+      const currentValue = smoothed[i]
+      const variation = Math.abs((currentValue - lastValue) / lastValue)
+
+      if (variation > threshold || i === 0 || i === prices.length - 1) {
+        significantPoints.push({
+          ...prices[i],
+          price: Number(currentValue.toFixed(2))
+        })
+        lastValue = currentValue
+      }
+    }
+
+    if (significantPoints.length < 100) {
+      const step = Math.floor(prices.length / 100)
+      return prices.map((price, index) => ({
+        ...price,
+        price: Number(smoothed[index].toFixed(2))
+      })).filter((_, index) => index % step === 0)
+    }
+
+    return significantPoints
   }
 
   const processedCryptos = cryptos.map(crypto => ({
