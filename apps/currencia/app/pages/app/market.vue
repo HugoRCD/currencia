@@ -23,7 +23,7 @@ const series = {
 
     <!-- Crypto -->
     <div style="--stagger: 1" data-animate class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-      <ChartCryptoCard v-for="(crypto, index) in cryptos.slice(0, 5)" :key="crypto.name" :crypto-item="crypto" :index />
+      <ChartCryptoCard v-for="(crypto, index) in cryptos.slice(0, 12)" :key="crypto.name" :crypto-item="crypto" :index />
     </div>
 
     <!-- Overall Chart -->
