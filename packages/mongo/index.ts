@@ -31,9 +31,9 @@ export class MongoDBClient {
 
   private client: MongoClient
   private db: Db | null = null
-  private collection: Collection<PriceDocument | SentimentDocument> | null = null
+  private pricesCollection: Collection<PriceDocument> | null = null
+  private sentimentCollection: Collection<SentimentDocument> | null = null
   private readonly dbName: string
-  private readonly collectionName: string
 
   constructor(config?: MongoConfig) {
     const envPath = join(process.cwd(), '.env')
@@ -41,7 +41,6 @@ export class MongoDBClient {
 
     const url = config?.url || process.env.MONGODB_URL
     this.dbName = config?.dbName || process.env.MONGODB_DB_NAME || 'currencia'
-    this.collectionName = config?.collectionName || process.env.MONGODB_COLLECTION_NAME || 'prices'
 
     if (!url) {
       throw new Error('MongoDB URL is not set. Please provide it in constructor or set MONGODB_URL in .env')
@@ -54,7 +53,8 @@ export class MongoDBClient {
     try {
       await this.client.connect()
       this.db = this.client.db(this.dbName)
-      this.collection = this.db.collection<PriceDocument | SentimentDocument>(this.collectionName)
+      this.pricesCollection = this.db.collection<PriceDocument>('prices')
+      this.sentimentCollection = this.db.collection<SentimentDocument>('sentiments')
       console.log('Successfully connected to MongoDB')
     } catch (error) {
       console.error('Failed to connect to MongoDB:', error)
@@ -72,7 +72,8 @@ export class MongoDBClient {
     try {
       await this.client.close()
       this.db = null
-      this.collection = null
+      this.pricesCollection = null
+      this.sentimentCollection = null
       console.log('Disconnected from MongoDB')
     } catch (error) {
       console.error('Error disconnecting from MongoDB:', error)
@@ -81,21 +82,19 @@ export class MongoDBClient {
   }
 
   private ensureConnection() {
-    if (!this.db || !this.collection) {
+    if (!this.db || !this.pricesCollection || !this.sentimentCollection) {
       throw new Error('MongoDB client not connected')
     }
   }
 
   async savePrices(prices: Record<string, number>): Promise<void> {
     this.ensureConnection()
-
     try {
       const document: PriceDocument = {
         timestamp: new Date(),
         prices
       }
-
-      await this.collection!.insertOne(document)
+      await this.pricesCollection!.insertOne(document)
       console.log('Successfully saved prices to MongoDB')
     } catch (error) {
       console.error('Failed to save prices to MongoDB:', error)
@@ -105,10 +104,9 @@ export class MongoDBClient {
 
   async getLatestPrices(): Promise<PriceDocument | null> {
     this.ensureConnection()
-
     try {
-      return await this.collection!
-        .findOne({}, { sort: { timestamp: -1 } })
+      return await this.pricesCollection!
+        .findOne<PriceDocument>({}, { sort: { timestamp: -1 } })
     } catch (error) {
       console.error('Failed to fetch latest prices from MongoDB:', error)
       throw error
@@ -117,41 +115,40 @@ export class MongoDBClient {
 
   async getLatestSentiment(): Promise<SentimentDocument | null> {
     this.ensureConnection()
-
     try {
-      return await this.collection!
-        .findOne({}, { sort: { timestamp: -1 } })
+      return await this.sentimentCollection!
+        .findOne<SentimentDocument>({}, { sort: { timestamp: -1 } })
     } catch (error) {
       console.error('Failed to fetch latest sentiments from MongoDB:', error)
       throw error
     }
   }
 
-  async getPricesById(id: object): Promise<PriceDocument | null> {
+  async getPricesById(id: string): Promise<PriceDocument | null> {
     this.ensureConnection()
     try {
-      return await this.collection!
-        .findOne({ _id: id })
+      return await this.pricesCollection!
+        .findOne<PriceDocument>({ _id: id })
     } catch (error) {
       console.error('Failed to fetch prices by ID from MongoDB:', error)
       throw error
     }
   }
 
-  async deletePricesById(id: object): Promise<void> {
+  async deletePricesById(id: string): Promise<void> {
     this.ensureConnection()
     try {
-      await this.collection!.deleteOne({ _id: id })
+      await this.pricesCollection!.deleteOne({ _id: id })
     } catch (error) {
       console.error('Failed to delete prices by ID from MongoDB:', error)
       throw error
     }
   }
 
-  async deleteSentimentById(id: object): Promise<void> {
+  async deleteSentimentById(id: string): Promise<void> {
     this.ensureConnection()
     try {
-      await this.collection!.deleteOne({ _id: id })
+      await this.sentimentCollection!.deleteOne({ _id: id })
     } catch (error) {
       console.error('Failed to delete sentiment by ID from MongoDB:', error)
       throw error

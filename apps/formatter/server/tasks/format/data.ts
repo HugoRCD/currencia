@@ -31,9 +31,9 @@ export default defineTask({
       await rabbitClient.consumeMessages(async (messageContent) => {
         console.log('[TASK:DATA] - Processing message:', messageContent)
 
-        const objectId = new ObjectId(messageContent)
+        const objectId = messageContent
 
-        const crypto = await mongoClient.getPricesById(objectId)
+        const crypto = await mongoClient.getPricesById(messageContent)
 
         if (!crypto) {
           console.error(`[TASK:DATA] - No data found for ID: ${messageContent}`)
