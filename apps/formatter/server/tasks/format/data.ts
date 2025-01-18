@@ -29,6 +29,12 @@ export default defineTask({
       console.log('[TASK:DATA] - Starting message consumer')
       await rabbitClient.connect()
 
+      process.on('SIGINT', async () => {
+        console.log('Received SIGINT. Cleaning up...')
+        await rabbitClient.disconnect()
+        process.exit(0)
+      })
+
       await rabbitClient.consumeMessages(async (messageContent) => {
         console.log('[TASK:DATA] - Processing message:', messageContent)
 

@@ -18,6 +18,9 @@ export class RabbitMQClient {
   private readonly maxReconnectAttempts = 5
   private reconnectAttempts = 0
   private isConnecting: boolean = false
+  private shouldReconnect: boolean = true
+  private reconnectTimer: Timer = null
+  private consumers: Map<string, (msg: amqp.ConsumeMessage | null) => void> = new Map()
 
   constructor(config: RabbitConfig) {
     this.config = {
@@ -28,72 +31,115 @@ export class RabbitMQClient {
     }
   }
 
-  async connect(): Promise<void> {
-    if (this.isConnecting) return
-    this.isConnecting = true
-
+  private async createConnection(): Promise<void> {
     try {
-      if (this.connection) {
-        await this.connection.close()
-      }
-
       this.connection = await amqp.connect(this.config.url)
-      this.channel = await this.connection.createChannel()
-
-      this.reconnectAttempts = 0
 
       this.connection.on('error', (err) => {
-        console.error('RabbitMQ connection error:', err)
-        this.handleDisconnect()
+        console.error('RabbitMQ Connection Error:', err)
+        this.scheduleReconnect()
       })
 
       this.connection.on('close', () => {
-        console.log('RabbitMQ connection closed')
-        this.handleDisconnect()
+        console.log('RabbitMQ Connection Closed')
+        this.scheduleReconnect()
       })
 
+      this.channel = await this.connection.createChannel()
+
       this.channel.on('error', (err) => {
-        console.error('RabbitMQ channel error:', err)
+        console.error('RabbitMQ Channel Error:', err)
+        this.scheduleReconnect()
       })
 
       this.channel.on('close', () => {
-        console.log('RabbitMQ channel closed')
+        console.log('RabbitMQ Channel Closed')
+        this.scheduleReconnect()
       })
 
       await this.setupQueues()
 
+      for (const [queue, callback] of this.consumers) {
+        await this.channel.consume(queue, callback)
+      }
+
+      this.reconnectAttempts = 0
       console.log('Successfully connected to RabbitMQ')
-      this.isConnecting = false
     } catch (error) {
-      console.error('Failed to connect to RabbitMQ:', error)
-      this.isConnecting = false
-      this.handleDisconnect()
+      console.error('Connection creation failed:', error)
       throw error
     }
   }
 
-  private handleDisconnect() {
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout)
+  private scheduleReconnect(): void {
+    if (!this.shouldReconnect || this.isConnecting || this.reconnectTimer) {
+      return
     }
+
+    this.cleanup()
 
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
       console.error('Max reconnection attempts reached')
+      this.shouldReconnect = false
       return
     }
 
     this.reconnectAttempts++
     const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts - 1), 30000)
 
-    console.log(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`)
+    console.log(`Scheduling reconnection in ${delay}ms (attempt ${this.reconnectAttempts})`)
 
-    this.reconnectTimeout = setTimeout(async () => {
-      try {
-        await this.connect()
-      } catch (error) {
-        console.error('Reconnection failed:', error)
-      }
+    this.reconnectTimer = setTimeout(async () => {
+      this.reconnectTimer = null
+      await this.connect()
     }, delay)
+  }
+
+  private cleanup(): void {
+    if (this.channel) {
+      try {
+        this.channel.close().then(r => r)
+      } catch (err) {
+        console.error('Error closing channel:', err)
+      }
+      this.channel = null
+    }
+
+    if (this.connection) {
+      try {
+        this.connection.close().then(r => r)
+      } catch (err) {
+        console.error('Error closing connection:', err)
+      }
+      this.connection = null
+    }
+  }
+
+  async connect(): Promise<void> {
+    if (this.isConnecting) return
+
+    this.isConnecting = true
+    this.shouldReconnect = true
+
+    try {
+      await this.createConnection()
+    } catch (error) {
+      this.scheduleReconnect()
+    } finally {
+      this.isConnecting = false
+    }
+  }
+
+  disconnect(): void {
+    this.shouldReconnect = false
+
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer)
+      this.reconnectTimer = null
+    }
+
+    this.cleanup()
+    this.consumers.clear()
   }
 
   private async setupQueues(): Promise<void> {
@@ -115,7 +161,7 @@ export class RabbitMQClient {
       await this.connect()
     }
 
-    await this.channel!.consume(this.config.queue, async (msg) => {
+    const messageHandler = async (msg: amqp.ConsumeMessage | null) => {
       if (!msg) return
 
       try {
@@ -138,11 +184,14 @@ export class RabbitMQClient {
         }
       } catch (error) {
         console.error('Critical error processing message:', error)
-        if (this.channel && this.channel.connection.connection) {
-          this.channel.nack(msg, false, false)
+        if (this.channel?.connection?.connection) {
+          this.channel.nack(msg, false, true)
         }
       }
-    })
+    }
+
+    this.consumers.set(this.config.queue, messageHandler)
+    await this.channel!.consume(this.config.queue, messageHandler)
   }
 
   private republishWithDelay(
@@ -212,27 +261,6 @@ export class RabbitMQClient {
         ...options
       }
     )
-  }
-
-  async disconnect(): Promise<void> {
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout)
-    }
-
-    try {
-      if (this.channel) {
-        await this.channel.close()
-        this.channel = null
-      }
-      if (this.connection) {
-        await this.connection.close()
-        this.connection = null
-      }
-      console.log('Disconnected from RabbitMQ')
-    } catch (error) {
-      console.error('Error disconnecting from RabbitMQ:', error)
-      throw error
-    }
   }
 
 }

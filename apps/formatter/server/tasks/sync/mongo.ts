@@ -20,6 +20,12 @@ export default defineTask({
     try {
       console.log('[TASK:SYNC] - Syncing MongoID to RabbitMQ')
 
+      process.on('SIGINT', async () => {
+        console.log('Received SIGINT. Cleaning up...')
+        await rabbitClient.disconnect()
+        process.exit(0)
+      })
+
       const batchSize = 10
       const prices = await mongoClient.getPricesBatch(batchSize)
 
