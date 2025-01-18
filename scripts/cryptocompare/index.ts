@@ -34,27 +34,31 @@ program
         console.error(error)
       }
     } else {
-      const cryptoArray = cryptos.map((crypto) => crypto.symbol)
-      const cryptoChunks = chunkArray(cryptoArray, Math.ceil(cryptoArray.length / threads))
-      const workerPromises: Promise<void>[] = []
-      cryptoChunks.forEach(chunk => {
-        const worker = new Worker('./worker.ts')
-        const workerPromise = new Promise<void>((resolve) => {
-          let processedCount = 0
-          worker.onmessage = ({ data: { crypto, price } }) => {
-            results[crypto] = price
-            console.log(`${crypto}: ${price}`)
-            processedCount++
-            if (processedCount === chunk.length) {
-              worker.terminate()
-              resolve()
+      try {
+        const cryptoArray = cryptos.map((crypto) => crypto.symbol)
+        const cryptoChunks = chunkArray(cryptoArray, Math.ceil(cryptoArray.length / threads))
+        const workerPromises: Promise<void>[] = []
+        cryptoChunks.forEach(chunk => {
+          const worker = new Worker('./worker.ts')
+          const workerPromise = new Promise<void>((resolve) => {
+            let processedCount = 0
+            worker.onmessage = ({ data: { crypto, price } }) => {
+              results[crypto] = price
+              console.log(`${crypto}: ${price}`)
+              processedCount++
+              if (processedCount === chunk.length) {
+                worker.terminate()
+                resolve()
+              }
             }
-          }
+          })
+          workerPromises.push(workerPromise)
+          worker.postMessage({ cryptos: chunk, startUrl, endUrl })
         })
-        workerPromises.push(workerPromise)
-        worker.postMessage({ cryptos: chunk, startUrl, endUrl })
-      })
-      await Promise.all(workerPromises)
+        await Promise.all(workerPromises)
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     console.log('Final results:')

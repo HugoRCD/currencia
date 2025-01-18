@@ -96,16 +96,6 @@ const variation = computed(() => {
 
 const chart = ref()
 
-/*watch(() => data.value, (data) => {
-  console.log(data)
-  if (chart.value) {
-    // sort using timestamp
-    console.log(data)
-    const sortedData = data.sort((a, b) => a[0] - b[0])
-    chart.value.chart.updateSeries([{ data: sortedData }])
-  }
-})*/
-
 watch(colorMode, () => {
   chart.value.chart.updateOptions({
     theme: {
@@ -138,12 +128,7 @@ watch(colorMode, () => {
 function updateTimeframe(newTimeframe: TimeFrame) {
   selectedTimeframe.value = newTimeframe
   if (chart.value) {
-    chart.value.chart.updateOptions({
-      xaxis: {
-        min: newTimeframe.start || undefined,
-        max: newTimeframe.end || undefined,
-      }
-    })
+    chart.value.zoomX(newTimeframe.start, newTimeframe.end)
   }
 }
 
@@ -165,14 +150,9 @@ const chartOptions = {
     id: 'area-datetime',
     type: 'area',
     zoom: {
-      enabled: false,
-    },
-    animations: {
       enabled: true,
-      easing: 'linear',
-      dynamicAnimation: {
-        speed: 1000
-      }
+      autoScaleYaxis: true,
+      type: 'x'
     },
     toolbar: {
       show: false,

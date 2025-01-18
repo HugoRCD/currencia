@@ -35,13 +35,13 @@ self.onmessage = async (event) => {
       console.error(`Error for ${crypto}:`, error)
     }
   } else if (cryptos) {
-    for (const crypto of cryptos) {
-      try {
+    try {
+      for (const crypto of cryptos) {
         const price = await getCryptoPrice(crypto, startUrl, endUrl)
         self.postMessage({ crypto, price })
-      } catch (error) {
-        console.error(`Error for ${crypto}:`, error)
       }
+    } catch (error) {
+      console.error(`Error for ${crypto}:`, error)
     }
   }
 }

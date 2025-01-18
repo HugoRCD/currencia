@@ -8,6 +8,7 @@ export type ApexOptions = {
     zoom?: {
       enabled?: boolean;
       autoScaleYaxis?: boolean;
+      type?: string;
     };
     toolbar?: {
       show: boolean;

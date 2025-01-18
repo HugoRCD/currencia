@@ -15,7 +15,7 @@ function calculateTimeframes(data: [number, number][]): TimeFrame[] {
   const timestamps = data.map(([timestamp]) => timestamp)
   const minTimestamp = Math.min(...timestamps)
   const maxTimestamp = Math.max(...timestamps)
-  const totalDuration = maxTimestamp - minTimestamp
+  const now = maxTimestamp
 
   const timeframes: TimeFrame[] = [
     {
@@ -25,37 +25,24 @@ function calculateTimeframes(data: [number, number][]): TimeFrame[] {
     }
   ]
 
-  const now = Date.now()
-  if (totalDuration >= 86400000) { // More than a day
-    timeframes.push({
-      value: '1D',
-      start: now - 86400000,
-      end: now
-    })
-  }
+  const oneDay = 24 * 60 * 60 * 1000
+  const periods = [
+    { value: '1D', duration: oneDay },
+    { value: '1W', duration: 7 * oneDay },
+    { value: '1M', duration: 30 * oneDay },
+    { value: '3M', duration: 90 * oneDay },
+    { value: '1Y', duration: 365 * oneDay }
+  ]
 
-  if (totalDuration >= 604800000) { // More than a week
-    timeframes.push({
-      value: '1W',
-      start: now - 604800000,
-      end: now
-    })
-  }
-
-  if (totalDuration >= 2592000000) { // More than a month
-    timeframes.push({
-      value: '1M',
-      start: now - 2592000000,
-      end: now
-    })
-  }
-
-  if (totalDuration >= 7776000000) { // More than 3 months
-    timeframes.push({
-      value: '3M',
-      start: now - 7776000000,
-      end: now
-    })
+  for (const period of periods) {
+    const potentialStart = now - period.duration
+    if (potentialStart >= minTimestamp) {
+      timeframes.push({
+        value: period.value,
+        start: potentialStart,
+        end: now
+      })
+    }
   }
 
   return timeframes
