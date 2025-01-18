@@ -1,5 +1,5 @@
 import * as amqp from 'amqplib'
-import type { Connection, Channel } from 'amqplib'
+import type { Connection, Channel, ConsumeMessage, Options } from 'amqplib'
 
 export type RabbitConfig = {
   url: string
@@ -13,14 +13,16 @@ export class RabbitMQClient {
 
   private connection: Connection | null = null
   private channel: Channel | null = null
-  private readonly config: RabbitConfig
-  private reconnectTimeout: Timer = null
-  private readonly maxReconnectAttempts = 5
-  private reconnectAttempts = 0
-  private isConnecting: boolean = false
-  private shouldReconnect: boolean = true
+  private consumerTag: string | null = null
+  private heartbeatInterval: Timer = null
   private reconnectTimer: Timer = null
-  private consumers: Map<string, (msg: amqp.ConsumeMessage | null) => void> = new Map()
+  private isConnecting = false
+  private shouldReconnect = true
+  private reconnectAttempts = 0
+
+  private readonly config: RabbitConfig
+  private readonly maxReconnectAttempts = 5
+  private readonly heartbeatInterval_ms = 30000
 
   constructor(config: RabbitConfig) {
     this.config = {
@@ -28,90 +30,6 @@ export class RabbitMQClient {
       retryDelay: 5000,
       prefetchCount: 1,
       ...config
-    }
-  }
-
-  private async createConnection(): Promise<void> {
-    try {
-      this.connection = await amqp.connect(this.config.url)
-
-      this.connection.on('error', (err) => {
-        console.error('RabbitMQ Connection Error:', err)
-        this.scheduleReconnect()
-      })
-
-      this.connection.on('close', () => {
-        console.log('RabbitMQ Connection Closed')
-        this.scheduleReconnect()
-      })
-
-      this.channel = await this.connection.createChannel()
-
-      this.channel.on('error', (err) => {
-        console.error('RabbitMQ Channel Error:', err)
-        this.scheduleReconnect()
-      })
-
-      this.channel.on('close', () => {
-        console.log('RabbitMQ Channel Closed')
-        this.scheduleReconnect()
-      })
-
-      await this.setupQueues()
-
-      for (const [queue, callback] of this.consumers) {
-        await this.channel.consume(queue, callback)
-      }
-
-      this.reconnectAttempts = 0
-      console.log('Successfully connected to RabbitMQ')
-    } catch (error) {
-      console.error('Connection creation failed:', error)
-      throw error
-    }
-  }
-
-  private scheduleReconnect(): void {
-    if (!this.shouldReconnect || this.isConnecting || this.reconnectTimer) {
-      return
-    }
-
-    this.cleanup()
-
-    if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error('Max reconnection attempts reached')
-      this.shouldReconnect = false
-      return
-    }
-
-    this.reconnectAttempts++
-    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts - 1), 30000)
-
-    console.log(`Scheduling reconnection in ${delay}ms (attempt ${this.reconnectAttempts})`)
-
-    this.reconnectTimer = setTimeout(async () => {
-      this.reconnectTimer = null
-      await this.connect()
-    }, delay)
-  }
-
-  private cleanup(): void {
-    if (this.channel) {
-      try {
-        this.channel.close().then(r => r)
-      } catch (err) {
-        console.error('Error closing channel:', err)
-      }
-      this.channel = null
-    }
-
-    if (this.connection) {
-      try {
-        this.connection.close().then(r => r)
-      } catch (err) {
-        console.error('Error closing connection:', err)
-      }
-      this.connection = null
     }
   }
 
@@ -130,30 +48,15 @@ export class RabbitMQClient {
     }
   }
 
-  disconnect(): void {
+  async disconnect(): Promise<void> {
     this.shouldReconnect = false
+    this.clearTimers()
 
-    if (this.reconnectTimer) {
-      clearTimeout(this.reconnectTimer)
-      this.reconnectTimer = null
+    if (this.consumerTag && this.channel) {
+      await this.channel.cancel(this.consumerTag)
     }
 
-    this.cleanup()
-    this.consumers.clear()
-  }
-
-  private async setupQueues(): Promise<void> {
-    if (!this.channel) throw new Error('Channel not initialized')
-
-    await this.channel.assertQueue(this.config.queue, {
-      durable: true
-    })
-
-    await this.channel.assertQueue(`${this.config.queue}.dlq`, {
-      durable: true
-    })
-
-    await this.channel.prefetch(this.config.prefetchCount)
+    await this.cleanup()
   }
 
   async consumeMessages(callback: (message: string) => Promise<void>): Promise<void> {
@@ -161,7 +64,7 @@ export class RabbitMQClient {
       await this.connect()
     }
 
-    const messageHandler = async (msg: amqp.ConsumeMessage | null) => {
+    const messageHandler = async (msg: ConsumeMessage | null) => {
       if (!msg) return
 
       try {
@@ -172,37 +75,108 @@ export class RabbitMQClient {
           await callback(messageContent)
           this.channel?.ack(msg)
         } catch (error) {
-          console.error(`Error processing message (attempt ${retryCount + 1}):`, error)
-
-          if (retryCount < this.config.maxRetries) {
-            this.republishWithDelay(messageContent, retryCount + 1)
-            this.channel?.ack(msg)
-          } else {
-            this.sendToDLQ(messageContent, retryCount, error as Error)
-            this.channel?.ack(msg)
-          }
+          this.handleMessageError(msg, messageContent, retryCount, error as Error)
         }
       } catch (error) {
-        console.error('Critical error processing message:', error)
         if (this.channel?.connection?.connection) {
           this.channel.nack(msg, false, true)
         }
       }
     }
 
-    this.consumers.set(this.config.queue, messageHandler)
-    await this.channel!.consume(this.config.queue, messageHandler)
+    const { consumerTag } = await this.channel!.consume(
+      this.config.queue,
+      messageHandler,
+      { noAck: false }
+    )
+
+    this.consumerTag = consumerTag
+
+    return new Promise<void>((_, reject) => {
+      this.channel!.on('close', () => reject(new Error('Channel closed')))
+      this.channel!.on('error', reject)
+    })
   }
 
-  private republishWithDelay(
-    content: string,
-    retryCount: number
-  ): void {
+  async processDLQ(callback: (message: string) => Promise<void>): Promise<void> {
     if (!this.channel) throw new Error('Channel not initialized')
 
+    await this.channel.consume(`${this.config.queue}.dlq`, async (msg) => {
+      if (!msg) return
+
+      try {
+        await callback(msg.content.toString())
+        this.channel?.ack(msg)
+      } catch (error) {
+        this.channel?.nack(msg, false, true)
+      }
+    })
+  }
+
+  publishMessage(content: string, options: Options.Publish = {}): void {
+    if (!this.channel) throw new Error('Channel not initialized')
+
+    this.channel.sendToQueue(
+      this.config.queue,
+      Buffer.from(content),
+      {
+        persistent: true,
+        ...options
+      }
+    )
+  }
+
+  private async createConnection(): Promise<void> {
+    this.connection = await amqp.connect(this.config.url, { heartbeat: 60 })
+    this.channel = await this.connection.createChannel()
+
+    this.setupEventListeners()
+    await this.setupQueues()
+    this.startHeartbeat()
+  }
+
+  private setupEventListeners(): void {
+    this.connection!.on('error', this.handleConnectionError.bind(this))
+    this.connection!.on('close', this.handleConnectionError.bind(this))
+    this.channel!.on('error', this.handleConnectionError.bind(this))
+    this.channel!.on('close', this.handleConnectionError.bind(this))
+  }
+
+  private async setupQueues(): Promise<void> {
+    await this.channel!.assertQueue(this.config.queue, { durable: true })
+    await this.channel!.assertQueue(`${this.config.queue}.dlq`, { durable: true })
+    await this.channel!.prefetch(this.config.prefetchCount)
+  }
+
+  private startHeartbeat(): void {
+    this.clearHeartbeat()
+    this.heartbeatInterval = setInterval(async () => {
+      try {
+        await this.channel?.checkQueue(this.config.queue)
+      } catch {
+        this.handleConnectionError()
+      }
+    }, this.heartbeatInterval_ms)
+  }
+
+  private handleMessageError(
+    msg: ConsumeMessage,
+    content: string,
+    retryCount: number,
+    error: Error
+  ): void {
+    if (retryCount < this.config.maxRetries) {
+      this.republishWithDelay(content, retryCount + 1)
+    } else {
+      this.sendToDLQ(content, retryCount, error)
+    }
+    this.channel?.ack(msg)
+  }
+
+  private republishWithDelay(content: string, retryCount: number): void {
     const delay = this.config.retryDelay * Math.pow(2, retryCount - 1)
 
-    this.channel.publish('', this.config.queue, Buffer.from(content), {
+    this.channel!.publish('', this.config.queue, Buffer.from(content), {
       headers: {
         'x-retry-count': retryCount,
         'x-original-timestamp': new Date().toISOString()
@@ -212,14 +186,8 @@ export class RabbitMQClient {
     })
   }
 
-  private sendToDLQ(
-    content: string,
-    retryCount: number,
-    error: Error
-  ): void {
-    if (!this.channel) throw new Error('Channel not initialized')
-
-    this.channel.sendToQueue(
+  private sendToDLQ(content: string, retryCount: number, error: Error): void {
+    this.channel!.sendToQueue(
       `${ this.config.queue }.dlq`,
       Buffer.from(content),
       {
@@ -233,34 +201,63 @@ export class RabbitMQClient {
     )
   }
 
-  async processDLQ(callback: (message: string) => Promise<void>): Promise<void> {
-    if (!this.channel) throw new Error('Channel not initialized')
-
-    await this.channel.consume(`${this.config.queue}.dlq`, async (msg) => {
-      if (!msg) return
-
-      try {
-        const messageContent = msg.content.toString()
-        await callback(messageContent)
-        this.channel?.ack(msg)
-      } catch (error) {
-        console.error('Error processing DLQ message:', error)
-        this.channel?.nack(msg, false, true)
-      }
-    })
+  private handleConnectionError(): void {
+    this.clearHeartbeat()
+    this.scheduleReconnect()
   }
 
-  publishMessage(id: string, options: amqp.Options.Publish = {}): void {
-    if (!this.channel) throw new Error('Channel not initialized')
+  private scheduleReconnect(): void {
+    if (!this.shouldReconnect || this.isConnecting || this.reconnectTimer) return
 
-    this.channel.sendToQueue(
-      this.config.queue,
-      Buffer.from(id.toString()),
-      {
-        persistent: true,
-        ...options
+    this.cleanup().then(r => r)
+
+    if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+      this.shouldReconnect = false
+      return
+    }
+
+    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts++), 30000)
+    this.reconnectTimer = setTimeout(async () => {
+      this.reconnectTimer = null
+      await this.connect()
+    }, delay)
+  }
+
+  private async cleanup(): Promise<void> {
+    if (this.channel) {
+      try {
+        await this.channel.close()
+      } finally {
+        this.channel = null
       }
-    )
+    }
+
+    if (this.connection) {
+      try {
+        await this.connection.close()
+      } finally {
+        this.connection = null
+      }
+    }
+  }
+
+  private clearTimers(): void {
+    if (this.heartbeatInterval) {
+      clearInterval(this.heartbeatInterval)
+      this.heartbeatInterval = null
+    }
+
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer)
+      this.reconnectTimer = null
+    }
+  }
+
+  private clearHeartbeat(): void {
+    if (this.heartbeatInterval) {
+      clearInterval(this.heartbeatInterval)
+      this.heartbeatInterval = null
+    }
   }
 
 }

@@ -17,33 +17,36 @@ export default defineTask({
     })
     const mongoClient = await MongoDBClient.create()
 
+    const cleanup = async () => {
+      console.log('[TASK:SYNC] - Cleaning up connections')
+      await mongoClient.disconnect()
+      await rabbitClient.disconnect()
+    }
+
     try {
-      console.log('[TASK:SYNC] - Syncing MongoID to RabbitMQ')
+      console.log('[TASK:SYNC] - Starting sync process')
 
       process.on('SIGINT', async () => {
-        console.log('Received SIGINT. Cleaning up...')
-        await rabbitClient.disconnect()
+        await cleanup()
         process.exit(0)
       })
 
-      const batchSize = 10
-      const prices = await mongoClient.getPricesBatch(batchSize)
-
-      if (!prices || prices.length === 0) {
+      const prices = await mongoClient.getPricesBatch(10)
+      if (!prices?.length) {
         console.log('[TASK:SYNC] - No prices found in MongoDB')
+        await cleanup()
         return { result: 'No prices found' }
       }
 
       await rabbitClient.connect()
 
-      await Promise.all(
-        prices.map((price) => {
-          rabbitClient.publishMessage(price._id.toString())
-          console.log(`[TASK:SYNC] - Published ID: ${price._id}`)
-        })
-      )
+      for (const price of prices) {
+        rabbitClient.publishMessage(price._id.toString())
+        console.log(`[TASK:SYNC] - Published ID: ${price._id}`)
+      }
 
       console.log(`[TASK:SYNC] - ${prices.length} IDs sent to RabbitMQ successfully`)
+      await cleanup()
 
       return {
         result: 'Success',
@@ -51,11 +54,8 @@ export default defineTask({
       }
     } catch (error) {
       console.error('[TASK:SYNC] - Error in sync task:', error)
+      await cleanup()
       throw error
-    } finally {
-      console.log('[TASK:SYNC] - Disconnecting from MongoDB and RabbitMQ')
-      await mongoClient.disconnect()
-      await rabbitClient.disconnect()
     }
   },
 })
