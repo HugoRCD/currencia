@@ -5,6 +5,7 @@ const symbolParams = z.object({
 })
 
 const priceSchema = z.object({
+  symbol: z.string(),
   price: z.number(),
   timestamp: z.number(),
 })
@@ -14,20 +15,19 @@ const bodySchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const { symbol } = await getValidatedRouterParams(event, symbolParams.parse)
   const body = await readValidatedBody(event, bodySchema.parse)
 
-  const crypto = await prisma.crypto.findUnique({
+  const cryptos = await prisma.crypto.findMany({
     where: {
-      symbol,
+      symbol: {
+        in: body.prices.map(({ symbol }) => symbol)
+      }
     }
   })
 
-  if (!crypto) return createError({ statusCode: 404, message: 'Crypto not found' })
-
   await prisma.cryptoPrice.createMany({
-    data: body.prices.map(({ price, timestamp }) => ({
-      cryptoId: crypto.id,
+    data: body.prices.map(({ price, timestamp, symbol }) => ({
+      cryptoId: cryptos.find(c => c.symbol === symbol)!.id,
       timestamp: timestamp.toString(),
       price
     }))

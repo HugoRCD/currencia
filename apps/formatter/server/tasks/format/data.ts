@@ -101,13 +101,14 @@ function formatCrypto(name: string, price: number, timestamp: Date): Crypto | nu
 async function saveToPostgreSQL(cryptos: Crypto[]): Promise<void> {
   const runtimeConfig = useRuntimeConfig()
   const baseUrl = runtimeConfig.apiUrl
-  for (const crypto of cryptos) {
-    await $fetch(`${baseUrl}/api/crypto/${crypto.symbol}`, {
-      method: 'POST',
-      body: {
+  await $fetch(`${baseUrl}/api/crypto/prices`, {
+    method: 'POST',
+    body: {
+      prices: cryptos.map(crypto => ({
+        symbol: crypto.symbol,
         timestamp: crypto.timestamp,
         price: crypto.value
-      }
-    })
-  }
+      }))
+    }
+  })
 }

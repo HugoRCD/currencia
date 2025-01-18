@@ -2,14 +2,16 @@
 import dayjs from 'dayjs'
 import type { Classification } from '@prisma/client'
 
-const { data, status } = useFetch('/api/sentiments')
+const { data, status } = useFetch('/api/sentiments', {
+  method: 'GET',
+})
 
 const filledData = computed(() => {
   if (!data.value) return Array.from({ length: 30 }, () => ({ date: '', value: -1 }))
   const last30Days = data.value.slice(0, 30)
   const filled = Array.from({ length: 30 }, (_, i) => {
     const date = dayjs().subtract(i, 'day').format('DD/MM/YYYY')
-    const found = last30Days.find((item) => dayjs(item.date).format('DD/MM/YYYY') === date)
+    const found = last30Days.find((item: any) => dayjs(item.date).format('DD/MM/YYYY') === date)
     return found || { date, value: -1 }
   })
   return filled.reverse()

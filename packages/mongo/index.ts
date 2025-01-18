@@ -14,6 +14,15 @@ type PriceDocument = {
   prices: Record<string, number>
 }
 
+type SentimentDocument = {
+  _id?: string
+  timestamp: Date
+  date: string
+  value: number
+  classification: string
+  message: string
+}
+
 /**
  * A class for interacting with a MongoDB database.
  * It provides methods for inserting and retrieving prices.
@@ -22,7 +31,7 @@ export class MongoDBClient {
 
   private client: MongoClient
   private db: Db | null = null
-  private collection: Collection<PriceDocument> | null = null
+  private collection: Collection<PriceDocument | SentimentDocument> | null = null
   private readonly dbName: string
   private readonly collectionName: string
 
@@ -45,7 +54,7 @@ export class MongoDBClient {
     try {
       await this.client.connect()
       this.db = this.client.db(this.dbName)
-      this.collection = this.db.collection<PriceDocument>(this.collectionName)
+      this.collection = this.db.collection<PriceDocument | SentimentDocument>(this.collectionName)
       console.log('Successfully connected to MongoDB')
     } catch (error) {
       console.error('Failed to connect to MongoDB:', error)
@@ -106,6 +115,18 @@ export class MongoDBClient {
     }
   }
 
+  async getLatestSentiment(): Promise<SentimentDocument | null> {
+    this.ensureConnection()
+
+    try {
+      return await this.collection!
+        .findOne({}, { sort: { timestamp: -1 } })
+    } catch (error) {
+      console.error('Failed to fetch latest sentiments from MongoDB:', error)
+      throw error
+    }
+  }
+
   async getPricesById(id: object): Promise<PriceDocument | null> {
     this.ensureConnection()
     try {
@@ -127,21 +148,12 @@ export class MongoDBClient {
     }
   }
 
-  async getPricesByDateRange(startDate: Date, endDate: Date): Promise<PriceDocument[]> {
+  async deleteSentimentById(id: object): Promise<void> {
     this.ensureConnection()
-
     try {
-      return await this.collection!
-        .find({
-          timestamp: {
-            $gte: startDate,
-            $lte: endDate
-          }
-        })
-        .sort({ timestamp: 1 })
-        .toArray()
+      await this.collection!.deleteOne({ _id: id })
     } catch (error) {
-      console.error('Failed to fetch prices by date range from MongoDB:', error)
+      console.error('Failed to delete sentiment by ID from MongoDB:', error)
       throw error
     }
   }

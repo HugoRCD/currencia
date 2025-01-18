@@ -7,7 +7,7 @@ export default defineNitroConfig({
   },
 
   scheduledTasks: {
-    '* * * * *': ['sync:mongo', 'format:data']
+    '* * * * *': ['sync:mongo', 'format:sentiments', 'format:data']
   },
 
   runtimeConfig: {
