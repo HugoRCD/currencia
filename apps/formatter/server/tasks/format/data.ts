@@ -57,6 +57,7 @@ export default defineTask({
         console.log(`[TASK:DATA] - Successfully processed ${cryptoArray.length} cryptocurrencies`)
       })
 
+      // eslint-disable-next-line
       await rabbitClient.processDLQ(async (messageContent) => {
         console.log('[TASK:DATA] - Processing failed message from DLQ:', messageContent)
       })
@@ -64,7 +65,7 @@ export default defineTask({
       return new Promise((resolve) => {
         process.on('SIGINT', async () => {
           await cleanup()
-          resolve({ result: 'Shutdown' })
+          resolve({ result: 'Shutdown' as never })
         })
       })
     } catch (error) {
@@ -111,7 +112,7 @@ function formatCryptos(crypto: any): Crypto[] {
     cryptoArray.push({
       symbol,
       timestamp: timestamp.getTime(),
-      value: price
+      value: price as number
     })
   }
 
