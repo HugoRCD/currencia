@@ -18,69 +18,99 @@ async function getCryptoPrice(symbol: string): Promise<CryptoPrice> {
   return crypto
 }
 
-function clearPeerInterval(peerId: string) {
-  const interval = intervals.get(peerId)
-  if (interval) {
-    clearInterval(interval)
-    intervals.delete(peerId)
-    console.log('Interval cleared for peer:', peerId)
+class WebSocketManager {
+
+  private static instance: WebSocketManager
+  private intervals = new Map<string, NodeJS.Timer>()
+  private connectedPeers = new Set<string>()
+
+  private constructor() {}
+
+  static getInstance(): WebSocketManager {
+    if (!this.instance) {
+      this.instance = new WebSocketManager()
+    }
+    return this.instance
   }
+
+  addPeer(peerId: string) {
+    this.connectedPeers.add(peerId)
+    this.logConnectionStats()
+  }
+
+  removePeer(peerId: string) {
+    this.connectedPeers.delete(peerId)
+    this.clearInterval(peerId)
+    this.logConnectionStats()
+  }
+
+  setInterval(peerId: string, interval: NodeJS.Timer) {
+    this.clearInterval(peerId)
+    this.intervals.set(peerId, interval)
+  }
+
+  private clearInterval(peerId: string) {
+    const interval = this.intervals.get(peerId)
+    if (interval) {
+      clearInterval(interval)
+      this.intervals.delete(peerId)
+      console.log('Interval cleared for peer:', peerId)
+    }
+  }
+
+  private logConnectionStats() {
+    console.log(`Active connections: ${this.connectedPeers.size}`)
+  }
+
 }
 
-function logConnectionStats() {
-  console.log(`Active connections: ${connectedPeers.size}`)
-}
+const wsManager = WebSocketManager.getInstance()
 
 export default defineWebSocketHandler({
   async open(peer) {
-    connectedPeers.add(peer.id)
-    console.log('WebSocket connected:', peer.id)
-    logConnectionStats()
-
-    if (!peer.websocket) {
-      peer.close(1008, 'WebSocket connection required')
-      return
-    }
-    if (!peer.websocket.url) {
-      peer.close(1008, 'WebSocket URL is required')
-      return
-    }
-    const url = new URL(peer.websocket.url)
-    const symbol = url.pathname.split('/').pop()
-
-    if (!symbol) {
-      peer.close(1008, 'Symbol is required')
-      return
-    }
-
     try {
+      if (!peer.websocket?.url) {
+        throw new Error('Invalid WebSocket connection')
+      }
+
+      const symbol = new URL(peer.websocket.url).pathname.split('/').pop()
+      if (!symbol) {
+        throw new Error('Symbol is required')
+      }
+
+      wsManager.addPeer(peer.id)
+
       const crypto = await getCryptoPrice(symbol)
       peer.send(JSON.stringify(crypto))
 
       const interval = setInterval(async () => {
-        const crypto = await getCryptoPrice(symbol)
-        if (peer.websocket?.readyState === 1) { // 1 = OPEN
+        try {
+          if (peer.websocket?.readyState !== 1) {
+            throw new Error('WebSocket not ready')
+          }
+
+          const crypto = await getCryptoPrice(symbol)
           peer.send(JSON.stringify(crypto))
-        } else {
-          clearPeerInterval(peer.id)
+        } catch (error) {
+          console.error('Interval error:', error)
+          wsManager.removePeer(peer.id)
         }
       }, 5000)
 
-      intervals.set(peer.id, interval)
+      wsManager.setInterval(peer.id, interval)
     } catch (error) {
-      peer.close(1011, 'Failed to fetch crypto data')
+      console.error('WebSocket open error:', error)
+      peer.close(1011, error instanceof Error ? error.message : 'Unknown error')
     }
   },
 
   close(peer) {
-    connectedPeers.delete(peer.id)
+    wsManager.removePeer(peer.id)
     console.log('WebSocket disconnected:', peer.id)
-    clearPeerInterval(peer.id)
   },
 
   error(peer, error) {
-    connectedPeers.delete(peer.id)
+    wsManager.removePeer(peer.id)
     console.error('WebSocket error:', error)
-    clearPeerInterval(peer.id)
   }
 })

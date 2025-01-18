@@ -1,72 +1,106 @@
 import type { CryptoPrice } from '@prisma/client'
 
-export function usePrice(symbol: string): {
-  crypto: Ref<CryptoPrice>
-  isLoading: Ref<boolean>
-  error: Ref<string | null>
-  reconnect: () => void
-} {
+export function usePrice(symbol: string) {
   const crypto = useCryptoPrice(symbol)
   const isLoading = ref(true)
   const error = ref<string | null>(null)
-  const retryCount = ref(0)
-  const MAX_RETRIES = 3
-  const RETRY_DELAY = 2000
+  const wsRef = ref<WebSocket | null>(null)
+  const isConnected = ref(false)
+  const isMounted = ref(true)
 
-  let ws: WebSocket | null = null
+  let retryTimeout: NodeJS.Timeout | null = null
+
+  const cleanup = () => {
+    if (retryTimeout) {
+      clearTimeout(retryTimeout)
+      retryTimeout = null
+    }
+
+    if (wsRef.value) {
+      wsRef.value.close()
+      wsRef.value = null
+    }
+
+    isConnected.value = false
+    isLoading.value = false
+  }
 
   const initWebSocket = () => {
-    if (ws) {
-      ws.close()
-    }
+    if (!isMounted.value) return
 
-    const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const url = `${protocol}//${location.host}/api/crypto/${symbol}`
-    ws = new WebSocket(url)
+    cleanup()
 
-    ws.onmessage = (event) => {
-      try {
-        crypto.value = JSON.parse(event.data)
+    try {
+      const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
+      const url = `${protocol}//${location.host}/api/crypto/${symbol}`
+      const ws = new WebSocket(url)
+      wsRef.value = ws
+
+      ws.onopen = () => {
+        if (!isMounted.value) {
+          ws.close()
+          return
+        }
+        console.log('WebSocket connected')
+        isConnected.value = true
         isLoading.value = false
-        retryCount.value = 0
-      } catch (err) {
-        console.error('Failed to parse WebSocket data:', err)
+        error.value = null
       }
-    }
 
-    ws.onclose = () => {
-      if (retryCount.value < MAX_RETRIES) {
-        retryCount.value++
-        setTimeout(() => {
-          console.log(`Retrying connection (${retryCount.value}/${MAX_RETRIES})...`)
-          initWebSocket()
-        }, RETRY_DELAY * retryCount.value)
-      } else {
-        error.value = 'Failed to connect to stats stream after multiple attempts'
-        isLoading.value = false
+      ws.onmessage = (event) => {
+        if (!isMounted.value) return
+        try {
+          crypto.value = JSON.parse(event.data)
+        } catch (err) {
+          console.error('Failed to parse WebSocket data:', err)
+        }
       }
-    }
 
-    ws.onerror = (err) => {
-      console.error('WebSocket error:', err)
+      ws.onclose = (event) => {
+        console.log('WebSocket closed:', event.code, event.reason)
+        isConnected.value = false
+        wsRef.value = null
+
+        if (isMounted.value && event.code !== 1000) {
+          error.value = 'Connection lost'
+        }
+      }
+
+      ws.onerror = (event) => {
+        if (!isMounted.value) return
+        console.error('WebSocket error:', event)
+        error.value = 'Connection error'
+      }
+    } catch (err) {
+      if (!isMounted.value) return
+      console.error('Failed to initialize WebSocket:', err)
+      error.value = 'Failed to initialize connection'
+      isLoading.value = false
     }
   }
 
   const reconnect = () => {
-    retryCount.value = 0
+    if (!isMounted.value) return
+    error.value = null
+    isLoading.value = true
     initWebSocket()
   }
 
   onMounted(() => {
     if (import.meta.client) {
+      isMounted.value = true
       initWebSocket()
     }
   })
 
-  onUnmounted(() => {
-    if (ws) {
-      ws.close()
-      ws = null
+  onBeforeUnmount(() => {
+    isMounted.value = false
+    cleanup()
+  })
+
+  watch(() => symbol, () => {
+    if (import.meta.client && isMounted.value) {
+      reconnect()
     }
   })
 
@@ -74,6 +108,7 @@ export function usePrice(symbol: string): {
     crypto,
     isLoading,
     error,
+    isConnected,
     reconnect
   }
 }
