@@ -113,6 +113,22 @@ export class MongoDBClient {
     }
   }
 
+  async getPricesBatch(batchSize: number, processed: boolean = false): Promise<PriceDocument[]> {
+    this.ensureConnection()
+    try {
+      return await this.pricesCollection!
+        .find({
+          processed: { $ne: processed }
+        })
+        .limit(batchSize)
+        .sort({ timestamp: -1 })
+        .toArray()
+    } catch (error) {
+      console.error('Failed to fetch prices batch from MongoDB:', error)
+      throw error
+    }
+  }
+
   async getLatestSentiment(): Promise<SentimentDocument | null> {
     this.ensureConnection()
     try {
@@ -124,7 +140,7 @@ export class MongoDBClient {
     }
   }
 
-  async getPricesById(id: string): Promise<PriceDocument | null> {
+  async getPricesById(id: object): Promise<PriceDocument | null> {
     this.ensureConnection()
     try {
       return await this.pricesCollection!
@@ -135,7 +151,7 @@ export class MongoDBClient {
     }
   }
 
-  async deletePricesById(id: string): Promise<void> {
+  async deletePricesById(id: object): Promise<void> {
     this.ensureConnection()
     try {
       await this.pricesCollection!.deleteOne({ _id: id })
@@ -145,7 +161,7 @@ export class MongoDBClient {
     }
   }
 
-  async deleteSentimentById(id: string): Promise<void> {
+  async deleteSentimentById(id: object): Promise<void> {
     this.ensureConnection()
     try {
       await this.sentimentCollection!.deleteOne({ _id: id })

@@ -6,6 +6,7 @@ export type RabbitConfig = {
   queue: string
   maxRetries: number
   retryDelay: number
+  prefetchCount: number
 }
 
 export class RabbitMQClient {
@@ -18,6 +19,7 @@ export class RabbitMQClient {
     this.config = {
       maxRetries: 3,
       retryDelay: 5000,
+      prefetchCount: 1,
       ...config
     }
   }
@@ -38,18 +40,14 @@ export class RabbitMQClient {
     if (!this.channel) throw new Error('Channel not initialized')
 
     await this.channel.assertQueue(this.config.queue, {
-      durable: true,
-      exclusive: false,
-      autoDelete: false
+      durable: true
     })
 
     await this.channel.assertQueue(`${this.config.queue}.dlq`, {
-      durable: true,
-      exclusive: false,
-      autoDelete: false
+      durable: true
     })
 
-    await this.channel.prefetch(1)
+    await this.channel.prefetch(this.config.prefetchCount)
   }
 
   async consumeMessages(callback: (message: string) => Promise<void>): Promise<void> {
@@ -93,9 +91,11 @@ export class RabbitMQClient {
 
     this.channel.publish('', this.config.queue, Buffer.from(content), {
       headers: {
-        'x-retry-count': retryCount
+        'x-retry-count': retryCount,
+        'x-original-timestamp': new Date().toISOString()
       },
-      expiration: delay.toString()
+      expiration: delay.toString(),
+      persistent: true
     })
   }
 
@@ -107,14 +107,15 @@ export class RabbitMQClient {
     if (!this.channel) throw new Error('Channel not initialized')
 
     this.channel.sendToQueue(
-      `${this.config.queue}.dlq`,
+      `${ this.config.queue }.dlq`,
       Buffer.from(content),
       {
         headers: {
           'x-retry-count': retryCount,
           'x-error-message': error.message,
           'x-failed-at': new Date().toISOString()
-        }
+        },
+        persistent: true
       }
     )
   }
@@ -136,12 +137,16 @@ export class RabbitMQClient {
     })
   }
 
-  publishMessage(id: string): void {
+  publishMessage(id: string, options: amqp.Options.Publish = {}): void {
     if (!this.channel) throw new Error('Channel not initialized')
 
     this.channel.sendToQueue(
       this.config.queue,
-      Buffer.from(id.toString())
+      Buffer.from(id.toString()),
+      {
+        persistent: true,
+        ...options
+      }
     )
   }
 

@@ -165,7 +165,7 @@ const chartOptions = {
     id: 'area-datetime',
     type: 'area',
     zoom: {
-      enabled: true,
+      enabled: false,
     },
     animations: {
       enabled: true,

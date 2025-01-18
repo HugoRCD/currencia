@@ -20,7 +20,8 @@ export default defineTask({
       url: runtimeConfig.rabbit.url,
       queue: runtimeConfig.rabbit.queue,
       maxRetries: 3,
-      retryDelay: 5000
+      retryDelay: 5000,
+      prefetchCount: 5
     })
     const mongoClient = await MongoDBClient.create()
 
@@ -31,9 +32,9 @@ export default defineTask({
       await rabbitClient.consumeMessages(async (messageContent) => {
         console.log('[TASK:DATA] - Processing message:', messageContent)
 
-        const objectId = messageContent
+        const objectId = new ObjectId(messageContent)
 
-        const crypto = await mongoClient.getPricesById(messageContent)
+        const crypto = await mongoClient.getPricesById(objectId)
 
         if (!crypto) {
           console.error(`[TASK:DATA] - No data found for ID: ${messageContent}`)

@@ -1,4 +1,5 @@
 import { MongoDBClient } from '@currencia/mongo'
+import { ObjectId } from 'mongodb'
 import { RabbitMQClient } from '~/utils/rabbit'
 
 export default defineTask({
@@ -22,7 +23,9 @@ export default defineTask({
 
       await saveToPostgreSQL(sentiment)
 
-      await mongoClient.deleteSentimentById(sentiment._id)
+      const id = new ObjectId(sentiment._id)
+
+      await mongoClient.deleteSentimentById(id)
 
       return { result: 'Success' }
     } catch (error) {

@@ -12,26 +12,37 @@ export default defineTask({
       url: runtimeConfig.rabbit.url,
       queue: runtimeConfig.rabbit.queue,
       maxRetries: 3,
-      retryDelay: 5000
+      retryDelay: 5000,
+      prefetchCount: 5
     })
     const mongoClient = await MongoDBClient.create()
 
     try {
       console.log('[TASK:SYNC] - Syncing MongoID to RabbitMQ')
 
-      const prices = await mongoClient.getLatestPrices()
-      if (!prices) {
+      const batchSize = 10
+      const prices = await mongoClient.getPricesBatch(batchSize)
+
+      if (!prices || prices.length === 0) {
         console.log('[TASK:SYNC] - No prices found in MongoDB')
         return { result: 'No prices found' }
       }
 
       await rabbitClient.connect()
 
-      rabbitClient.publishMessage(prices._id.toString())
+      await Promise.all(
+        prices.map((price) => {
+          rabbitClient.publishMessage(price._id.toString())
+          console.log(`[TASK:SYNC] - Published ID: ${price._id}`)
+        })
+      )
 
-      console.log('[TASK:SYNC] - IDs sent to RabbitMQ successfully')
+      console.log(`[TASK:SYNC] - ${prices.length} IDs sent to RabbitMQ successfully`)
 
-      return { result: 'Success' }
+      return {
+        result: 'Success',
+        count: prices.length
+      }
     } catch (error) {
       console.error('[TASK:SYNC] - Error in sync task:', error)
       throw error
