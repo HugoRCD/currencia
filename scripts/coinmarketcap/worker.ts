@@ -12,13 +12,25 @@ function formatPrice(price: string) {
 
 async function getCryptoPrice(crypto: string, baseUrl: string) {
   console.log(`Starting scrapping for ${crypto}...`)
-  const browser = await puppeteer.launch()
+  const browser = await puppeteer.launch({
+    executablePath: '/usr/bin/chromium',
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process',
+      '--headless'
+    ],
+  })
   const page = await browser.newPage()
   await page.goto(`${baseUrl}/${crypto}`)
   const element = await page.waitForSelector(priceSelector)
-  const price = await element.evaluate((node) => node.textContent)
+  const price = await element?.evaluate((node) => node.textContent)
   await browser.close()
-  return formatPrice(price)
+  return formatPrice(price || '')
 }
 
 self.onmessage = async (event) => {

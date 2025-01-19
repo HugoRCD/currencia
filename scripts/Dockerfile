@@ -56,23 +56,41 @@ const execAsync = promisify(exec);
 const DELAY_BETWEEN_RUNS = 30000;
 
 async function runScript(scriptPath: string) {
-    try {
-        console.log(`Running ${scriptPath}`);
-        await execAsync(`bun run ${scriptPath}`);
-        console.log(`${scriptPath} done`);
-    } catch (error) {
-        console.error(`Error in ${scriptPath}:`, error);
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY = 5000;
+
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        try {
+            console.log(`Running ${scriptPath} (attempt ${attempt}/${MAX_RETRIES})`);
+            const { stdout, stderr } = await execAsync(`bun run ${scriptPath}`);
+            if (stderr) console.error(`stderr: ${stderr}`);
+            if (stdout) console.log(`stdout: ${stdout}`);
+            console.log(`${scriptPath} completed successfully`);
+            return;
+        } catch (error) {
+            console.error(`Error in ${scriptPath} (attempt ${attempt}/${MAX_RETRIES}):`, error);
+            if (attempt < MAX_RETRIES) {
+                console.log(`Retrying in ${RETRY_DELAY/1000} seconds...`);
+                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+            }
+        }
     }
+    console.error(`Failed to run ${scriptPath} after ${MAX_RETRIES} attempts`);
 }
 
 async function runAllScripts() {
     while (true) {
-        await Promise.all([
-            // runScript('scripts/coinmarketcap/index.ts'),
-            runScript('scripts/kraken/index.ts'),
-            // runScript('scripts/cryptocompare/index.ts')
-        ]);
+        try {
+            await Promise.all([
+                runScript('scripts/coinmarketcap/index.ts'),
+                runScript('scripts/kraken/index.ts'),
+                runScript('scripts/cryptocompare/index.ts')
+            ]);
+        } catch (error) {
+            console.error('Error in script execution:', error);
+        }
 
+        console.log(`Waiting ${DELAY_BETWEEN_RUNS/1000} seconds before next run...`);
         await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_RUNS));
     }
 }
