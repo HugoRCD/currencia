@@ -55,6 +55,7 @@ export async function getAllCryptos(all: boolean = false) {
     const smoothed = savitzkyGolay(preProcesed)
 
     const significantPoints = []
+    // eslint-disable-next-line prefer-destructuring
     let lastValue = smoothed[0]
     const threshold = 0.1
 

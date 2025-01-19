@@ -18,7 +18,8 @@ program
 
     const fetchCryptoPrices = (cryptos: string[]) => {
       return new Promise<void>((resolve) => {
-        const worker = new Worker('./worker.js', {
+        const workerPath = new URL('./worker.ts', import.meta.url).href
+        const worker = new Worker(workerPath, {
           workerData: { cryptos, startUrl, endUrl },
         })
 

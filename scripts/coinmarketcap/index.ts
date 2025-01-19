@@ -18,7 +18,8 @@ program
     if (options.crypto) {
       try {
         isCrypto(options.crypto)
-        const worker = new Worker('./worker.ts')
+        const workerPath = new URL('./worker.ts', import.meta.url).href
+        const worker = new Worker(workerPath)
 
         worker.postMessage({ crypto: options.crypto, baseUrl })
 
@@ -39,7 +40,8 @@ program
       const workerPromises: Promise<void>[] = []
 
       cryptoChunks.forEach(chunk => {
-        const worker = new Worker('./worker.ts')
+        const workerPath = new URL('./worker.ts', import.meta.url).href
+        const worker = new Worker(workerPath)
         const workerPromise = new Promise<void>((resolve) => {
           let processedCount = 0
 
