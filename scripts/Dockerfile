@@ -43,11 +43,12 @@ ENV DELAY_BETWEEN_RUNS=30000
 
 WORKDIR /scripts
 
-COPY package.json bun.lockb ./
-
-RUN bun install
+COPY package.json ./
+COPY bun.lockb ./
 
 COPY . .
+
+RUN bun install
 
 COPY <<-"EOF" /scripts/runner.ts
 import { exec } from 'child_process';
