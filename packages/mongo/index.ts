@@ -16,8 +16,7 @@ type PriceDocument = {
 
 type SentimentDocument = {
   _id?: string
-  timestamp: Date
-  date: string
+  date: Date
   value: number
   classification: string
   message: string
@@ -54,7 +53,7 @@ export class MongoDBClient {
       await this.client.connect()
       this.db = this.client.db(this.dbName)
       this.pricesCollection = this.db.collection<PriceDocument>('prices')
-      this.sentimentCollection = this.db.collection<SentimentDocument>('sentiments')
+      this.sentimentCollection = this.db.collection<SentimentDocument>('sentiment_analysis')
       console.log('Successfully connected to MongoDB')
     } catch (error) {
       console.error('Failed to connect to MongoDB:', error)
@@ -102,24 +101,11 @@ export class MongoDBClient {
     }
   }
 
-  async getLatestPrices(): Promise<PriceDocument | null> {
+  async getPricesBatch(batchSize: number): Promise<PriceDocument[]> {
     this.ensureConnection()
     try {
       return await this.pricesCollection!
-        .findOne<PriceDocument>({}, { sort: { timestamp: -1 } })
-    } catch (error) {
-      console.error('Failed to fetch latest prices from MongoDB:', error)
-      throw error
-    }
-  }
-
-  async getPricesBatch(batchSize: number, processed: boolean = false): Promise<PriceDocument[]> {
-    this.ensureConnection()
-    try {
-      return await this.pricesCollection!
-        .find({
-          processed: { $ne: processed }
-        })
+        .find()
         .limit(batchSize)
         .sort({ timestamp: -1 })
         .toArray()
@@ -133,7 +119,7 @@ export class MongoDBClient {
     this.ensureConnection()
     try {
       return await this.sentimentCollection!
-        .findOne<SentimentDocument>({}, { sort: { timestamp: -1 } })
+        .findOne<SentimentDocument>({}, { sort: { date: -1 } })
     } catch (error) {
       console.error('Failed to fetch latest sentiments from MongoDB:', error)
       throw error

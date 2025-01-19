@@ -7,7 +7,8 @@
     "prepare": "nitro prepare",
     "preview": "node .output/server/index.mjs",
     "sync:mongo": "nitro task run sync:mongo",
-    "format:data": "nitro task run format:data"
+    "format:data": "nitro task run format:data",
+    "format:sentiments": "nitro task run format:sentiments"
   },
   "devDependencies": {
     "@currencia/cryptos": "workspace:*",

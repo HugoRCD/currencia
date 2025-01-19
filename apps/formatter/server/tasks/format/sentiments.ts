@@ -38,7 +38,7 @@ export default defineTask({
   },
 })
 
-async function saveToPostgreSQL(sentiment: { classification: string; message: string, value: number, date: string }) {
+async function saveToPostgreSQL(sentiment: { classification: string; message: string, value: number, date: Date }) {
   const runtimeConfig = useRuntimeConfig()
   const baseUrl = runtimeConfig.apiUrl
   await $fetch(`${baseUrl}/api/sentiments`, {
