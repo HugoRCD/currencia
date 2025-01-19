@@ -28,7 +28,7 @@ const lastMessage = computed(() => {
   const sortedData = [...data.value].sort((a, b) =>
     dayjs(b.date).valueOf() - dayjs(a.date).valueOf()
   )
-  return sortedData[0].message
+  return sortedData[0]!.message
 })
 
 const lastClassification = computed<Classification>(() => {
@@ -37,7 +37,7 @@ const lastClassification = computed<Classification>(() => {
   const sortedData = [...data.value].sort((a, b) =>
     dayjs(b.date).valueOf() - dayjs(a.date).valueOf()
   )
-  return sortedData[0].classification
+  return sortedData[0]!.classification
 })
 
 function color(value: number) {
