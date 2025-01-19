@@ -61,12 +61,12 @@ model CryptoPrice {
 
 model Stat {
   id        Int      @id @default(autoincrement())
-  cryptoId  Int
+  cryptoId  Int?
   type      StatType
   value     Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  crypto    Crypto   @relation(fields: [cryptoId], references: [id])
+  crypto    Crypto?  @relation(fields: [cryptoId], references: [id])
 }
 
 model Sentiment {
