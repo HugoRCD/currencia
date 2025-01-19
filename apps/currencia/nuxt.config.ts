@@ -53,7 +53,10 @@ export default defineNuxtConfig({
     experimental: {
       websocket: true,
       tasks: true,
-    }
+    },
+    scheduledTasks: {
+      '0 8 * * *': ['stats:generate'],
+    },
   },
 
   imports: {

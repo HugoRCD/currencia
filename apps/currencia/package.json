@@ -19,7 +19,8 @@
     "prisma:pull": "prisma db pull",
     "prisma:push": "prisma db push",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "bun ./prisma/seed.ts"
+    "prisma:seed": "bun ./prisma/seed.ts",
+    "stats:generate": "nitro task run stats:generate"
   },
   "devDependencies": {
     "@hrcd/eslint-config": "^2.1.1",

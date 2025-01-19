@@ -8,9 +8,12 @@ datasource db {
 }
 
 enum StatType {
-  COMPARE_TO_LAST_WEEK
-  COMPARE_TO_LAST_MONTH
-  OVERALL_CHANGE
+  ALL_TIME_HIGH
+  WEEKLY_PERFORMANCE
+  MONTHLY_PERFORMANCE
+  VOLATILITY
+  SUPPORT_LEVEL
+  RESISTANCE_LEVEL
 }
 
 enum Classification {
@@ -45,6 +48,7 @@ model Crypto {
   portfolioData PortfolioData[]
   watchlist     Watchlist[]
   prices        CryptoPrice[]
+  stats         Stat[]
 }
 
 model CryptoPrice {
@@ -59,11 +63,14 @@ model CryptoPrice {
 
 model Stat {
   id        Int      @id @default(autoincrement())
-  cryptoId  Int
+  cryptoId  Int?
   type      StatType
   value     Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  crypto    Crypto?  @relation(fields: [cryptoId], references: [id])
+
+  @@unique([cryptoId, type])
 }
 
 model Sentiment {
