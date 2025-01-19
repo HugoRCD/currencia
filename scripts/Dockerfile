@@ -39,6 +39,8 @@ ENV MONGODB_URL=$MONGODB_URL
 ENV KRAKEN_API_KEY=$KRAKEN_API_KEY
 ENV KRAKEN_SECRET=$KRAKEN_API_SECRET
 
+ENV DELAY_BETWEEN_RUNS=30000
+
 WORKDIR /scripts
 
 COPY package.json bun.lockb ./
@@ -53,7 +55,8 @@ import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
-const DELAY_BETWEEN_RUNS = 30000;
+const DELAY_BETWEEN_RUNS = parseInt(process.env.DELAY_BETWEEN_RUNS || '30000');
+console.log(`Configured delay between runs: ${DELAY_BETWEEN_RUNS}ms`);
 
 async function runScript(scriptPath: string) {
     const MAX_RETRIES = 3;
