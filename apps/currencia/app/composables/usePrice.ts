@@ -1,5 +1,3 @@
-import type { CryptoPrice } from '@prisma/client'
-
 export function usePrice(symbol: string) {
   const crypto = useCryptoPrice(symbol)
   const isLoading = ref(true)
