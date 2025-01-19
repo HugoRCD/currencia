@@ -8,7 +8,12 @@ const { data, status } = useFetch('/api/sentiments', {
 
 const filledData = computed(() => {
   if (!data.value) return Array.from({ length: 30 }, () => ({ date: '', value: -1 }))
-  const last30Days = data.value.slice(0, 30)
+
+  const sortedData = [...data.value].sort((a, b) =>
+    dayjs(b.date).valueOf() - dayjs(a.date).valueOf()
+  )
+
+  const last30Days = sortedData.slice(0, 30)
   const filled = Array.from({ length: 30 }, (_, i) => {
     const date = dayjs().subtract(i, 'day').format('DD/MM/YYYY')
     const found = last30Days.find((item: any) => dayjs(item.date).format('DD/MM/YYYY') === date)
@@ -18,13 +23,21 @@ const filledData = computed(() => {
 })
 
 const lastMessage = computed(() => {
-  if (!data.value || !data.value[0]) return ''
-  return data.value[0].message
+  if (!data.value || data.value.length === 0) return ''
+
+  const sortedData = [...data.value].sort((a, b) =>
+    dayjs(b.date).valueOf() - dayjs(a.date).valueOf()
+  )
+  return sortedData[0].message
 })
 
 const lastClassification = computed<Classification>(() => {
-  if (!data.value || !data.value[0]) return 'NEUTRAL'
-  return data.value[0].classification
+  if (!data.value || data.value.length === 0) return 'NEUTRAL'
+
+  const sortedData = [...data.value].sort((a, b) =>
+    dayjs(b.date).valueOf() - dayjs(a.date).valueOf()
+  )
+  return sortedData[0].classification
 })
 
 function color(value: number) {

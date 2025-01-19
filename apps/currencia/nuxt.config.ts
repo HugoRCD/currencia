@@ -55,7 +55,7 @@ export default defineNuxtConfig({
       tasks: true,
     },
     scheduledTasks: {
-      '* * * * *': ['stats:ath'],
+      '0 8 * * *': ['stats:generate'],
     },
   },
 
