@@ -11,6 +11,7 @@ enum StatType {
   COMPARE_TO_LAST_WEEK
   COMPARE_TO_LAST_MONTH
   OVERALL_CHANGE
+  ATH
 }
 
 enum Classification {
@@ -45,6 +46,7 @@ model Crypto {
   portfolioData PortfolioData[]
   watchlist     Watchlist[]
   prices        CryptoPrice[]
+  stats         Stat[]
 }
 
 model CryptoPrice {
@@ -64,6 +66,7 @@ model Stat {
   value     Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  crypto    Crypto   @relation(fields: [cryptoId], references: [id])
 }
 
 model Sentiment {

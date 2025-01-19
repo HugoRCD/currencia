@@ -11,6 +11,8 @@ const crypto = cryptos.value.find((crypto: Crypto) => crypto.symbol === symbol) 
 
 if (!crypto) useRouter().push('/app/market')
 
+const { data: ath, status } = useFetch(`/api/crypto/${symbol}/ath`, { method: 'GET' })
+
 const variations = ref<Variations>({
   percent: -1,
   value: -1,
@@ -40,7 +42,7 @@ const data = ref(formatData(crypto.prices))
 </script>
 
 <template>
-  <div class="flex flex-col gap-8">
+  <div v-if="crypto && _crypto" class="flex flex-col gap-8">
     <div class="flex flex-col gap-4">
       <div style="--stagger: 1; --delay: 100ms" data-animate class="flex flex-row items-center gap-3">
         <img :src="crypto.logo" class="size-7" :alt="crypto.name">
@@ -89,6 +91,16 @@ const data = ref(formatData(crypto.prices))
       <p class="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
         {{ crypto.description }}
       </p>
+      <div class="mt-4 grid grid-cols-2 gap-2">
+        <div class="flex flex-col gap-1 rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+          <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">
+            ATH
+          </span>
+          <span class="text-sm text-gray-500 dark:text-gray-400">
+            {{ ath ? displayNumberValue(ath.value) : 'N/A' }}$
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
