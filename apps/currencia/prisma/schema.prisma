@@ -67,6 +67,8 @@ model Stat {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   crypto    Crypto?  @relation(fields: [cryptoId], references: [id])
+
+  @@unique([cryptoId, type])
 }
 
 model Sentiment {
