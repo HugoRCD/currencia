@@ -57,49 +57,91 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 const DELAY_BETWEEN_RUNS = parseInt(process.env.DELAY_BETWEEN_RUNS || '30000');
+const SCRIPT_TIMEOUT = 300000;
 console.log(`Configured delay between runs: ${DELAY_BETWEEN_RUNS}ms`);
 
-async function runScript(scriptPath: string) {
-    const MAX_RETRIES = 3;
-    const RETRY_DELAY = 5000;
+async function runScriptWithTimeout(scriptPath: string): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+        const timeoutId = setTimeout(() => {
+            console.error(`Script ${scriptPath} timed out after ${SCRIPT_TIMEOUT/1000} seconds`);
+            resolve();
+        }, SCRIPT_TIMEOUT);
 
-    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-        try {
-            console.log(`Running ${scriptPath} (attempt ${attempt}/${MAX_RETRIES})`);
-            const { stdout, stderr } = await execAsync(`bun run ${scriptPath}`);
-            if (stderr) console.error(`stderr: ${stderr}`);
-            if (stdout) console.log(`stdout: ${stdout}`);
-            console.log(`${scriptPath} completed successfully`);
-            return;
-        } catch (error) {
-            console.error(`Error in ${scriptPath} (attempt ${attempt}/${MAX_RETRIES}):`, error);
-            if (attempt < MAX_RETRIES) {
-                console.log(`Retrying in ${RETRY_DELAY/1000} seconds...`);
-                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+        const MAX_RETRIES = 3;
+        const RETRY_DELAY = 5000;
+
+        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                console.log(`[${new Date().toISOString()}] Running ${scriptPath} (attempt ${attempt}/${MAX_RETRIES})`);
+
+                const child = exec(`bun run ${scriptPath}`);
+
+                child.stdout?.on('data', (data) => console.log(`[${scriptPath}] ${data.trim()}`));
+                child.stderr?.on('data', (data) => console.error(`[${scriptPath}] Error: ${data.trim()}`));
+
+                await new Promise((resolveExec, rejectExec) => {
+                    child.on('exit', (code) => {
+                        if (code === 0) {
+                            resolveExec(null);
+                        } else {
+                            rejectExec(new Error(`Script exited with code ${code}`));
+                        }
+                    });
+                });
+
+                console.log(`[${new Date().toISOString()}] ${scriptPath} completed successfully`);
+                clearTimeout(timeoutId);
+                return resolve();
+            } catch (error) {
+                console.error(`[${new Date().toISOString()}] Error in ${scriptPath} (attempt ${attempt}/${MAX_RETRIES}):`, error);
+                if (attempt < MAX_RETRIES) {
+                    console.log(`Retrying in ${RETRY_DELAY/1000} seconds...`);
+                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+                }
             }
         }
-    }
-    console.error(`Failed to run ${scriptPath} after ${MAX_RETRIES} attempts`);
+
+        console.error(`[${new Date().toISOString()}] Failed to run ${scriptPath} after ${MAX_RETRIES} attempts`);
+        clearTimeout(timeoutId);
+        resolve();
+    });
 }
 
 async function runAllScripts() {
     while (true) {
+        const startTime = Date.now();
+        console.log(`\n[${new Date().toISOString()}] Starting new execution cycle`);
+
         try {
-            await Promise.all([
-                runScript('scripts/coinmarketcap/index.ts'),
-                runScript('scripts/kraken/index.ts'),
-                runScript('scripts/cryptocompare/index.ts')
-            ]);
+            await runScriptWithTimeout('scripts/coinmarketcap/index.ts');
+            await runScriptWithTimeout('scripts/kraken/index.ts');
+            await runScriptWithTimeout('scripts/cryptocompare/index.ts');
         } catch (error) {
-            console.error('Error in script execution:', error);
+            console.error(`[${new Date().toISOString()}] Error in script execution cycle:`, error);
         }
 
+        const executionTime = Date.now() - startTime;
+        console.log(`[${new Date().toISOString()}] Scripts execution took ${executionTime}ms`);
         console.log(`Waiting ${DELAY_BETWEEN_RUNS/1000} seconds before next run...`);
-        await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_RUNS));
+
+        let waitedTime = 0;
+        while (waitedTime < DELAY_BETWEEN_RUNS) {
+            await new Promise(resolve => setTimeout(resolve, Math.min(60000, DELAY_BETWEEN_RUNS - waitedTime)));
+            waitedTime += 60000;
+            console.log(`[${new Date().toISOString()}] Still waiting... ${Math.max(0, DELAY_BETWEEN_RUNS - waitedTime)/1000} seconds remaining`);
+        }
     }
 }
 
-console.log('Starting runner');
+process.on('uncaughtException', (error) => {
+    console.error(`[${new Date().toISOString()}] Uncaught Exception:`, error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error(`[${new Date().toISOString()}] Unhandled Rejection at:`, promise, 'reason:', reason);
+});
+
+console.log(`[${new Date().toISOString()}] Starting runner`);
 runAllScripts().catch(console.error);
 EOF
 
