@@ -14,7 +14,7 @@
     "@currencia/cryptos": "workspace:*",
     "@currencia/mongo": "workspace:*",
     "@currencia/utils": "workspace:*",
-    "@types/amqplib": "^0.10.6",
+    "@types/amqplib": "^0.10.7",
     "nitropack": "latest"
   },
   "dependencies": {
