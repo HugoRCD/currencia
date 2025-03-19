@@ -36,7 +36,7 @@
     "dayjs": "^1.11.13",
     "dayjs-nuxt": "^2.1.11",
     "eslint": "^9.21.0",
-    "nuxt": "3.15.4",
+    "nuxt": "3.16.0",
     "nuxt-auth-utils": "^0.5.16",
     "nuxt-build-cache": "^0.1.1",
     "prisma": "^6.4.1",
