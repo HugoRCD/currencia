@@ -1,13 +1,8 @@
 # Stage 1: Build Stage
 FROM oven/bun:latest AS build
 
-ARG DATABASE_URL
 ARG TURBO_TEAM
-ARG TURBO_TOKEN
-
-ENV DATABASE_URL=$DATABASE_URL
 ENV TURBO_TEAM=$TURBO_TEAM
-ENV TURBO_TOKEN=$TURBO_TOKEN
 ENV NODE_ENV=production
 
 WORKDIR /app
@@ -19,11 +14,23 @@ COPY apps/currencia/package.json ./apps/currencia/package.json
 
 COPY . .
 
-RUN bun install
+RUN --mount=type=secret,id=DATABASE_URL \
+    --mount=type=secret,id=TURBO_TOKEN \
+    DATABASE_URL=$(cat /run/secrets/DATABASE_URL 2>/dev/null) \
+    TURBO_TOKEN=$(cat /run/secrets/TURBO_TOKEN 2>/dev/null) \
+    bun install
 
-RUN bun prisma:generate
+RUN --mount=type=secret,id=DATABASE_URL \
+    --mount=type=secret,id=TURBO_TOKEN \
+    DATABASE_URL=$(cat /run/secrets/DATABASE_URL 2>/dev/null) \
+    TURBO_TOKEN=$(cat /run/secrets/TURBO_TOKEN 2>/dev/null) \
+    bun prisma:generate
 
-RUN bun run build:app
+RUN --mount=type=secret,id=DATABASE_URL \
+    --mount=type=secret,id=TURBO_TOKEN \
+    DATABASE_URL=$(cat /run/secrets/DATABASE_URL 2>/dev/null) \
+    TURBO_TOKEN=$(cat /run/secrets/TURBO_TOKEN 2>/dev/null) \
+    bun run build:app
 
 # Stage 2: Final Stage
 FROM oven/bun:latest

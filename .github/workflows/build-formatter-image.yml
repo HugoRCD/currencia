@@ -58,6 +58,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
             TURBO_TEAM=${{ vars.TURBO_TEAM }}
+          secrets: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
